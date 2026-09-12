@@ -225,9 +225,9 @@
         /* ===== REAL-TIME VU METER — fixed panel, visible on EVERY page, only while audio plays ===== */
         .vu-meter-panel {
     position: fixed;
-    top: 50%;
+    top: 90px;
     right: 22px;
-    transform: translateY(-50%) translateX(20px);
+    transform: translateX(20px);
     width: 168px;
     padding: 0;
     display: flex;
@@ -243,7 +243,7 @@
 .vu-meter-panel.vu-active {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(-50%) translateX(0);
+    transform: translateX(0);
     visibility: visible;
 }
 .vu-meter-panel.vu-dragging { cursor: grabbing; transition: none; }
@@ -260,7 +260,6 @@
 .vu-pivot { fill: #1a1a1a; stroke: #c21f1f; stroke-width: 1; }
 .vu-caption { font-size: 6.5px; fill: rgba(255,255,255,0.55); letter-spacing: 1.5px; }
 #vuNeedleGroup { will-change: transform; }
-body.has-global-player .vu-meter-panel { top: calc(50% - 35px); }
 @media (max-width: 1300px) {
     .vu-meter-panel { display: none; }
 }
@@ -2529,17 +2528,57 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
             { code: 'pt', label: 'Português' },
             { code: 'ht', label: 'Kreyòl Ayisyen' }
         ];
-        function localizedText(value) {
+        // A beat's description can end up stored as a JSON-encoded STRING instead of a real object
+        // (this happens if the database column is text instead of jsonb). If that string then gets
+        // re-wrapped and saved again, it nests further each time — these helpers unwrap however many
+        // layers deep it went, so both display and the admin edit form always work with clean data.
+        function deepParseJSON(value, depth) {
+            depth = depth || 0;
+            if (depth > 6) return value;
+            if (typeof value === 'string') {
+                const t = value.trim();
+                if (t.length > 1 && t.startsWith('{') && t.endsWith('}')) {
+                    try { return deepParseJSON(JSON.parse(t), depth + 1); } catch (e) { return value; }
+                }
+                return value;
+            }
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                const out = {};
+                Object.keys(value).forEach(k => { out[k] = deepParseJSON(value[k], depth + 1); });
+                return out;
+            }
+            return value;
+        }
+        // Keeps drilling in (picking the current language, or English, or whatever's first) until it
+        // lands on an actual plain string, no matter how many layers of corruption it has to peel off.
+        function unwrapToString(value, depth) {
+            depth = depth || 0;
+            if (depth > 6) return typeof value === 'string' ? value : '';
+            if (typeof value === 'string') {
+                const t = value.trim();
+                if (t.length > 1 && t.startsWith('{') && t.endsWith('}')) {
+                    try { return unwrapToString(JSON.parse(t), depth + 1); } catch (e) { return value; }
+                }
+                return value;
+            }
             if (value && typeof value === 'object') {
                 const lang = localStorage.getItem('fridBeats_lang') || 'en';
-                return value[lang] || value.en || Object.values(value)[0] || '';
+                return unwrapToString(value[lang] || value.en || Object.values(value)[0] || '', depth + 1);
             }
-            return value || '';
+            return value ? String(value) : '';
+        }
+        function localizedText(value) {
+            return unwrapToString(value) || '';
         }
         function getItemDescObj(item) {
             if (!item || !item.description) return {};
-            if (typeof item.description === 'object') return item.description;
-            return { en: item.description }; // legacy plain-string description -> treat as English
+            const parsed = deepParseJSON(item.description);
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                const out = {};
+                Object.keys(parsed).forEach(k => { out[k] = unwrapToString(parsed[k]); });
+                return out;
+            }
+            return { en: unwrapToString(parsed) }; // still a plain string after unwrapping -> treat as English
         }
         function renderDescriptionFields(item) {
             const desc = getItemDescObj(item);
@@ -2915,10 +2954,13 @@ document.addEventListener('keydown', function(e) {
             const beat = getBeatById(beatId);
             if (!beat) { console.warn('Beat not found:', beatId); return; }
 
-            // Same beat already loaded -> toggle play/pause
+            // Same beat already loaded -> toggle play/pause (also handles replaying after it finished)
             if (currentBeatId === beatId && currentAudio) {
                 if (!currentAudio.paused) { currentAudio.pause(); }
-                else { attemptPlay(currentAudio, beatId, false); }
+                else {
+                    if (currentAudio.ended) currentAudio.currentTime = 0; // restart from the top instead of doing nothing
+                    attemptPlay(currentAudio, beatId, false);
+                }
                 return;
             }
 
@@ -2944,13 +2986,19 @@ document.addEventListener('keydown', function(e) {
             if (gpTitleEl) gpTitleEl.textContent = beat.title;
             if (gpArtistEl) gpArtistEl.textContent = beat.artist;
 
-            // Load / draw the real waveform for this track
-            loadWaveformForBeat(beatId, beat.preview);
+            // Load / draw the real waveform for this track — delayed slightly so this extra
+            // download doesn't compete for bandwidth with the audio file itself while it's
+            // trying to start playing (this was making playback feel slow to start).
+            if (waveformCache[beatId]) {
+                loadWaveformForBeat(beatId, beat.preview);
+            } else {
+                setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
+            }
 
             attemptPlay(audio, beatId, false);
             updatePlayButtons(beatId, true);
 
-            audio.onended = () => { updatePlayButtons(beatId, false); currentAudio = null; currentBeatId = null; renderWaveform(0); };
+            audio.onended = () => { updatePlayButtons(beatId, false); renderWaveform(0); };
             audio.onpause = () => { if (!audio.ended) updatePlayButtons(beatId, false); };
             audio.onplay = () => { updatePlayButtons(beatId, true); };
 
@@ -3226,7 +3274,7 @@ document.addEventListener('keydown', function(e) {
                         <p class="flp-artist">${flp.artist} • ${flp.genre}</p>
                         <p class="flp-desc card-desc" style="font-weight:300;">${localizedText(flp.description)}</p>
                         <div class="flp-download-form">
-                            <input type="email" id="flpEmail_${flp.id}" placeholder="Enter your email">
+                            <input type="email" id="flpEmail_${flp.id}" name="flp_email_${flp.id}" autocomplete="email" placeholder="Enter your email">
                             <button class="btn btn-primary btn-sm" onclick="downloadFLP('${flp.id}')">
                                 <i class="fas fa-download"></i> Download
                             </button>
@@ -4713,8 +4761,8 @@ setLang = function(lang) {
 };
 
 document.addEventListener('DOMContentLoaded', async function() {
-    setLang(localStorage.getItem('fridBeats_lang') || 'en');
     await loadDataFromSupabase();
+    setLang(localStorage.getItem('fridBeats_lang') || 'en');
     
     // IMPORTANT: Do NOT clear sessionStorage here, because it will also clear the data you saved.
     // Only clear it when you LOG OUT.
