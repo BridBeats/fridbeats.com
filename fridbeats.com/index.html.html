@@ -154,45 +154,6 @@
         ::selection { background:var(--accent-primary); color:#fff; }
         .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
 
-        /* ===== ANIMATED WAVE BACKGROUND ===== */
-        .wave-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        .wave-svg {
-            position: absolute;
-            left: 0;
-            width: 200%;
-            height: 140px;
-            fill: none;
-        }
-        .wave-svg path { fill: none; }
-        .wave-svg-1 {
-            top: 12%;
-            opacity: 0.22;
-            animation: waveScroll 22s linear infinite;
-        }
-        .wave-svg-1 path { stroke: var(--accent-primary); stroke-width: 2; }
-        .wave-svg-2 {
-            top: 45%;
-            opacity: 0.18;
-            animation: waveScroll 32s linear infinite reverse;
-        }
-        .wave-svg-2 path { stroke: var(--accent-hover, var(--accent-primary)); stroke-width: 1.8; }
-        .wave-svg-3 {
-            top: 75%;
-            opacity: 0.16;
-            animation: waveScroll 40s linear infinite;
-        }
-        .wave-svg-3 path { stroke: var(--accent-primary); stroke-width: 1.6; }
-        @keyframes waveScroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
         /* ===== DISTANT TROPICAL / PALM TREE BACKGROUND (decorative texture, far behind content) ===== */
         .nature-bg {
             position: fixed;
@@ -315,9 +276,6 @@
         display: block;
     }
 }
-        @media (max-width:768px) {
-            .wave-svg { height: 90px; }
-        }
 
         /* ===== HEADER ===== */
 .header {
@@ -630,6 +588,33 @@ background-clip: text;
         .beat-artwork { position:relative; aspect-ratio:1/1; background:var(--bg-tertiary); overflow:hidden; display:flex; align-items:center; justify-content:center; }
         .beat-artwork img { width:100%; height:100%; object-fit:cover; transition:var(--transition-slow); }
         .beat-artwork .no-image { color:var(--text-muted); font-size:0.875rem; text-align:center; padding:1rem; }
+        /* ===== LOADING STATE (shown until data arrives from Supabase — never leaves the page blank) ===== */
+        .loading-state {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3.5rem 1rem;
+            gap: 1rem;
+            color: var(--text-tertiary);
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.08);
+            border-top-color: var(--accent-primary);
+            animation: loadingSpin 0.8s linear infinite;
+        }
+        @keyframes loadingSpin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-state span {
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
         .beat-card:hover .beat-artwork img { transform:scale(1.03); }
         .beat-play-overlay {
             position:absolute; inset:0;
@@ -1591,27 +1576,7 @@ input[type="range"]::-moz-range-thumb {
     </svg>
 </div>
 
-    <!-- ===== ANIMATED WAVE BACKGROUND ===== -->
-    <div class="wave-bg" aria-hidden="true">
-        <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="wave-svg wave-svg-1">
-            <g>
-                <path d="M0,50 C50,10 100,90 150,50 C200,10 250,90 300,50 C350,10 400,90 450,50 C500,10 550,90 600,50" />
-                <path d="M600,50 C650,10 700,90 750,50 C800,10 850,90 900,50 C950,10 1000,90 1050,50 C1100,10 1150,90 1200,50" />
-            </g>
-        </svg>
-        <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="wave-svg wave-svg-2">
-            <g>
-                <path d="M0,60 C60,20 120,100 180,60 C240,20 300,100 360,60 C420,20 480,100 540,60 C600,20 660,100 720,60" />
-                <path d="M600,60 C660,20 720,100 780,60 C840,20 900,100 960,60 C1020,20 1080,100 1140,60 C1200,20 1260,100 1320,60" />
-            </g>
-        </svg>
-        <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="wave-svg wave-svg-3">
-            <g>
-                <path d="M0,40 C40,70 80,10 120,40 C160,70 200,10 240,40 C280,70 320,10 360,40 C400,70 440,10 480,40 C520,70 560,10 600,40" />
-                <path d="M600,40 C640,70 680,10 720,40 C760,70 800,10 840,40 C880,70 920,10 960,40 C1000,70 1040,10 1080,40 C1120,70 1160,10 1200,40" />
-            </g>
-        </svg>
-    </div>
+
 
     <!-- ===== HEADER ===== -->
     <header class="header" id="header">
@@ -1708,7 +1673,9 @@ input[type="range"]::-moz-range-thumb {
     <div class="container">
         <h2 class="section-title" data-i18n="home_featured_title">Featured <span>Beats</span></h2>
         <p class="section-subtitle" data-i18n="home_featured_subtitle">Check out some of my latest and most popular beats</p>
-        <div class="beat-grid" id="featuredGrid"></div>
+        <div class="beat-grid" id="featuredGrid">
+            <div class="loading-state"><div class="loading-spinner"></div><span>Loading beats…</span></div>
+        </div>
         <div class="text-center mt-4">
             <button class="btn btn-secondary" onclick="navigateTo('beats')" data-i18n="home_view_all">View All Beats</button>
         </div>
@@ -1770,8 +1737,10 @@ input[type="range"]::-moz-range-thumb {
                     <div class="filter-group"><label data-i18n="filters_sort">Sort By</label><select id="sortSelect" onchange="applyFilters()"><option value="newest">Newest First</option><option value="popular">Most Popular</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></div>
                 </div>
                 <div>
-                    <p class="text-muted mb-2" id="beatCount">6 beats available</p>
-                    <div class="beat-grid" id="beatGrid"></div>
+                    <p class="text-muted mb-2" id="beatCount">Loading…</p>
+                    <div class="beat-grid" id="beatGrid">
+                        <div class="loading-state"><div class="loading-spinner"></div><span>Loading beats…</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1792,7 +1761,9 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="templates_title">FL Studio <span>Templates</span></h1><p class="text-muted" data-i18n="templates_subtitle">Premium FL Studio templates for producers — $9.99 each</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
-            <div class="beat-grid" id="templateGrid"></div>
+            <div class="beat-grid" id="templateGrid">
+                <div class="loading-state"><div class="loading-spinner"></div><span>Loading templates…</span></div>
+            </div>
         </div>
     </div>
 
@@ -1803,7 +1774,9 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="flp_title">FLP <span>Remakes</span></h1><p class="text-muted" data-i18n="flp_subtitle">Download FLP remakes for free. Enter your email to get the download link.</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
-            <div class="flp-grid" id="flpGrid"></div>
+            <div class="flp-grid" id="flpGrid">
+                <div class="loading-state"><div class="loading-spinner"></div><span>Loading FLP remakes…</span></div>
+            </div>
             <div id="flpMessage" style="margin-top:1.5rem;text-align:center;"></div>
         </div>
     </div>
