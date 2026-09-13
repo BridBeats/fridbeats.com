@@ -2604,33 +2604,25 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
 }
 
         // ============================================================
-        // ADMIN AUTH
+        // ADMIN AUTH — verified live against Supabase Auth's real session, not a client-side flag.
         // ============================================================
-        // WARNING: this is a BASIC protection, good enough to keep out people
-        // who don't know how to dig for the password in the code (view-source). It's not
-        // REAL security — anyone who knows JS well can lift this hash
-        // and crack it offline. For real security, the password must be verified
-        // on a backend (e.g. Supabase Auth), not in the browser.
-        //
-        // The default password is: FridBeats2026!  -> CHANGE IT right away!
-        // To generate a new hash: in the browser console, type:
-        //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('NOUVO_MODPAS'))
-        //     .then(b => console.log(Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')));
-        // then copy the result into ADMIN_PASSWORD_HASH below.
-        const ADMIN_PASSWORD_HASH = '28795c2ccd52349f51815dda7a2c7cf5193e7acf7964ddc8eccddd9f93b5447c';
-        const ADMIN_SESSION_KEY = 'fridBeats_adminAuthed';
-
-        async function sha256Hex(text) {
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        function isAdminAuthed() {
-    return sessionStorage.getItem('isAdmin') === 'true';
+        async function isAdminAuthed() {
+    if (!supabaseClient) return false;
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error || !data || !data.session) return false;
+        const session = data.session;
+        // expires_at is a Unix timestamp in seconds — treat a missing value as expired, to be safe
+        if (!session.expires_at || session.expires_at * 1000 <= Date.now()) return false;
+        return true;
+    } catch (e) {
+        console.error('Error checking admin session:', e);
+        return false;
+    }
 }
 
-        function updateAdminNavVisibility() {
-            const authed = isAdminAuthed();
+        async function updateAdminNavVisibility() {
+            const authed = await isAdminAuthed();
             const link1 = document.getElementById('adminNavLink');
             const link2 = document.getElementById('adminNavLinkMobile');
             if (link1) link1.style.display = authed ? 'inline-block' : 'none';
@@ -2656,12 +2648,12 @@ document.addEventListener('keydown', function(e) {
             }
         }
 
-        function showAdminGateOrPanel() {
+        async function showAdminGateOrPanel() {
     const gate = document.getElementById('adminLoginGate');
     const panel = document.getElementById('adminPanelContent');
     if (!gate || !panel) return;
     
-    if (isAdminAuthed()) {
+    if (await isAdminAuthed()) {
         gate.style.display = 'none';
         panel.style.display = 'block';
         renderAdminBeats();
@@ -2705,22 +2697,19 @@ document.addEventListener('keydown', function(e) {
     }
     
     if (data.user) {
-        sessionStorage.setItem('isAdmin', 'true');
-        sessionStorage.setItem('supabaseUser', JSON.stringify(data.user));
-        updateAdminNavVisibility();
-        showAdminGateOrPanel();
+        await updateAdminNavVisibility();
+        await showAdminGateOrPanel();
     }
 }
 
-        function adminLogout() {
+        async function adminLogout() {
     if (!confirm('Logout?')) return;
     
-    // Disconnect from Supabase Auth
-    if (supabaseClient) supabaseClient.auth.signOut();
+    // Disconnect from Supabase Auth — this is the ONLY thing that determines admin access,
+    // so a real sign-out here is what actually revokes it.
+    if (supabaseClient) await supabaseClient.auth.signOut();
     
-    sessionStorage.removeItem('isAdmin');
-    sessionStorage.removeItem('supabaseUser');
-    updateAdminNavVisibility();
+    await updateAdminNavVisibility();
     alert('Logged out!');
     navigateTo('home');
 }
@@ -4736,27 +4725,20 @@ setLang = function(lang) {
 document.addEventListener('DOMContentLoaded', async function() {
     await loadDataFromSupabase();
     setLang(localStorage.getItem('fridBeats_lang') || 'en');
-    
-    // IMPORTANT: Do NOT clear sessionStorage here, because it will also clear the data you saved.
-    // Only clear it when you LOG OUT.
-    
+
     if (supabaseClient) {
-        supabaseClient.auth.onAuthStateChange((event, session) => {
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-                sessionStorage.setItem('isAdmin', 'true');
-                sessionStorage.setItem('supabaseUser', JSON.stringify(session.user));
-                updateAdminNavVisibility();
-                showAdminGateOrPanel();
+                await updateAdminNavVisibility();
+                await showAdminGateOrPanel();
             } else if (event === 'SIGNED_OUT') {
-                sessionStorage.removeItem('isAdmin');
-                sessionStorage.removeItem('supabaseUser');
-                updateAdminNavVisibility();
-                showAdminGateOrPanel();
+                await updateAdminNavVisibility();
+                await showAdminGateOrPanel();
             }
         });
     }
     
-    updateAdminNavVisibility();
+    await updateAdminNavVisibility();
     updateCartCount();
     renderFeatured();
     initGlobalPlayer();
