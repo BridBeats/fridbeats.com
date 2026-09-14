@@ -26,6 +26,14 @@
     <meta property="og:url" content="https://fridbeats.com" />
     <meta property="og:type" content="website" />
 
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <!-- ===== TWITTER CARD ===== -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="FRID BEATS | Music Producer & Beatmaker" />
@@ -34,8 +42,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         /* ===== ALL STYLES ===== */
         :root {
@@ -65,6 +71,21 @@
         --transition-base: 250ms;
     --transition-slow: 400ms;
 }
+            .loading-state span {
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+            }
+            body.app-loading > :not(#appLoadingScreen) { visibility: hidden; }
+            #appLoadingScreen {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg-primary);
+            }
+            body:not(.app-loading) #appLoadingScreen { display: none; }
     .lang-btn {
     background: var(--bg-input);
     border: 1px solid var(--border);
@@ -146,6 +167,7 @@
         a { color:inherit; text-decoration:none; }
 
         button { cursor:pointer; font-family:inherit; border:none; background:none; color:inherit; }
+        *, *::before, *::after { box-sizing:border-box; }
         img { max-width:100%; display:block; }
         ::-webkit-scrollbar { width:6px; }
         ::-webkit-scrollbar-track { background:var(--bg-secondary); }
@@ -515,7 +537,7 @@
         }
         .hero-content { position:relative; z-index:1; max-width:800px; padding-top:1rem; }
         .hero-logo { max-width:240px; margin:0 auto 1.5rem; }
-        .hero-logo img { width:100%; height:auto; filter:grayscale(0.2); }
+        .hero-logo img { width:100%; height:auto; filter:brightness(1.08) contrast(1.12); }
         .hero-title { font-size:clamp(2.5rem,8vw,5rem); font-weight:900; letter-spacing:-0.02em; line-height:1.1; margin-bottom:0.5rem; }
         .hero-title span {
             color:var(--accent-primary);
@@ -1415,6 +1437,25 @@ input[type="range"]::-moz-range-thumb {
     .hero { min-height:80vh; }
 }
 @media (max-width:768px) {
+            html { scroll-behavior:auto; }
+            .nature-bg, .glass-section::before, .glass-section::after { animation:none !important; }
+            body {
+                background-color:var(--bg-primary);
+                background-image:
+                    radial-gradient(ellipse 58% 24% at 50% 15%, rgba(48,145,119,0.34) 0%, rgba(26,90,74,0.16) 48%, transparent 100%),
+                    radial-gradient(ellipse 72% 22% at 18% 12%, rgba(26,90,74,0.14) 0%, transparent 100%),
+                    linear-gradient(160deg, #0c1821 0%, #091722 38%, #07131a 100%);
+            }
+            body::before, .nature-bg { display:none; }
+            .hero-content, .hero-title, .hero-subtitle, .hero-statement, .hero-buttons, .stats-grid,
+            .glass-section::before, .glass-section::after { animation:none; }
+            .header, .glass-section, .beat-card, .template-card, .flp-card, .filters-panel,
+            .cart-item, .modal, .admin-panel, .contact-method, .global-player {
+                backdrop-filter:none;
+                -webkit-backdrop-filter:none;
+            }
+            .beat-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr)); gap:0.75rem; }
+            .flp-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:0.75rem; }
     .filters-section { grid-template-columns:1fr; }
     .beat-detail { grid-template-columns:1fr; }
     .about-grid { grid-template-columns:1fr; }
@@ -1426,14 +1467,19 @@ input[type="range"]::-moz-range-thumb {
             .nav-links { display:none; }
             .mobile-menu-btn { display:block; }
             #langSelect { display:none; }
-            .header { padding:0 0.75rem; }
-            .logo { font-size:1.1rem; gap:0.3rem; }
-            .logo img { height:28px; }
+            .header { height:56px; padding:0 0.55rem; }
+            .logo { min-width:0; flex:1; font-size:0.98rem; gap:0.25rem; white-space:nowrap; }
+            .logo img { display:block; width:28px; height:28px; object-fit:contain; flex-shrink:0; }
+            .nav-right { flex-shrink:0; gap:0.35rem; }
+            .lang-btn { min-height:34px; padding:0.32rem 0.58rem; font-size:0.68rem; }
+            .lang-btn span { display:inline; }
+            .mobile-search-btn, .cart-btn, .mobile-menu-btn { width:34px; height:34px; padding:0; display:flex; align-items:center; justify-content:center; }
+            .mobile-search-btn { font-size:1.05rem; }
+            .cart-btn { font-size:1.08rem; }
+            .mobile-menu-btn { font-size:1.35rem; }
             .hero-title { font-size:2.2rem; }
             .hero { min-height:75vh; padding:0.5rem; }
             .hero-logo { max-width:190px; }
-            .beat-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
-            .flp-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
             .footer-grid { grid-template-columns:1fr 1fr; }
             .cart-item { flex-wrap:wrap; }
             .flp-download-form { flex-direction:column; }
@@ -1460,8 +1506,8 @@ input[type="range"]::-moz-range-thumb {
             .hero-title { font-size:1.8rem; }
             .hero { min-height:70vh; }
             .hero-logo { max-width:150px; }
-            .beat-grid { grid-template-columns:repeat(auto-fill,minmax(135px,1fr)); }
-            .flp-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); }
+            .beat-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr)); gap:0.65rem; }
+            .flp-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr)); gap:0.65rem; }
             .footer-grid { grid-template-columns:1fr; }
             .admin-stats { grid-template-columns:1fr; }
             .admin-table { font-size:0.6rem; }
@@ -1481,6 +1527,11 @@ input[type="range"]::-moz-range-thumb {
 .flp-info h3 { font-size:0.75rem; }
 .flp-info .flp-artist { font-size:0.58rem; }
         }
+    @media (max-width:360px) {
+        .glass-section { padding-left:0.4rem; padding-right:0.4rem; }
+        .beat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
+        .flp-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
+    }
         .text-center { text-align:center; }
         .text-muted { color:var(--text-muted); }
         .mt-4 { margin-top:2rem; }
@@ -1496,7 +1547,8 @@ input[type="range"]::-moz-range-thumb {
         .mt-3 { margin-top:1rem; }
     </style>
 </head>
-<body>
+<body class="app-loading">
+<div id="appLoadingScreen" class="loading-state"><div class="loading-spinner"></div><span>Loading beats...</span></div>
     <div class="vu-meter-panel" id="vuMeterPanel" aria-hidden="true">
     <svg viewBox="0 0 160 162" class="vu-meter-svg">
         <defs>
@@ -1828,7 +1880,7 @@ input[type="range"]::-moz-range-thumb {
             </div>
             <div class="profile-wrapper">
     <div class="profile-image-container" id="profileContainer">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg" alt="Frid Beats" id="profileImage" onerror="this.style.display='none'">
+        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg" alt="Frid Beats" id="profileImage" loading="lazy" decoding="async" onerror="this.style.display='none'">
     </div>
     <div class="about-bio">
                         <p data-i18n="about_bio1"><strong>Frid Beats</strong> is a music producer, beatmaker, composer, artist and mixing engineer driven by creativity and sound.</p>
@@ -1883,23 +1935,23 @@ input[type="range"]::-moz-range-thumb {
                    <h4 style="color:var(--text-secondary);font-weight:500;margin-top:1.5rem;" data-i18n="about_experience">Work Experience</h4>
 <div class="experience-list">
     <div class="experience-item" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:0.8rem 1rem;">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/coro27-studio.png" alt="Coro27 Studio" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
+                <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/coro27-studio.png" alt="Coro27 Studio" loading="lazy" decoding="async" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
         <div><h4>Coro27 Studio</h4><p class="collab">First Studio</p><p class="year">2022-2024</p></div>
     </div>
     <div class="experience-item" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:0.8rem 1rem;">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/hello.jpg" alt="HELLO" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
+                <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/hello.jpg" alt="HELLO" loading="lazy" decoding="async" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
         <div><h4>HELLO</h4><p class="collab">ft. Passito</p><p class="year">2024-2025 • Featured collaborations</p></div>
     </div>
     <div class="experience-item" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:0.8rem 1rem;">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/bagay_yo_anpil.jpg" alt="BAGAY YO ANIPIL" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
+                <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/bagay_yo_anpil.jpg" alt="BAGAY YO ANIPIL" loading="lazy" decoding="async" style="height:45px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
         <div><h4>BAGAY YO ANIPIL</h4><p class="collab">ft. Passito feat. Chesca, T.T.K City, Zoe Neg</p><p class="year">2024-2025 • Featured collaborations</p></div>
     </div>
     <div class="experience-item" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:0.8rem 1rem;">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/sistema-bajo-fuego.jpeg" alt="Sistema Bajo Fuego" style="height:40px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
+                <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/sistema-bajo-fuego.jpeg" alt="Sistema Bajo Fuego" loading="lazy" decoding="async" style="height:40px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
         <div><h4>Sistema Bajo Fuego</h4><p class="collab">New Collaboration 2026</p><p class="year">2026 • Upcoming</p></div>
     </div>
     <div class="experience-item" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:0.8rem 1rem;">
-        <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/zona-gris-studio.png" alt="Zona Gris Studio" style="height:40px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
+                <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/zona-gris-studio.png" alt="Zona Gris Studio" loading="lazy" decoding="async" style="height:40px;width:auto;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
         <div><h4>Zona Gris Studio</h4><p class="collab">New Collaboration 2026</p><p class="year">2026 • Upcoming</p></div>
     </div>
 </div>
@@ -2134,66 +2186,81 @@ input[type="range"]::-moz-range-thumb {
 // Tous les URLs sont maintenant hébergés sur Supabase Storage
 // ============================================================
 
+function orderContentNewestFirst(items) {
+    if (!Array.isArray(items)) return [];
+    return items
+        .map((item, index) => ({ item, index }))
+        .sort((a, b) => {
+            const aTime = a.item && a.item.createdAt ? Date.parse(a.item.createdAt) : NaN;
+            const bTime = b.item && b.item.createdAt ? Date.parse(b.item.createdAt) : NaN;
+            if (Number.isNaN(aTime) && Number.isNaN(bTime)) return a.index - b.index;
+            if (Number.isNaN(aTime)) return 1;
+            if (Number.isNaN(bTime)) return -1;
+            return bTime - aTime || a.index - b.index;
+        })
+        .map(({ item }) => item);
+}
+
 const defaultBeats = [
     {
-        id: 'beat_001', title: 'Frame 24', artist: 'Frid Beats',
+        id: 'beat_001', title: 'Ayo Mode', artist: 'Frid Beats',
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista1.png',
-        genre: 'Kompa', bpm: 148, key: 'F# Minor',
-        mood: ['Energético', 'Romántico', 'Soulful'],
-        description: 'Kompa beat with energy and feeling.',
-        preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista1.mp3',
-        price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: true, download: 'downloads/beats/pista1.zip', createdAt: '2024-01-15'
-    },
-    {
-        id: 'beat_002', title: 'Ayo Mode', artist: 'Frid Beats',
-        artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista2.png',
-        genre: 'Kompa', bpm: 148, key: 'E Major',
+        genre: 'Trap', bpm: 157, key: 'E Major',
         mood: ['Romántico', 'Suave', 'Melódico'],
         description: 'Romantic kompa with smooth melodies.',
+        preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista1.mp3',
+        price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
+        featured: true, download: 'downloads/beats/pista1.zip', createdAt: '2024-01-20'
+    },
+    {
+        id: 'beat_002', title: 'Nebula', artist: 'Frid Beats',
+        artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista2.png',
+        genre: 'Trap', bpm: 96, key: 'G Minor',
+        mood: ['Energético', 'Melodic', 'World'],
+        description: 'trap guitar melodic vibe.',
         preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista2.mp3',
         price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: true, download: 'downloads/beats/pista2.zip', createdAt: '2024-01-20'
+        featured: false, download: 'downloads/beats/pista2.zip', createdAt: '2024-02-01'
     },
     {
-        id: 'beat_003', title: 'Nebula', artist: 'Frid Beats',
+        id: 'beat_003', title: 'Rockstar', artist: 'Frid Beats',
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista3.png',
-        genre: 'Reggaeton', bpm: 96, key: 'G Minor',
-        mood: ['Energético', 'Festivo', 'Latino'],
-        description: 'Reggaeton with contagious rhythm.',
+        genre: 'AfroBeat', bpm: 96, key: 'A Minor',
+        mood: ['dance', 'urbano', 'pop'],
+        description: 'afro ubran vibe.',
         preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista3.mp3',
         price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: false, download: 'downloads/beats/pista3.zip', createdAt: '2024-02-01'
+        featured: false, download: 'downloads/beats/pista3.zip', createdAt: '2024-02-05'
     },
     {
-        id: 'beat_004', title: 'Rockstar', artist: 'Frid Beats',
+        id: 'beat_004', title: 'Gilded Trap', artist: 'Frid Beats',
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista4.png',
-        genre: 'Dembow', bpm: 116, key: 'A Minor',
-        mood: ['Energético', 'Agresivo', 'Callejero'],
-        description: 'Aggressive dembow with street energy.',
+        genre: 'Trap', bpm: 90, key: 'E Minor',
+        mood: ['Oscuro', 'Melódico', 'guitar'],
+        description: 'Dark trap with guitar melodies.',
         preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista4.mp3',
         price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: false, download: 'downloads/beats/pista4.zip', createdAt: '2024-02-05'
+        featured: false, download: 'downloads/beats/pista4.zip', createdAt: '2024-02-15'
     },
     {
-        id: 'beat_005', title: 'Red Thread', artist: 'Frid Beats',
+        id: 'beat_005', title: 'Frame 24', artist: 'Frid Beats',
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista5.png',
-        genre: 'Drill', bpm: 143, key: 'F Minor',
-        mood: ['Oscuro', 'Agresivo', 'Intenso'],
-        description: 'Dark drill with intense atmosphere.',
+        genre: 'Kompa', bpm: 90, key: 'F# Minor',
+        mood: ['street vibe', 'Romántico', 'Soulful'],
+        description: 'boombap vibe story telling.',
         preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista5.mp3',
         price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: false, download: 'downloads/beats/pista5.zip', createdAt: '2024-02-10'
+        featured: true, download: 'downloads/beats/pista5.zip', createdAt: '2024-01-15'
     },
     {
-        id: 'beat_006', title: 'Gilded Trap', artist: 'Frid Beats',
+        id: 'beat_006', title: 'Red Thread', artist: 'Frid Beats',
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/beats/pista6.png',
-        genre: 'Trap', bpm: 143, key: 'E Minor',
-        mood: ['Oscuro', 'Melódico', 'Atmosférico'],
-        description: 'Dark trap with atmospheric melodies.',
+        genre: 'Drill', bpm: 87, key: 'F Minor',
+        mood: ['Story telling', 'street rap', '90s vibe'],
+        description: 'boombap vibe story telling.',
         preview: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/audio/pista6.mp3',
         price: { basic: 14.99, wav: 29.99, premium: 49.99, exclusive: 99.99 },
-        featured: false, download: 'downloads/beats/pista6.zip', createdAt: '2024-02-15'
+        featured: false, download: 'downloads/beats/pista6.zip', createdAt: '2024-02-10'
     }
 ];
 
@@ -2269,16 +2336,16 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
             if (!supabaseClient) return;
             try {
                 const [beatsRes, templatesRes, flpRes] = await Promise.all([
-                    supabaseClient.from('beats').select('*'),
-                    supabaseClient.from('templates').select('*'),
-                    supabaseClient.from('flp').select('*')
+                    supabaseClient.from('beats').select('id,title,artist,artwork,genre,bpm,key,mood,description,preview,price,featured,files,createdAt'),
+                    supabaseClient.from('templates').select('id,title,genre,bpm,price,artwork,description,download,createdAt'),
+                    supabaseClient.from('flp').select('id,title,artist,genre,thumbnail,description,youtubeUrl,download')
                 ]);
                 if (beatsRes.error) throw beatsRes.error;
                 if (templatesRes.error) throw templatesRes.error;
                 if (flpRes.error) throw flpRes.error;
-                if (beatsRes.data && beatsRes.data.length) beatsData = beatsRes.data;
-                if (templatesRes.data && templatesRes.data.length) templatesData = templatesRes.data;
-                if (flpRes.data && flpRes.data.length) flpData = flpRes.data;
+                if (beatsRes.data && beatsRes.data.length) beatsData = orderContentNewestFirst(beatsRes.data);
+                if (templatesRes.data && templatesRes.data.length) templatesData = orderContentNewestFirst(templatesRes.data);
+                if (flpRes.data && flpRes.data.length) flpData = orderContentNewestFirst(flpRes.data);
             } catch (e) {
                 console.error('Error loading data from Supabase, falling back to local data:', e);
             }
@@ -2860,7 +2927,7 @@ document.addEventListener('keydown', function(e) {
 
             const missing = [];
             const exclusiveBeatIds = [];
-            cart.forEach(i => {
+            for (const i of cart) {
                 if (i.type === 'beat') {
                     const source = beatsData.find(b => b.id === i.id);
                     if (!source || !source.files) { missing.push(i.title); return; }
@@ -2871,14 +2938,14 @@ document.addEventListener('keydown', function(e) {
                     if ((tier === 'premium' || tier === 'exclusive') && source.files.trackout) filesToSend.push(source.files.trackout);
                     if (!filesToSend.length) { missing.push(i.title); return; }
                     filesToSend.forEach(url => startFLPDownload(url));
-                    generateLicensePDF(email, i.title, tier, i.price);
+                    await generateLicensePDF(email, i.title, tier, i.price);
                     if (tier === 'exclusive') exclusiveBeatIds.push(i.id);
                 } else {
                     const source = templatesData.find(t => t.id === i.id);
                     if (source && source.download) { startFLPDownload(source.download); }
                     else { missing.push(i.title); }
                 }
-            });
+            }
             exclusiveBeatIds.forEach(id => removeBeatFromStore(id));
 
             if (missing.length) {
@@ -3061,6 +3128,12 @@ document.addEventListener('keydown', function(e) {
         function renderBeats() {
     const grid = document.getElementById('beatGrid');
     if (!grid) return;
+
+    if (!beatsData.length) {
+        grid.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><span>Loading beats…</span></div>`;
+        return;
+    }
+
     let filtered = [...beatsData];
     const search = document.getElementById('searchInput');
     if (search && search.value) {
@@ -3072,13 +3145,6 @@ document.addEventListener('keydown', function(e) {
     else if (currentBpm === 'medium') filtered = filtered.filter(b => b.bpm >= 90 && b.bpm <= 120);
     else if (currentBpm === 'fast') filtered = filtered.filter(b => b.bpm >= 120 && b.bpm <= 160);
     else if (currentBpm === 'very-fast') filtered = filtered.filter(b => b.bpm > 160);
-    const sort = document.getElementById('sortSelect');
-    if (sort) {
-        const value = sort.value;
-        if (value === 'newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        else if (value === 'price-low') filtered.sort((a, b) => a.price.basic - b.price.basic);
-        else if (value === 'price-high') filtered.sort((a, b) => b.price.basic - a.price.basic);
-    }
     const count = document.getElementById('beatCount');
     if (count) count.textContent = filtered.length + ' beats available';
     grid.innerHTML = filtered.map(beat => createBeatCardHTML(beat)).join('');
@@ -3189,6 +3255,10 @@ document.addEventListener('keydown', function(e) {
         function renderTemplates() {
             const grid = document.getElementById('templateGrid');
             if (!grid) return;
+            if (!templatesData.length) {
+                grid.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><span>Loading templates…</span></div>`;
+                return;
+            }
             grid.innerHTML = templatesData.map(t => `
                 <div class="beat-card" id="template-card-${t.id}">
                     <div class="beat-artwork">
@@ -3221,6 +3291,10 @@ document.addEventListener('keydown', function(e) {
         function renderFLP() {
             const grid = document.getElementById('flpGrid');
             if (!grid) return;
+            if (!flpData.length) {
+                grid.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><span>Loading FLP remakes…</span></div>`;
+                return;
+            }
             grid.innerHTML = flpData.map(flp => `
                 <div class="flp-card" id="flp-card-${flp.id}">
                     <div class="flp-artwork">
@@ -3601,6 +3675,17 @@ document.addEventListener('keydown', function(e) {
             renderBeats(); renderFeatured();
         }
 
+        function loadExternalScript(src, globalName) {
+            if (window[globalName]) return Promise.resolve(window[globalName]);
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve(window[globalName]);
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
         async function submitContactForm(event) {
             event.preventDefault();
             const firstName = document.getElementById('cf_first_name').value.trim();
@@ -3614,7 +3699,9 @@ document.addEventListener('keydown', function(e) {
             btn.disabled = true;
             let sentOk = false;
 
-            // 1) Primary: EmailJS — actually delivers the message to your inbox.
+            // 1) Primary: load EmailJS only when the form is used.
+            try { await loadExternalScript('https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js', 'emailjs'); }
+            catch (e) { console.error('EmailJS could not load:', e); }
             if (window.emailjs) {
                 try {
                     await emailjs.send('service_2npkvir', 'template_ypw0gh9', {
@@ -3688,7 +3775,9 @@ document.addEventListener('keydown', function(e) {
             }
         }
 
-        function generateLicensePDF(buyerEmail, beatTitle, licenseTier, price) {
+        async function generateLicensePDF(buyerEmail, beatTitle, licenseTier, price) {
+            try { await loadExternalScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'jspdf'); }
+            catch (e) { console.error('jsPDF could not load:', e); return; }
             if (!window.jspdf) return;
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -3860,7 +3949,7 @@ document.addEventListener('keydown', function(e) {
                             wav: wavUrl || (id ? beatsData.find(d => d.id === id)?.files?.wav || null : null),
                             trackout: trackoutUrl || (id ? beatsData.find(d => d.id === id)?.files?.trackout || null : null)
                         },
-                        createdAt: new Date().toISOString().split('T')[0]
+                        createdAt: id ? beatsData.find(d => d.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString()
                     };
                 } else if (type === 'template') {
                     newItem = {
@@ -3871,7 +3960,8 @@ document.addEventListener('keydown', function(e) {
                         price: parseFloat(document.getElementById('f_price').value) || 9.99,
                         description: readDescriptionFromForm(),
                         artwork: artworkData || (id ? templatesData.find(t => t.id === id)?.artwork || 'images/templates/template.png' : 'images/templates/template.png'),
-                        download: zipUrl || (id ? templatesData.find(t => t.id === id)?.download || null : null)
+                        download: zipUrl || (id ? templatesData.find(t => t.id === id)?.download || null : null),
+                        createdAt: id ? templatesData.find(t => t.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString()
                     };
                 } else if (type === 'flp') {
                     newItem = {
@@ -3882,7 +3972,8 @@ document.addEventListener('keydown', function(e) {
                         description: readDescriptionFromForm(),
                         thumbnail: thumbnailData || (id ? flpData.find(f => f.id === id)?.thumbnail || 'images/flp/flp.jpg' : 'images/flp/flp.jpg'),
                         youtubeUrl: document.getElementById('f_youtube').value || 'https://youtube.com/watch?v=...',
-                        download: zipUrl || (id ? flpData.find(f => f.id === id)?.download || null : null)
+                        download: zipUrl || (id ? flpData.find(f => f.id === id)?.download || null : null),
+                        createdAt: id ? flpData.find(f => f.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString()
                     };
                 }
 
@@ -3903,7 +3994,7 @@ document.addEventListener('keydown', function(e) {
                         data[index] = newItem;
                     }
                 } else {
-                    data.push(newItem);
+                    data.unshift(newItem);
                 }
 
                 saveFunc();
@@ -4290,7 +4381,6 @@ const VU_ATTACK_TAU = 0.045;  // seconds — quick rise on transients
 const VU_RELEASE_TAU = 0.22;  // seconds — smooth fall back down, like a real VU meter's ballistics
 
 function vuLoopTick(now) {
-    requestAnimationFrame(vuLoopTick);
     if (vuLastTime === null) vuLastTime = now;
     const dt = Math.min(0.1, (now - vuLastTime) / 1000); // seconds; clamp so a tab coming back from sleep doesn't jump
     vuLastTime = now;
@@ -4300,6 +4390,14 @@ function vuLoopTick(now) {
     const isPlaying = !!(currentAudio && !currentAudio.paused && currentAudio.readyState >= 2);
     const panel = document.getElementById('vuMeterPanel');
     if (panel) panel.classList.toggle('vu-active', isPlaying); // only show the gauge while music is actually playing
+    if (!isPlaying) {
+        vuLastTime = null;
+        const idleNeedle = document.getElementById('vuNeedleGroup');
+        if (idleNeedle) idleNeedle.style.transform = `rotate(${VU_REST_ANGLE}deg)`;
+        setTimeout(() => requestAnimationFrame(vuLoopTick), 250);
+        return;
+    }
+    requestAnimationFrame(vuLoopTick);
     let targetAngle = VU_REST_ANGLE;
     if (isPlaying) {
         const rms = vuReadLevel();
@@ -4749,6 +4847,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderTemplates();
     renderFLP();
     updateAdminStats();
+    document.body.classList.remove('app-loading');
+    document.getElementById('appLoadingScreen')?.remove();
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
