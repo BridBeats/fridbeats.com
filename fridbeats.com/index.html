@@ -21,14 +21,15 @@
     <meta name="msvalidate.01" content="0B6E04211357A55720B7537D1C282836" />
 
     <!-- ===== OPEN GRAPH ===== -->
-    <!-- R2 MIGRATION TODO: once files are migrated to R2/B2 and the CDN works,
-         replace the 3 supabase URLs below with https://cdn.fridbeats.com/public/profile/frid-beats-profile.jpg -->
+    <!-- Social share image: the FRID BEATS logo icon (self-hosted on the site itself) -->
     <meta property="og:title" content="FRID BEATS | Music Producer & Beatmaker" />
     <meta property="og:description" content="Premium beats en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
     <meta property="og:site_name" content="FRID BEATS" />
-    <meta property="og:image" content="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg?v=2" />
-    <meta property="og:image:secure_url" content="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg?v=2" />
-    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image" content="https://www.fridbeats.com/favicon.png?v=3" />
+    <meta property="og:image:secure_url" content="https://www.fridbeats.com/favicon.png?v=3" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="2000" />
     <meta property="og:url" content="https://fridbeats.com" />
     <meta property="og:type" content="website" />
 
@@ -45,7 +46,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="FRID BEATS | Music Producer & Beatmaker" />
     <meta name="twitter:description" content="Premium beats en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
-    <meta name="twitter:image" content="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg?v=2" />
+    <meta name="twitter:image" content="https://www.fridbeats.com/favicon.png?v=3" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -2473,6 +2474,20 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
         }
         // Ask the Worker to email the customer secure download links (72h validity).
         // Non-blocking: failure only logs — instant downloads in the browser still happen.
+        // Notify the ADMIN (you) about important events via the Worker.
+        // Orders are verified server-side by the Worker (real PayPal payment).
+        function notifyAdmin(type, payload) {
+            if (!R2_UPLOAD_ENDPOINT) return;
+            try {
+                fetch(R2_UPLOAD_ENDPOINT + '/admin-notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: type, ...payload })
+                }).catch(() => {}); // fire-and-forget — never block the user flow
+            } catch (e) { /* ignore */ }
+        }
+
+        // Notify the CUSTOMER (email with 72h secure links) after a purchase.
         async function notifyOrderEmail(paypalOrderId, email) {
             if (!R2_UPLOAD_ENDPOINT || !paypalOrderId || !email) return false;
             try {
@@ -3188,6 +3203,8 @@ document.addEventListener('keydown', function(e) {
             }
             // Send the confirmation email with secure download links (non-blocking).
             notifyOrderEmail(details.id, email);
+            // Tell the ADMIN about this sale (non-blocking, verified server-side).
+            notifyAdmin('order', { orderId: details.id, email: email });
             cart = [];
             saveCart();
             updateCartCount();
@@ -3576,6 +3593,8 @@ document.addEventListener('keydown', function(e) {
                 subscribers.push(email);
                 saveSubscribers();
                 updateAdminStats();
+                // Tell the ADMIN about the new subscriber (non-blocking).
+                notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length });
             }
             
             // Show success message with animation and download button
