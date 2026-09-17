@@ -2295,7 +2295,7 @@ const defaultFlp = [
         id: 'flp_002', title: 'Dead Fresh', artist: 'Lil Baby', genre: 'Trap',
         thumbnail: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/flp/dead_fresh.png',
         description: 'Complete FL Studio remake. Includes FLP file + sound kit used for the remake.',
-        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/flp/DEAD%20FRESH%20REMAKE%20FLP.rar'
+        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/flp/DEAD%20FRESH.rar'
     },
     {
         id: 'flp_003', title: 'Wagwan', artist: 'Central Cee', genre: 'Drill',
@@ -2307,7 +2307,7 @@ const defaultFlp = [
         id: 'flp_004', title: 'Plot Twist', artist: 'Drake', genre: 'Dancehall',
         thumbnail: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/flp/plot_twist.png',
         description: 'Complete FL Studio remake. Includes FLP file + sound kit used for the remake.',
-        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/flp/PLOT%20TWIST%20FLP.rar'
+        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/flp/PLOT%20TWIST.rar'
     }
 ];
 
@@ -2316,7 +2316,7 @@ const defaultTemplates = [
         id: 'temp_001', title: 'Kompa Template', genre: 'Kompa', bpm: 140, price: 9.99,
         artwork: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/templates/Kompa.png',
         description: 'FL Studio Kompa Template with professional mixing.',
-        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/templates/Frid-Beats-Kompa-Template-01.zip'
+        download: 'https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/private/templates/Kompa-Template-01.zip'
     }
 ];
 
@@ -2545,29 +2545,56 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
             }
         }
 
-        async function syncTableToSupabase(tableName, rows) {
-    if (!supabaseClient) return;
-    
-    // Check if admin is authenticated BEFORE writing to Supabase
-    // If not authenticated, just save locally and return
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-        console.warn(`⚠️ Admin not authenticated. Data saved locally, but NOT synced with Supabase.`);
-        return;
-    }
-    
-    try {
-        const delRes = await supabaseClient.from(tableName).delete().neq('id', '__none__');
-        if (delRes.error) throw delRes.error;
-        if (rows.length) {
-            const insRes = await supabaseClient.from(tableName).insert(rows);
-            if (insRes.error) throw insRes.error;
+        // ============================================================
+        // SUPABASE ROW-LEVEL SYNC (admin edits)
+        // Row-level upsert/delete only — NEVER wipes the whole table.
+        // (The old delete-all + insert-all sync destroyed every row in a
+        // table whenever a single insert failed or local data was stale.)
+        // ============================================================
+        function supabaseTableName(type) {
+            return type === 'beat' ? 'beats' : (type === 'template' ? 'templates' : 'flp');
         }
-    } catch (e) {
-        console.error(`Error syncing table "${tableName}" with Supabase:`, e);
-        alert(`⚠️ Could not sync "${tableName}" with Supabase:\n\n${e.message || e}\n\nCheck the browser console (F12) for details.`);
-    }
-}
+
+        async function supabaseAdminReady() {
+            if (!supabaseClient) return false;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                console.warn('⚠️ Admin not authenticated. Change saved locally only — NOT synced with Supabase.');
+                return false;
+            }
+            return true;
+        }
+
+        async function upsertRowToSupabase(type, row) {
+            if (!(await supabaseAdminReady())) return false;
+            const table = supabaseTableName(type);
+            // The flp table has NO createdAt column — sending it makes every insert fail.
+            // Strip it for the DB copy only (the local array can keep it for ordering).
+            const payload = table === 'flp' ? (() => { const c = { ...row }; delete c.createdAt; return c; })() : row;
+            try {
+                const res = await supabaseClient.from(table).upsert(payload, { onConflict: 'id' });
+                if (res.error) throw res.error;
+                return true;
+            } catch (e) {
+                console.error(`Error saving "${row && row.id}" to Supabase (${table}):`, e);
+                alert(`⚠️ "${(row && row.title) || (row && row.id) || 'Item'}" was saved in THIS browser, but Supabase rejected it:\n\n${e.message || e}\n\nOther visitors will NOT see this change. Usual causes:\n1) Admin session expired → log out and log back in.\n2) Missing database policy → run supabase-admin-policy.sql in the Supabase SQL Editor.`);
+                return false;
+            }
+        }
+
+        async function deleteRowFromSupabase(type, id) {
+            if (!(await supabaseAdminReady())) return false;
+            const table = supabaseTableName(type);
+            try {
+                const res = await supabaseClient.from(table).delete().eq('id', id);
+                if (res.error) throw res.error;
+                return true;
+            } catch (e) {
+                console.error(`Error deleting "${id}" from Supabase (${table}):`, e);
+                alert(`⚠️ Deleted in THIS browser, but Supabase refused:\n\n${e.message || e}\n\nThe item will reappear for other visitors. Check the admin session / database policies.`);
+                return false;
+            }
+        }
 
 
         // ============================================================
@@ -2580,9 +2607,10 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
                 return false;
             }
         }
-        function saveBeats() { safeLocalStorageSet('fridBeats_beats', JSON.stringify(beatsData)); syncTableToSupabase('beats', beatsData); }
-        function saveTemplates() { safeLocalStorageSet('fridBeats_templates', JSON.stringify(templatesData)); syncTableToSupabase('templates', templatesData); }
-        function saveFlp() { safeLocalStorageSet('fridBeats_flp', JSON.stringify(flpData)); syncTableToSupabase('flp', flpData); }
+        function saveBeats() { safeLocalStorageSet('fridBeats_beats', JSON.stringify(beatsData)); }
+        function saveTemplates() { safeLocalStorageSet('fridBeats_templates', JSON.stringify(templatesData)); }
+        function saveFlp() { safeLocalStorageSet('fridBeats_flp', JSON.stringify(flpData)); }
+        // Row-level Supabase sync happens in saveModal()/deleteItem() — one row at a time.
         function saveSubscribers() {
             safeLocalStorageSet('fridBeats_subscribers', JSON.stringify(subscribers));
             if (supabaseClient) {
@@ -4207,6 +4235,7 @@ document.addEventListener('keydown', function(e) {
                 }
 
                 saveFunc();
+                await upsertRowToSupabase(type, newItem);
                 closeModal();
                 renderAdminBeats();
                 renderAdminTemplates();
@@ -4226,9 +4255,9 @@ document.addEventListener('keydown', function(e) {
 
         function deleteItem(type, id) {
             if (!confirm('Are you sure you want to delete this item?')) return;
-            if (type === 'beat') { beatsData = beatsData.filter(d => d.id !== id); saveBeats(); renderAdminBeats(); renderBeats(); renderFeatured(); updateAdminStats(); }
-            else if (type === 'template') { templatesData = templatesData.filter(d => d.id !== id); saveTemplates(); renderAdminTemplates(); renderTemplates(); updateAdminStats(); }
-            else if (type === 'flp') { flpData = flpData.filter(d => d.id !== id); saveFlp(); renderAdminFlp(); renderFLP(); updateAdminStats(); }
+            if (type === 'beat') { beatsData = beatsData.filter(d => d.id !== id); saveBeats(); deleteRowFromSupabase(type, id); renderAdminBeats(); renderBeats(); renderFeatured(); updateAdminStats(); }
+            else if (type === 'template') { templatesData = templatesData.filter(d => d.id !== id); saveTemplates(); deleteRowFromSupabase(type, id); renderAdminTemplates(); renderTemplates(); updateAdminStats(); }
+            else if (type === 'flp') { flpData = flpData.filter(d => d.id !== id); saveFlp(); deleteRowFromSupabase(type, id); renderAdminFlp(); renderFLP(); updateAdminStats(); }
         }
 
         function renderAdminBeats() {
