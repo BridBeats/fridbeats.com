@@ -21,6 +21,8 @@
     <meta name="msvalidate.01" content="0B6E04211357A55720B7537D1C282836" />
 
     <!-- ===== OPEN GRAPH ===== -->
+    <!-- R2 MIGRATION TODO: once files are migrated to R2/B2 and the CDN works,
+         replace the 3 supabase URLs below with https://cdn.fridbeats.com/public/profile/frid-beats-profile.jpg -->
     <meta property="og:title" content="FRID BEATS | Music Producer & Beatmaker" />
     <meta property="og:description" content="Premium beats en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
     <meta property="og:site_name" content="FRID BEATS" />
@@ -33,6 +35,7 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
+    <link rel="preconnect" href="https://cdn.fridbeats.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1323,8 +1326,7 @@ body.has-global-player { padding-bottom: 78px; }
     display: none; /* Pousantaj la kache pa defo */
 }
 
-.volume-control:hover span {
-    display: block; /* Pousantaj la parèt lè ou hover */
+.volume-control:hover span {        display: block; /* Percentage shows on hover */
 }
 
 input[type="range"] {
@@ -1602,10 +1604,10 @@ input[type="range"]::-moz-range-thumb {
             </radialGradient>
         </defs>
 
-        <!-- Solèy -->
+        <!-- Sun -->
         <circle cx="500" cy="380" r="350" fill="url(#sunGlow)"/>
 
-        <!-- PYE KOKOYE 1 (gòch) -->
+        <!-- COCONUT TREE 1 (left) -->
         <g opacity="0.35">
             <path d="M180,530 Q175,480 180,440" stroke="#1a4a35" stroke-width="4" fill="none"/>
             <path d="M180,440 Q140,425 100,445" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
@@ -2201,8 +2203,7 @@ input[type="range"]::-moz-range-thumb {
         // ============================================================
         // DATA - FROM localStorage OR DEFAULTS
         // ============================================================
-// ============================================================
-// Tous les URLs sont maintenant hébergés sur Supabase Storage
+// ============================================================        // All URLs are now hosted on Supabase Storage
 // ============================================================
 
 function orderContentNewestFirst(items) {
@@ -2341,6 +2342,180 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
         const isSupabaseConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_ANON_KEY.startsWith('REPLACE');
         const isPayPalConfigured = PAYPAL_CLIENT_ID && !PAYPAL_CLIENT_ID.startsWith('REPLACE');
 
+        // ============================================================
+        // 3) CLOUDFLARE R2 CDN — files (images, MP3, ZIP) served from
+        //    Cloudflare R2 (free egress) instead of Supabase Storage.
+        //    After migration, set CDN_BASE to your custom domain, e.g.
+        //    'https://cdn.fridbeats.com'  (same folder structure as the
+        //    Supabase bucket: public/... and private/...).
+        //    BACKBLAZE B2 MODE (no credit card): set CDN_BASE = Worker URL + '/pub',
+        //    e.g. 'https://frid-beats-r2-upload.xxxxx.workers.dev/pub'
+        //    Leave as '' to keep using Supabase Storage until migration is done.
+        const CDN_BASE = 'https://frid-beats-r2-upload.fridbeats.workers.dev/pub'; // B2 all-private mode: Worker /pub proxy
+        const R2_UPLOAD_ENDPOINT = 'https://frid-beats-r2-upload.fridbeats.workers.dev'; // Cloudflare Worker (B2 backend)
+
+        const SUPABASE_STORAGE_HOST = 'myyfdrttulefdmjnybuk.supabase.co';
+        // Rewrite any Supabase Storage URL to the R2/CDN equivalent when CDN_BASE is set.
+        // URLs that already point at the CDN, relative paths, and data URLs pass through untouched.
+        function cdnUrl(url) {
+            if (!url || typeof url !== 'string') return url;
+            if (url.startsWith('data:') || url.startsWith('blob:')) return url;
+            if (CDN_BASE && url.includes(SUPABASE_STORAGE_HOST)) {
+                const marker = '/storage/v1/object/public/frid-files/';
+                const idx = url.indexOf(marker);
+                if (idx !== -1) return CDN_BASE + '/' + url.substring(idx + marker.length);
+            }
+            return url;
+        }
+        // Upload a File/Blob to R2 through the Cloudflare Worker; falls back to
+        // Supabase Storage when R2_UPLOAD_ENDPOINT is not configured.
+        // bucket: 'public' (frid-files — artwork/previews/free FLPs) or 'private' (purchased files).
+        async function uploadToStorage(file, folder, onProgress, bucket) {
+            if (!file) return null;
+            if (R2_UPLOAD_ENDPOINT) {
+                try { return await uploadToR2(file, folder, onProgress, bucket); }
+                catch (e) { console.warn('R2 upload failed, falling back to Supabase Storage:', e); }
+            }
+            return uploadToSupabaseStorage(file, folder);
+        }
+        // Upload via the R2 Worker (admin session is verified server-side by the Worker).
+        function uploadToR2(file, folder, onProgress, bucket) {
+            return new Promise((resolve, reject) => {
+                const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                const path = `${folder}/${Date.now()}_${safeName}`;
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', R2_UPLOAD_ENDPOINT + '/upload?path=' + encodeURIComponent(path) + '&bucket=' + encodeURIComponent(bucket || 'public'));
+                // Attach the Supabase access token so the Worker can verify the admin session
+                supabaseClient.auth.getSession().then(({ data }) => {
+                    if (data && data.session && data.session.access_token) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + data.session.access_token);
+                    }
+                    xhr.upload.onprogress = (ev) => {
+                        if (onProgress && ev.lengthComputable) onProgress(Math.round((ev.loaded / ev.total) * 100));
+                    };
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                const res = JSON.parse(xhr.responseText);
+                                if (res && res.publicUrl) resolve(res.publicUrl);
+                                else reject(new Error('R2 Worker did not return publicUrl'));
+                            } catch (err) { reject(err); }
+                        } else {
+                            reject(new Error('R2 upload HTTP ' + xhr.status + ': ' + xhr.responseText));
+                        }
+                    };
+                    xhr.onerror = () => reject(new Error('R2 upload network error'));
+                    xhr.send(file);
+                }).catch(() => reject(new Error('No admin session for R2 upload')));
+            });
+        }
+
+        // ============================================================
+        // SECURE DOWNLOAD LINKS — purchased files are only served via
+        // short-lived signed URLs issued by the Worker, which verifies
+        // the PayPal payment server-side before signing.
+        // ============================================================
+        // Convert a stored file URL (CDN or Supabase) to its R2 private-bucket path.
+        // Returns null when the file is not in a known private folder.
+        function privateFilePath(url) {
+            if (!url || typeof url !== 'string' || url.startsWith('data:')) return null;
+            // R2-style paths: .../beat/mp3/..., .../beat/wav/..., .../beat/trackout/...,
+            // .../beat/..., .../template/... (sing), .../templates/... (plur),
+            // .../private/flp/..., .../private/templates/...
+            // + legacy manual Supabase folders: .../private/MP3 File/..., WAV File, Trackout File
+            const m = url.match(/\/(beat\/(?:mp3|wav|trackout)?\/?[^\/?#]+|template?s?\/?[^\/?#]+|private\/(?:flp|templates|(?:MP3|WAV|Trackout)(?:%20|\s)File)\/[^?#]+)($|[?#])/i);
+            if (!m) return null;
+            let p = m[1].replace(/\/+$/, '');
+            try { p = decodeURIComponent(p); } catch (e) { /* keep as-is */ }
+            // Legacy Supabase folders (manual uploads with spaces) → new beat/* structure in the private bucket
+            p = p.replace(/^private\/MP3 File\//i, 'beat/mp3/')
+                 .replace(/^private\/WAV File\//i, 'beat/wav/')
+                 .replace(/^private\/Trackout File\//i, 'beat/trackout/')
+                 // Any other "private/..." → root of the private bucket
+                 .replace(/^private\//, '');
+            return p;
+        }
+        // Ask the Worker for a short-lived signed download URL for one purchased file.
+        // The Worker verifies the PayPal order server-side (order id + email match the
+        // order stored in Supabase) before returning the signed URL.
+        async function getSignedDownloadUrl(paypalOrderId, email, filePath) {
+            if (!R2_UPLOAD_ENDPOINT) return null;
+            try {
+                const res = await fetch(R2_UPLOAD_ENDPOINT + '/sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: paypalOrderId, email: email, path: filePath })
+                });
+                if (!res.ok) { console.error('Sign failed:', res.status, await res.text().catch(() => '')); return null; }
+                const data = await res.json();
+                return data && data.url ? data.url : null;
+            } catch (e) {
+                console.error('Sign request error:', e);
+                return null;
+            }
+        }
+        // Download one purchased file through a signed URL; falls back to the raw
+        // URL when the signing service is not configured (legacy behavior).
+        async function downloadPurchasedFile(paypalOrderId, email, fileUrl, fallbackName) {
+            const path = privateFilePath(fileUrl);
+            if (path) {
+                const signed = await getSignedDownloadUrl(paypalOrderId, email, path);
+                if (signed) { startFLPDownload(signed); return true; }
+                if (R2_UPLOAD_ENDPOINT) {
+                    // Signing configured but failed — do NOT leak the public URL.
+                    alert('⚠️ Download link could not be created. Please contact contact@fridbeats.com with your order ID ' + (paypalOrderId || '') + '.');
+                    return false;
+                }
+            }
+            // Legacy fallback (no R2 worker configured): direct download as before.
+            startFLPDownload(fileUrl);
+            return true;
+        }
+        // Ask the Worker to email the customer secure download links (72h validity).
+        // Non-blocking: failure only logs — instant downloads in the browser still happen.
+        async function notifyOrderEmail(paypalOrderId, email) {
+            if (!R2_UPLOAD_ENDPOINT || !paypalOrderId || !email) return false;
+            try {
+                const res = await fetch(R2_UPLOAD_ENDPOINT + '/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: paypalOrderId, email: email })
+                });
+                if (!res.ok) { console.warn('Email notify failed:', res.status, await res.text().catch(() => '')); return false; }
+                const data = await res.json();
+                return !!(data && data.sent);
+            } catch (e) {
+                console.warn('Email notify error:', e);
+                return false;
+            }
+        }
+
+        // Normalize URL fields of a content row (beat/template/flp) through the CDN layer.
+        function normalizeRowUrls(row) {
+            if (!row || typeof row !== 'object') return row;
+            const out = { ...row };
+            ['artwork', 'preview', 'thumbnail', 'download'].forEach(k => { if (out[k]) out[k] = cdnUrl(out[k]); });
+            if (out.files && typeof out.files === 'object') {
+                const files = { ...out.files };
+                ['mp3', 'wav', 'trackout'].forEach(k => { if (files[k]) files[k] = cdnUrl(files[k]); });
+                out.files = files;
+            }
+            return out;
+        }
+        function normalizeContentUrls(rows) { return (rows || []).map(normalizeRowUrls); }
+
+        // Apply the CDN rewrite to the default local data too (no-op until CDN_BASE is set).
+        beatsData = normalizeContentUrls(beatsData);
+        templatesData = normalizeContentUrls(templatesData);
+        flpData = normalizeContentUrls(flpData);
+        // Rewrite hardcoded static images (logo, profile, partner logos) to the CDN as well.
+        function rewriteStaticImages() {
+            if (!CDN_BASE) return;
+            document.querySelectorAll('img[src*="' + SUPABASE_STORAGE_HOST + '"]').forEach(img => { img.src = cdnUrl(img.getAttribute('src')); });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', rewriteStaticImages);
+        else rewriteStaticImages();
+
         const supabaseClient = (isSupabaseConfigured && window.supabase)
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: { persistSession: false }
@@ -2362,9 +2537,9 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
                 if (beatsRes.error) throw beatsRes.error;
                 if (templatesRes.error) throw templatesRes.error;
                 if (flpRes.error) throw flpRes.error;
-                if (beatsRes.data && beatsRes.data.length) beatsData = orderContentNewestFirst(beatsRes.data);
-                if (templatesRes.data && templatesRes.data.length) templatesData = orderContentNewestFirst(templatesRes.data);
-                if (flpRes.data && flpRes.data.length) flpData = orderContentNewestFirst(flpRes.data);
+                if (beatsRes.data && beatsRes.data.length) beatsData = normalizeContentUrls(orderContentNewestFirst(beatsRes.data));
+                if (templatesRes.data && templatesRes.data.length) templatesData = normalizeContentUrls(orderContentNewestFirst(templatesRes.data));
+                if (flpRes.data && flpRes.data.length) flpData = normalizeContentUrls(orderContentNewestFirst(flpRes.data));
             } catch (e) {
                 console.error('Error loading data from Supabase, falling back to local data:', e);
             }
@@ -2932,9 +3107,20 @@ document.addEventListener('keydown', function(e) {
         async function handleSuccessfulOrder(details) {
             const emailEl = document.getElementById('checkoutEmail');
             const email = (emailEl && emailEl.value) || (details.payer && details.payer.email_address) || '';
+            // Save the private R2 paths of every purchased file in the order —
+            // the Worker only signs paths that are present on the matching order.
             const orderRecord = {
                 email: email,
-                items: cart.map(i => ({ id: i.id, title: i.title, type: i.type, price: i.price, quantity: i.quantity, license: i.license || null })),
+                items: cart.map(i => {
+                    const src = i.type === 'beat' ? beatsData.find(b => b.id === i.id) : templatesData.find(t => t.id === i.id);
+                    return { id: i.id, title: i.title, type: i.type, price: i.price, quantity: i.quantity, license: i.license || null,
+                        files: src ? {
+                            mp3: src.files ? privateFilePath(src.files.mp3) : null,
+                            wav: src.files ? privateFilePath(src.files.wav) : null,
+                            trackout: src.files ? privateFilePath(src.files.trackout) : null,
+                            download: privateFilePath(src.download)
+                        } : null };
+                }),
                 total: getCartTotal(),
                 paypal_order_id: details.id
             };
@@ -2956,12 +3142,12 @@ document.addEventListener('keydown', function(e) {
                     if ((tier === 'wav' || tier === 'premium' || tier === 'exclusive') && source.files.wav) filesToSend.push(source.files.wav);
                     if ((tier === 'premium' || tier === 'exclusive') && source.files.trackout) filesToSend.push(source.files.trackout);
                     if (!filesToSend.length) { missing.push(i.title); return; }
-                    filesToSend.forEach(url => startFLPDownload(url));
+                    for (const url of filesToSend) { await downloadPurchasedFile(details.id, email, url); }
                     await generateLicensePDF(email, i.title, tier, i.price);
                     if (tier === 'exclusive') exclusiveBeatIds.push(i.id);
                 } else {
                     const source = templatesData.find(t => t.id === i.id);
-                    if (source && source.download) { startFLPDownload(source.download); }
+                    if (source && source.download) { await downloadPurchasedFile(details.id, email, source.download); }
                     else { missing.push(i.title); }
                 }
             }
@@ -2970,8 +3156,10 @@ document.addEventListener('keydown', function(e) {
             if (missing.length) {
                 alert('✅ Payment successful!\n\nYour download(s) are starting now.\n\n⚠️ Note: ' + missing.join(', ') + ' — file not uploaded yet by the producer. Contact us and we will send it directly.');
             } else {
-                alert('✅ Payment successful! Your download(s) and license certificate are starting now.');
+                alert('✅ Payment successful! Your download(s) and license certificate are starting now.\n\n📧 A confirmation email with secure download links (valid 72h) is being sent to ' + email + '.');
             }
+            // Send the confirmation email with secure download links (non-blocking).
+            notifyOrderEmail(details.id, email);
             cart = [];
             saveCart();
             updateCartCount();
@@ -3675,7 +3863,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         // Upload a file to Supabase Storage (bucket "frid-files") and return its public URL.
-        // Used for ZIP files, which are too large to store as base64 in localStorage/DB.
+        // Used as automatic fallback when R2_UPLOAD_ENDPOINT is not configured.
         async function uploadToSupabaseStorage(file, folder) {
             if (!supabaseClient || !file) return null;
             const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -3861,56 +4049,57 @@ document.addEventListener('keydown', function(e) {
                     if (artwork) {
                         const statusEl = document.getElementById('f_artwork_status');
                         const progressEl = document.getElementById('f_artwork_progress');
-                        if (statusEl) { statusEl.textContent = '⏳ Processing...'; statusEl.className = 'file-status uploading'; }
+                        if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
-                        artworkData = await readFileAsDataURL(artwork);
-                        if (statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
+                        artworkData = await uploadToStorage(artwork, 'public/beats', p => { if (progressEl) progressEl.style.width = p + '%'; });
+                        if (statusEl) { statusEl.textContent = artworkData ? '✅ Uploaded!' : '⚠️ Upload failed'; statusEl.className = artworkData ? 'file-status done' : 'file-status'; }
                         if (progressEl) progressEl.style.width = '100%';
                     }
                     if (audio) {
                         const statusEl = document.getElementById('f_audio_status');
                         const progressEl = document.getElementById('f_audio_progress');
-                        if (statusEl) { statusEl.textContent = '⏳ Processing...'; statusEl.className = 'file-status uploading'; }
+                        if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
-                        audioData = await readFileAsDataURL(audio);
-                        if (statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
+                        audioData = await uploadToStorage(audio, 'public/audio', p => { if (progressEl) progressEl.style.width = p + '%'; });
+                        if (statusEl) { statusEl.textContent = audioData ? '✅ Uploaded!' : '⚠️ Upload failed'; statusEl.className = audioData ? 'file-status done' : 'file-status'; }
                         if (progressEl) progressEl.style.width = '100%';
                     }
                     if (thumbnail) {
                         const statusEl = document.getElementById('f_thumbnail_status');
                         const progressEl = document.getElementById('f_thumbnail_progress');
-                        if (statusEl) { statusEl.textContent = '⏳ Processing...'; statusEl.className = 'file-status uploading'; }
+                        if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
-                        thumbnailData = await readFileAsDataURL(thumbnail);
-                        if (statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
+                        thumbnailData = await uploadToStorage(thumbnail, 'public/flp', p => { if (progressEl) progressEl.style.width = p + '%'; });
+                        if (statusEl) { statusEl.textContent = thumbnailData ? '✅ Uploaded!' : '⚠️ Upload failed'; statusEl.className = thumbnailData ? 'file-status done' : 'file-status'; }
                         if (progressEl) progressEl.style.width = '100%';
                     }
                 if (type === 'beat') {
-                    const uploadOne = async (fileInputId, folder, statusId, progressId) => {
+                    const uploadOne = async (fileInputId, folder, statusId, progressId, bucket) => {
                         const file = document.getElementById(fileInputId) ? document.getElementById(fileInputId).files[0] : null;
                         if (!file) return null;
                         const statusEl = document.getElementById(statusId);
                         const progressEl = document.getElementById(progressId);
                         if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
-                        if (!supabaseClient) { if (statusEl) statusEl.textContent = '⚠️ Supabase not configured'; return null; }
+                    if (!supabaseClient && !R2_UPLOAD_ENDPOINT) { if (statusEl) statusEl.textContent = '⚠️ Storage not configured'; return null; }
                         try {
-                            const url = await uploadToSupabaseStorage(file, folder);
-                            if (statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
+                            const url = await uploadToStorage(file, folder, p => { if (progressEl) progressEl.style.width = p + '%'; }, bucket);
+                            if (url && statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
+                            if (!url && statusEl) { statusEl.textContent = '⚠️ Upload failed'; statusEl.className = 'file-status'; }
                             if (progressEl) progressEl.style.width = '100%';
                             return url;
                         } catch (e) {
                             if (statusEl) { statusEl.textContent = '⚠️ Upload failed'; statusEl.className = 'file-status'; }
-                            alert('⚠️ Could not upload a file to Supabase Storage.');
+                            alert('⚠️ Could not upload a file to storage.');
                             return null;
                         }
                     };
-                                        const mp3Link = document.getElementById('f_mp3_link') ? document.getElementById('f_mp3_link').value.trim() : '';
+                    const mp3Link = document.getElementById('f_mp3_link') ? document.getElementById('f_mp3_link').value.trim() : '';
                     const wavLink = document.getElementById('f_wav_link') ? document.getElementById('f_wav_link').value.trim() : '';
                     const trackoutLink = document.getElementById('f_trackout_link') ? document.getElementById('f_trackout_link').value.trim() : '';
-                    mp3Url = mp3Link || await uploadOne('f_mp3', 'beat/mp3', 'f_mp3_status', 'f_mp3_progress');
-                    wavUrl = wavLink || await uploadOne('f_wav', 'beat/wav', 'f_wav_status', 'f_wav_progress');
-                    trackoutUrl = trackoutLink || await uploadOne('f_trackout', 'beat/trackout', 'f_trackout_status', 'f_trackout_progress');
+                    mp3Url = mp3Link || await uploadOne('f_mp3', 'beat/mp3', 'f_mp3_status', 'f_mp3_progress', 'private');
+                    wavUrl = wavLink || await uploadOne('f_wav', 'beat/wav', 'f_wav_status', 'f_wav_progress', 'private');
+                    trackoutUrl = trackoutLink || await uploadOne('f_trackout', 'beat/trackout', 'f_trackout_status', 'f_trackout_progress', 'private');
                                 } else if (zip || (document.getElementById('f_zip_link') && document.getElementById('f_zip_link').value.trim())) {
                     const linkVal = document.getElementById('f_zip_link') ? document.getElementById('f_zip_link').value.trim() : '';
                     const statusEl = document.getElementById('f_zip_status');
@@ -3922,9 +4111,10 @@ document.addEventListener('keydown', function(e) {
                     } else {
                     if (statusEl) { statusEl.textContent = '⏳ Uploading to storage...'; statusEl.className = 'file-status uploading'; }
                     if (progressEl) progressEl.style.width = '50%';
-                    if (supabaseClient) {
+                    if (supabaseClient || R2_UPLOAD_ENDPOINT) {
                         try {
-                            zipUrl = await uploadToSupabaseStorage(zip, type);
+                            // Purchased ZIPs (templates) go to the private bucket; free FLP remakes stay public.
+                            zipUrl = await uploadToStorage(zip, type, p => { if (progressEl) progressEl.style.width = p + '%'; }, type === 'flp' ? 'public' : 'private');
                             if (statusEl) { statusEl.textContent = '✅ Uploaded!'; statusEl.className = 'file-status done'; }
                             if (progressEl) progressEl.style.width = '100%';
                                                 } catch (e) {
@@ -3933,7 +4123,7 @@ document.addEventListener('keydown', function(e) {
                             alert('⚠️ Could not upload the ZIP file:\n\n' + (e.message || e) + '\n\nCheck the browser console (F12) for details.');
                         }
                                         } else {
-                        if (statusEl) { statusEl.textContent = '⚠️ Supabase not configured — ZIP not saved'; statusEl.className = 'file-status'; }
+                        if (statusEl) { statusEl.textContent = '⚠️ Storage not configured — ZIP not saved'; statusEl.className = 'file-status'; }
                     }
                     }
                 }
