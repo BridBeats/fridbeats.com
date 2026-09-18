@@ -519,6 +519,16 @@
     0% { box-shadow: 0 0 0 4px rgba(26,90,74,0.55); }
     100% { box-shadow: 0 0 0 0 rgba(26,90,74,0); }
 }
+/* Email deep link (?play=<id>&autoplay=1): pulse the play button until the
+   visitor taps anywhere, then the beat starts. Browsers block autoplay sound,
+   so this is the smoothest hands-off experience we can offer. */
+.beat-play-btn.awaiting-tap {
+    animation: awaitingTapPulse 1.4s ease-in-out infinite;
+}
+@keyframes awaitingTapPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.65); }
+    50% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+}
 .mobile-menu {
     display:none; position:fixed; top:70px; left:0; right:0;
     background:rgba(10,14,26,0.92);
@@ -5378,6 +5388,51 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('📦 ' + templatesData.length + ' templates available');
     console.log('🎹 ' + flpData.length + ' FLP remakes available');
     console.log('📧 ' + subscribers.length + ' subscribers');
+
+    // Deep links from emails (e.g. ?play=beat_123&autoplay=1).
+    // Opens the exact beat the email advertised. Sound can never auto-start
+    // (browsers block it without a user gesture) — instead we show a pulsing
+    // play prompt on the beat's big play button so one tap starts the music.
+    (function handleEmailDeepLink() {            try {
+                const params = new URLSearchParams(location.search);
+                // Cart recovery links (?promo=...#checkout): reopen checkout even
+                // if the visitor navigated away (hash doesn't re-fire on its own).
+                if (location.hash === '#checkout') {
+                    const backToCheckout = () => { try { if (cart.length) navigateTo('checkout'); } catch (e) {} };
+                    setTimeout(backToCheckout, 300);
+                    setTimeout(backToCheckout, 1200);
+                    setTimeout(() => window.addEventListener('hashchange', backToCheckout, { once: true }), 1500);
+                }
+                const playId = params.get('play');
+            if (!playId || !getBeatById(playId)) return;
+            showBeatDetail(playId);
+            if (params.get('autoplay') === '1') {
+                const watch = setInterval(() => {
+                    // Pulse both the modal's big Preview button and the grid card button
+                    const b = document.querySelector('.beat-play-btn[data-beat-id="' + playId + '"]');
+                    const d = document.getElementById('detailPlayBtn');
+                    if (b) b.classList.add('awaiting-tap');
+                    if (d) d.classList.add('awaiting-tap');
+                }, 1200);
+                setTimeout(() => clearInterval(watch), 60000);
+                const clearPulse = () => {
+                    document.querySelectorAll('.beat-play-btn.awaiting-tap').forEach(el => el.classList.remove('awaiting-tap'));
+                    const dp = document.getElementById('detailPlayBtn');
+                    if (dp) dp.classList.remove('awaiting-tap');
+                };
+                document.addEventListener('click', function onFirstTap() {
+                    document.removeEventListener('click', onFirstTap);
+                    clearInterval(watch);
+                    // If the tap didn't already start this beat (e.g. user tapped
+                    // elsewhere), start it now — browsers allow audio after a gesture.
+                    setTimeout(() => {
+                        if (currentBeatId !== playId) playPreview(playId);
+                        clearPulse();
+                    }, 0);
+                }, { once: true });
+            }
+        } catch (e) { console.warn('deep link error:', e); }
+    })();
 });
     </script>
 </body>
