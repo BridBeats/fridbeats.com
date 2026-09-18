@@ -234,12 +234,28 @@
     transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
 }
 .vu-meter-panel.vu-active {
-    opacity: 1;
+    opacity: 0.62; /* translucent while parked — content behind stays readable */
     pointer-events: auto;
     transform: translateX(0);
     visibility: visible;
 }
+/* Solid while interacting so the gauge is easy to read when you grab it */
+.vu-meter-panel.vu-active:hover,
+.vu-meter-panel.vu-dragging {
+    opacity: 0.97;
+}
 .vu-meter-panel.vu-dragging { cursor: grabbing; transition: none; }
+/* On small screens the panel would overlap the player bar / cards — pin it
+   above the bottom player with a compact size instead of hiding it. */
+@media (max-width: 1300px) {
+    .vu-meter-panel {
+        width: 104px;
+        top: auto;
+        bottom: 84px;   /* sits above the 70px global player bar */
+        right: 10px;
+        z-index: 600;
+    }
+}
 .vu-meter-svg { width: 100%; height: auto; touch-action: none; }
 .vu-face-frame { fill: #0c0c0c; stroke: #000; stroke-width: 1; }
 .vu-sign { font-size: 13px; font-weight: 700; fill: var(--accent-primary); }
@@ -253,10 +269,6 @@
 .vu-pivot { fill: #1a1a1a; stroke: #c21f1f; stroke-width: 1; }
 .vu-caption { font-size: 6.5px; fill: rgba(255,255,255,0.55); letter-spacing: 1.5px; }
 #vuNeedleGroup { will-change: transform; }
-@media (max-width: 1300px) {
-    .vu-meter-panel { display: none; }
-}
-
         /* ===== FILTERS PANEL (DESKTOP) ===== */
 .filters-panel {
     background: var(--bg-card);
@@ -1569,6 +1581,37 @@ input[type="range"]::-moz-range-thumb {
         .mt-2 { margin-top:0.5rem; }
         .mt-3 { margin-top:1rem; }
     </style>
+
+    <style>
+    /* ============================================================
+       MOBILE PERFORMANCE PATCH
+       backdrop-filter: blur() is re-rendered on every scrolled frame
+       and is the #1 cause of janky scrolling on phones. Images in
+       feed cards are 2-3 MB PNGs, so they must lazy-load. Infinite
+       glow/sway animations drain GPU and battery. All three are
+       disabled or deferred on mobile viewports.
+       ============================================================ */
+    @media (max-width: 768px) {
+      /* 1) Kill the expensive blur on elements that repeat per card.
+            They fall back to their solid/semi-transparent background. */
+      .beat-card, .flp-card, .stat-item, .beat-tag, .beat-meta-tag,
+      .card-includes, .license-option, .cart-item, .cart-summary,
+      .experience-item, .contact-card, .glass-section,
+      .beat-play-overlay, .beat-play-btn, .flp-artwork .play-overlay,
+      .flp-play-btn, .btn-secondary, .header.scrolled {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      /* 2) Stop the always-on animations (they restart instantly on
+            desktop and are decorative only). */
+      .glass-section, .palm-decoration {
+        animation: none !important;
+      }
+      /* 3) Pause animations for elements far off-screen (nice-to-have
+            hygiene; keeps hovers elsewhere intact). */
+      * { -webkit-tap-highlight-color: transparent; }
+    }
+    </style>
 </head>
 <body class="app-loading">
 <div id="appLoadingScreen" class="loading-state"><div class="loading-spinner"></div><span>Loading beats...</span></div>
@@ -1656,7 +1699,7 @@ input[type="range"]::-moz-range-thumb {
     <!-- ===== HEADER ===== -->
     <header class="header" id="header">
         <div class="logo" onclick="navigateTo('home')">
-            <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
+            <img loading="lazy" decoding="async" src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
             <span>FRID</span> BEATS
         </div>
         <div class="header-search" id="headerSearch">
@@ -1723,7 +1766,7 @@ input[type="range"]::-moz-range-thumb {
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-logo">
-                     <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
+                     <img loading="lazy" decoding="async" src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
                 </div>
                 <h1 class="hero-title">FRID <span>BEATS</span></h1>
                 <p class="hero-subtitle" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mixing Engineer</p>
@@ -2176,7 +2219,7 @@ input[type="range"]::-moz-range-thumb {
 <div id="globalPlayer" class="global-player" style="display:none;">
     <div class="gp-track">
         <div class="gp-left">
-            <img id="gpArtwork" src="" alt="" class="gp-artwork">
+            <img loading="lazy" decoding="async" id="gpArtwork" src="" alt="" class="gp-artwork">
             <div class="gp-info">
                 <span id="gpTitle" onclick="goToBeatDetails()" style="cursor:pointer;">No track playing</span>
                 <span id="gpArtist" style="color:var(--text-tertiary); font-size:0.8rem;">Frid Beats</span>
@@ -2208,6 +2251,18 @@ input[type="range"]::-moz-range-thumb {
 // ============================================================        // All URLs are now hosted on Supabase Storage
 // ============================================================
 
+function idEpochMs(item) {
+    // New content gets ids like "flp_<Date.now()>" — the 13-digit numeric
+    // suffix IS the creation timestamp. Seed ids (flp_001, beat_002…) have
+    // no epoch suffix. Used to order items when createdAt is unavailable
+    // (the flp table has no createdAt column).
+    if (item && typeof item.id === 'string') {
+        const m = item.id.match(/(\d{13,})$/);
+        if (m) return parseInt(m[1], 10);
+    }
+    return NaN;
+}
+
 function orderContentNewestFirst(items) {
     if (!Array.isArray(items)) return [];
     return items
@@ -2215,7 +2270,17 @@ function orderContentNewestFirst(items) {
         .sort((a, b) => {
             const aTime = a.item && a.item.createdAt ? Date.parse(a.item.createdAt) : NaN;
             const bTime = b.item && b.item.createdAt ? Date.parse(b.item.createdAt) : NaN;
-            if (Number.isNaN(aTime) && Number.isNaN(bTime)) return a.index - b.index;
+            if (Number.isNaN(aTime) && Number.isNaN(bTime)) {
+                // No createdAt anywhere: newest first by epoch-ms id suffix
+                // (admin-added items float to the top, seed items keep
+                // their original relative order below them).
+                const aId = idEpochMs(a.item);
+                const bId = idEpochMs(b.item);
+                if (!Number.isNaN(aId) && !Number.isNaN(bId) && aId !== bId) return bId - aId;
+                if (!Number.isNaN(aId)) return -1;
+                if (!Number.isNaN(bId)) return 1;
+                return a.index - b.index;
+            }
             if (Number.isNaN(aTime)) return 1;
             if (Number.isNaN(bTime)) return -1;
             return bTime - aTime || a.index - b.index;
@@ -2542,20 +2607,31 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
         if (!isPayPalConfigured) console.warn('⚠️ PayPal is not configured yet — the payment button will show a configuration notice.');
 
         // Load beats/templates/flp from Supabase (if configured), otherwise fall back to defaults/localStorage
+        // Fetches include the "featured" (pin) flag; if the column hasn't been
+        // added to a table yet, it retries that table WITHOUT it so the site
+        // still loads instead of breaking.
+        async function fetchTableWithFeatured(table, cols) {
+            let res = await supabaseClient.from(table).select(cols);
+            if (res.error && /featured/i.test(String(res.error.message || ''))) {
+                console.warn(`Table "${table}" has no featured column yet — retrying without it. Run supabase-admin-policy.sql to enable pinning.`);
+                res = await supabaseClient.from(table).select(cols.replace(/,featured/g, ''));
+            }
+            return res;
+        }
         async function loadDataFromSupabase() {
             if (!supabaseClient) return;
             try {
                 const [beatsRes, templatesRes, flpRes] = await Promise.all([
-                    supabaseClient.from('beats').select('id,title,artist,artwork,genre,bpm,key,mood,description,preview,price,featured,files,createdAt'),
-                    supabaseClient.from('templates').select('id,title,genre,bpm,price,artwork,description,download,createdAt'),
-                    supabaseClient.from('flp').select('id,title,artist,genre,thumbnail,description,youtubeUrl,download')
+                    fetchTableWithFeatured('beats', 'id,title,artist,artwork,genre,bpm,key,mood,description,preview,price,featured,files,createdAt'),
+                    fetchTableWithFeatured('templates', 'id,title,genre,bpm,price,artwork,description,download,featured,createdAt'),
+                    fetchTableWithFeatured('flp', 'id,title,artist,genre,thumbnail,description,youtubeUrl,download,featured')
                 ]);
                 if (beatsRes.error) throw beatsRes.error;
                 if (templatesRes.error) throw templatesRes.error;
                 if (flpRes.error) throw flpRes.error;
-                if (beatsRes.data && beatsRes.data.length) beatsData = normalizeContentUrls(orderContentNewestFirst(beatsRes.data));
-                if (templatesRes.data && templatesRes.data.length) templatesData = normalizeContentUrls(orderContentNewestFirst(templatesRes.data));
-                if (flpRes.data && flpRes.data.length) flpData = normalizeContentUrls(orderContentNewestFirst(flpRes.data));
+                if (beatsRes.data && beatsRes.data.length) beatsData = normalizeContentUrls(pinFirst(orderContentNewestFirst(beatsRes.data)));
+                if (templatesRes.data && templatesRes.data.length) templatesData = normalizeContentUrls(pinFirst(orderContentNewestFirst(templatesRes.data)));
+                if (flpRes.data && flpRes.data.length) flpData = normalizeContentUrls(pinFirst(orderContentNewestFirst(flpRes.data)));
             } catch (e) {
                 console.error('Error loading data from Supabase, falling back to local data:', e);
             }
@@ -2569,6 +2645,32 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
         // ============================================================
         function supabaseTableName(type) {
             return type === 'beat' ? 'beats' : (type === 'template' ? 'templates' : 'flp');
+        }
+
+        // ============================================================
+        // PIN / FEATURED (admin)
+        // Pinned items always appear first on the public site (all 3
+        // sections), each group otherwise ordered newest-first.
+        // The flag is the existing "featured" boolean, persisted per row.
+        // ============================================================
+        function pinFirst(items) {
+            if (!Array.isArray(items)) return [];
+            return [...items].sort((a, b) => (b && b.featured ? 1 : 0) - (a && a.featured ? 1 : 0));
+            // Stable sort: pinned keep their newest-first order among themselves,
+            // unpinned do the same below them.
+        }
+
+        async function toggleFeatured(type, id) {
+            const store = type === 'beat' ? beatsData : (type === 'template' ? templatesData : flpData);
+            const item = store.find(d => d.id === id);
+            if (!item) return;
+            item.featured = !item.featured;
+            (type === 'beat' ? saveBeats : type === 'template' ? saveTemplates : saveFlp)();
+            const ok = await upsertRowToSupabase(type, item);
+            if (ok) console.log(`"${item.title}" ${item.featured ? 'pinned to top' : 'unpinned'}`);
+            // Re-render admin lists + the public section for this type
+            renderAdminBeats(); renderAdminTemplates(); renderAdminFlp();
+            renderBeats(); renderTemplates(); renderFLP(); renderFeatured();
         }
 
         async function supabaseAdminReady() {
@@ -2588,7 +2690,13 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
             // Strip it for the DB copy only (the local array can keep it for ordering).
             const payload = table === 'flp' ? (() => { const c = { ...row }; delete c.createdAt; return c; })() : row;
             try {
-                const res = await supabaseClient.from(table).upsert(payload, { onConflict: 'id' });
+                let res = await supabaseClient.from(table).upsert(payload, { onConflict: 'id' });
+                if (res.error && payload && 'featured' in payload && /featured/i.test(String(res.error.message || ''))) {
+                    // featured column not added yet — save without the pin flag
+                    console.warn(`Table "${table}" has no featured column yet — saving without it. Run supabase-admin-policy.sql to enable pinning.`);
+                    const stripped = { ...payload }; delete stripped.featured;
+                    res = await supabaseClient.from(table).upsert(stripped, { onConflict: 'id' });
+                }
                 if (res.error) throw res.error;
                 return true;
             } catch (e) {
@@ -2928,6 +3036,7 @@ let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
 
         async function updateAdminNavVisibility() {
             const authed = await isAdminAuthed();
+            window.__fridAdminAuthed = authed; // cached flag (VU meter drag uses it)
             const link1 = document.getElementById('adminNavLink');
             const link2 = document.getElementById('adminNavLinkMobile');
             if (link1) link1.style.display = authed ? 'inline-block' : 'none';
@@ -3053,7 +3162,7 @@ document.addEventListener('keydown', function(e) {
             let html = `<div style="margin-bottom:1rem;color:var(--text-muted);">${cart.reduce((s,i) => s + i.quantity, 0)} items</div>`;
             cart.forEach((item, index) => {
                 html += `<div class="cart-item">
-                    <img src="${item.artwork}" alt="${item.title}" onerror="this.style.display='none'">
+                    <img loading="lazy" decoding="async" src="${item.artwork}" alt="${item.title}" onerror="this.style.display='none'">
                     <div class="cart-item-info"><h4>${item.title}</h4><p>${item.type === 'beat' ? 'Beat' : 'Template'}</p><p style="color:var(--text-secondary);font-weight:500;">$${item.price}</p></div>
                     <div class="cart-item-actions">
                         <button class="qty-btn" onclick="updateCartQuantity(${index}, -1)"><i class="fas fa-minus"></i></button>
@@ -3447,7 +3556,7 @@ document.addEventListener('keydown', function(e) {
             container.innerHTML = `
                 <div class="beat-detail">
                     <div class="beat-detail-artwork">
-                        <img src="${beat.artwork}" alt="${beat.title}" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'background:var(--bg-tertiary);padding:2rem;text-align:center;border-radius:var(--radius-xl);\\'><i class=\\'fas fa-image\\' style=\\'font-size:3rem;color:var(--text-muted);\\'></i></div>'">
+                        <img loading="lazy" decoding="async" src="${beat.artwork}" alt="${beat.title}" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'background:var(--bg-tertiary);padding:2rem;text-align:center;border-radius:var(--radius-xl);\\'><i class=\\'fas fa-image\\' style=\\'font-size:3rem;color:var(--text-muted);\\'></i></div>'">
                     </div>
                     <div class="beat-detail-info">
                         <h1>${beat.title}</h1>
@@ -3705,8 +3814,8 @@ document.addEventListener('keydown', function(e) {
                                 <input type="file" id="f_artwork" accept=".jpg,.png,.webp" />
                                 <span class="file-name" id="f_artwork_name">${item && item.artwork && !item.artwork.startsWith('data:') ? item.artwork.split('/').pop() : 'Choose file'}</span>
                             </div>
-                            ${item && item.artwork && !item.artwork.startsWith('data:') ? `<img src="${item.artwork}" class="file-preview" />` : ''}
-                            ${item && item.artwork && item.artwork.startsWith('data:') ? `<img src="${item.artwork}" class="file-preview" />` : ''}
+                            ${item && item.artwork && !item.artwork.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.artwork}" class="file-preview" />` : ''}
+                            ${item && item.artwork && item.artwork.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.artwork}" class="file-preview" />` : ''}
                             <div class="progress-bar"><div class="progress-fill" id="f_artwork_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_artwork_status">${item && item.artwork ? '✅ Loaded' : 'No file'}</span>
@@ -3785,8 +3894,8 @@ document.addEventListener('keydown', function(e) {
                                 <input type="file" id="f_artwork" accept=".jpg,.png,.webp" />
                                 <span class="file-name">${item && item.artwork && !item.artwork.startsWith('data:') ? item.artwork.split('/').pop() : 'Choose file'}</span>
                             </div>
-                            ${item && item.artwork && !item.artwork.startsWith('data:') ? `<img src="${item.artwork}" class="file-preview" />` : ''}
-                            ${item && item.artwork && item.artwork.startsWith('data:') ? `<img src="${item.artwork}" class="file-preview" />` : ''}
+                            ${item && item.artwork && !item.artwork.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.artwork}" class="file-preview" />` : ''}
+                            ${item && item.artwork && item.artwork.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.artwork}" class="file-preview" />` : ''}
                             <div class="progress-bar"><div class="progress-fill" id="f_artwork_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_artwork_status">${item && item.artwork ? '✅ Loaded' : 'No file'}</span>
@@ -3821,8 +3930,8 @@ document.addEventListener('keydown', function(e) {
                                 <input type="file" id="f_thumbnail" accept=".jpg,.png,.webp" />
                                 <span class="file-name">${item && item.thumbnail && !item.thumbnail.startsWith('data:') ? item.thumbnail.split('/').pop() : 'Choose file'}</span>
                             </div>
-                            ${item && item.thumbnail && !item.thumbnail.startsWith('data:') ? `<img src="${item.thumbnail}" class="file-preview" />` : ''}
-                            ${item && item.thumbnail && item.thumbnail.startsWith('data:') ? `<img src="${item.thumbnail}" class="file-preview" />` : ''}
+                            ${item && item.thumbnail && !item.thumbnail.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.thumbnail}" class="file-preview" />` : ''}
+                            ${item && item.thumbnail && item.thumbnail.startsWith('data:') ? `<img loading="lazy" decoding="async" src="${item.thumbnail}" class="file-preview" />` : ''}
                             <div class="progress-bar"><div class="progress-fill" id="f_thumbnail_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_thumbnail_status">${item && item.thumbnail ? '✅ Loaded' : 'No file'}</span>
@@ -4218,7 +4327,8 @@ document.addEventListener('keydown', function(e) {
                         description: readDescriptionFromForm(),
                         artwork: artworkData || (id ? templatesData.find(t => t.id === id)?.artwork || 'images/templates/template.png' : 'images/templates/template.png'),
                         download: zipUrl || (id ? templatesData.find(t => t.id === id)?.download || null : null),
-                        createdAt: id ? templatesData.find(t => t.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString()
+                        createdAt: id ? templatesData.find(t => t.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString(),
+                        featured: id ? !!(templatesData.find(t => t.id === id)?.featured) : false
                     };
                 } else if (type === 'flp') {
                     newItem = {
@@ -4230,7 +4340,8 @@ document.addEventListener('keydown', function(e) {
                         thumbnail: thumbnailData || (id ? flpData.find(f => f.id === id)?.thumbnail || 'images/flp/flp.jpg' : 'images/flp/flp.jpg'),
                         youtubeUrl: document.getElementById('f_youtube').value || 'https://youtube.com/watch?v=...',
                         download: zipUrl || (id ? flpData.find(f => f.id === id)?.download || null : null),
-                        createdAt: id ? flpData.find(f => f.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString()
+                        createdAt: id ? flpData.find(f => f.id === id)?.createdAt || new Date().toISOString() : new Date().toISOString(),
+                        featured: id ? !!(flpData.find(f => f.id === id)?.featured) : false
                     };
                 }
 
@@ -4285,13 +4396,14 @@ document.addEventListener('keydown', function(e) {
             if (!tbody) return;
             tbody.innerHTML = beatsData.map(beat => `
                 <tr>
-                    <td><img src="${beat.artwork}" alt="${beat.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
+                    <td><img loading="lazy" decoding="async" src="${beat.artwork}" alt="${beat.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
                     <td>${beat.title}</td>
                     <td>${beat.genre}</td>
                     <td>${beat.bpm}</td>
                     <td style="color:var(--text-secondary);">$${beat.price.basic}</td>
                     <td>
                         <div class="admin-actions">
+                            <button class="btn btn-sm ${beat.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('beat', '${beat.id}')" title="${beat.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
                             <button class="btn btn-sm btn-secondary" onclick="openModal('beat', '${beat.id}')" title="Edit"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-sm btn-danger" onclick="deleteItem('beat', '${beat.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                         </div>
@@ -4305,13 +4417,14 @@ document.addEventListener('keydown', function(e) {
             if (!tbody) return;
             tbody.innerHTML = templatesData.map(t => `
                 <tr>
-                    <td><img src="${t.artwork}" alt="${t.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
+                    <td><img loading="lazy" decoding="async" src="${t.artwork}" alt="${t.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
                     <td>${t.title}</td>
                     <td>${t.genre}</td>
                     <td>${t.bpm}</td>
                     <td style="color:var(--text-secondary);">$${t.price}</td>
                     <td>
                         <div class="admin-actions">
+                            <button class="btn btn-sm ${t.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('template', '${t.id}')" title="${t.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
                             <button class="btn btn-sm btn-secondary" onclick="openModal('template', '${t.id}')" title="Edit"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-sm btn-danger" onclick="deleteItem('template', '${t.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                         </div>
@@ -4325,12 +4438,13 @@ document.addEventListener('keydown', function(e) {
             if (!tbody) return;
             tbody.innerHTML = flpData.map(flp => `
                 <tr>
-                    <td><img src="${flp.thumbnail}" alt="${flp.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
+                    <td><img loading="lazy" decoding="async" src="${flp.thumbnail}" alt="${flp.title}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'"></td>
                     <td>${flp.title}</td>
                     <td>${flp.artist}</td>
                     <td>${flp.genre}</td>
                     <td>
                         <div class="admin-actions">
+                            <button class="btn btn-sm ${flp.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('flp', '${flp.id}')" title="${flp.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
                             <button class="btn btn-sm btn-secondary" onclick="openModal('flp', '${flp.id}')" title="Edit"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-sm btn-danger" onclick="deleteItem('flp', '${flp.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                         </div>
@@ -4691,7 +4805,18 @@ function initVUMeterDrag() {
         }
     } catch (e) {}
 
-    function onDown(e) {
+    // ONLY the logged-in admin can reposition the meter. Visitors get a
+    // static, translucent gauge that never moves (and cursor stays default).
+    async function canDrag() {
+        if (typeof isAdminAuthed === 'function') return await isAdminAuthed();
+        return !!window.__fridAdminAuthed;
+    }
+    canDrag().then(authed => {
+        if (!authed) panel.style.cursor = 'default';
+    });
+
+    async function onDown(e) {
+        if (!(await canDrag())) return; // visitors: ignore the grab entirely
         const evt = e.touches ? e.touches[0] : e;
         dragging = true;
         moved = false;
@@ -4740,8 +4865,8 @@ function initVUMeterDrag() {
         }
         requestAnimationFrame(() => panel.classList.remove('vu-dragging'));
     }
-    panel.addEventListener('mousedown', onDown);
-    panel.addEventListener('touchstart', onDown, { passive: true });
+    panel.addEventListener('mousedown', (e) => onDown(e));
+    panel.addEventListener('touchstart', (e) => onDown(e), { passive: true });
 }
 
 // ============================================================
@@ -4926,7 +5051,7 @@ function renderSearchDropdown(query, dropdownId) {
         return `<div class="search-dropdown-section"><div class="search-dropdown-label">${label}</div>` +
             items.map(item => `
                 <div class="search-dropdown-item" onclick="selectSearchResult('${type}','${item.id}')">
-                    <img src="${item.artwork || item.thumbnail || ''}" alt="" onerror="this.style.display='none'">
+                    <img loading="lazy" decoding="async" src="${item.artwork || item.thumbnail || ''}" alt="" onerror="this.style.display='none'">
                     <div>
                         <div class="search-dropdown-title">${item.title}</div>
                         <div class="search-dropdown-sub">${item.artist || ''}${item.genre ? ' • ' + item.genre : ''}</div>
