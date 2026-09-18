@@ -2478,7 +2478,9 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 return m ? m[1].toUpperCase() : (sessionStorage.getItem('fridBeatsPromo') || '');
             } catch (e) { return ''; }
         }
-        function validPromo(code) { return /^FRID15-[A-Z0-9]{5}$/.test(String(code || '').toUpperCase()); }
+        // Promo codes: FRID15-XXXXX (5 chars, per-cart recovery codes) and
+        // FRID15-WELCOME (the drip sequence's welcome discount).
+        function validPromo(code) { return /^FRID15-[A-Z0-9]{5,10}$/.test(String(code || '').toUpperCase()); }
         function promoDiscountPct(code) { return validPromo(code) ? 15 : 0; }
         function getCartTotal() {
             const gross = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
@@ -5395,6 +5397,40 @@ document.addEventListener('DOMContentLoaded', async function() {
     // play prompt on the beat's big play button so one tap starts the music.
     (function handleEmailDeepLink() {            try {
                 const params = new URLSearchParams(location.search);
+                // Cart recovery email links: ?promo=...&cart=<token>#checkout.
+                // Restores the exact items into the cart on ANY device, so the
+                // checkout is never empty — then opens the checkout page.
+                const cartParam = params.get('cart');
+                if (cartParam && /^[a-f0-9]{16}$/i.test(cartParam) && R2_UPLOAD_ENDPOINT && !cart.length) {
+                    (async () => {
+                        try {
+                            const r = await fetch(R2_UPLOAD_ENDPOINT + '/cart-get?id=' + encodeURIComponent(cartParam));
+                            if (!r.ok) return;
+                            const d = await r.json();
+                            if (d && d.ok && Array.isArray(d.items) && d.items.length) {
+                                cart.length = 0;
+                                d.items.forEach(it => cart.push({
+                                    id: String(it.id || ''), type: it.type === 'template' ? 'template' : 'beat',
+                                    price: Number(it.price) || 0, title: String(it.title || 'Item'),
+                                    artwork: '', quantity: Math.max(1, parseInt(it.quantity, 10) || 1), license: it.license || null
+                                }));
+                                saveCart(); renderCart(); updateCartCount();
+                                try { sessionStorage.setItem('fridBeatsCartRestored', '1'); } catch (e) {}
+                                console.log('🛒 Cart restored from recovery link:', cart.length, 'item(s)');
+                            }
+                        } catch (e) { console.warn('cart restore failed:', e); }
+                    })();
+                }
+                // Hash deep links (#beats, #templates, #flp, #checkout) — emails use
+                // them so every click lands where it should, never a blank home page.
+                const routeHash = () => {
+                    const h = (location.hash || '').replace('#', '');
+                    if (h === 'checkout' && cart.length) { navigateTo('checkout'); return true; }
+                    if (['beats', 'templates', 'flp', 'contact', 'about'].includes(h)) { navigateTo(h); return true; }
+                    return false;
+                };
+                if (!routeHash()) setTimeout(routeHash, 900);   // retry once after async cart restore
+                window.addEventListener('hashchange', routeHash);
                 // Cart recovery links (?promo=...#checkout): reopen checkout even
                 // if the visitor navigated away (hash doesn't re-fire on its own).
                 if (location.hash === '#checkout') {
