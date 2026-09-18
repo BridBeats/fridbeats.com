@@ -2172,6 +2172,14 @@ input[type="range"]::-moz-range-thumb {
                         </div>
                         <button class="btn btn-primary" onclick="sendEmailToSubscribers()"><i class="fas fa-paper-plane"></i> Send Email</button>
                         <p class="text-muted" style="font-size:0.7rem;margin-top:0.5rem;font-weight:300;">This will send an email to all subscribers who signed up for FLP downloads.</p>
+                        <div style="border-top:1px solid var(--border);margin-top:1.2rem;padding-top:1rem;">
+                            <h4 style="margin-bottom:0.6rem;font-weight:400;">🛒 Abandoned Cart Recovery — Test</h4>
+                            <p class="text-muted" style="font-size:0.75rem;margin-bottom:0.8rem;font-weight:300;">Preview the exact reminder emails customers get when they leave a cart. Put a beat in the cart → Checkout → type an email → wait ~10 seconds → then send the test to your inbox.</p>
+                            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestCartEmail(1)">Send 1h test email</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestCartEmail(2)">Send 24h test email (+promo)</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="admin-tab-content" id="adminTabMessages">
@@ -2391,8 +2399,72 @@ const defaultTemplates = [
 let beatsData = [...defaultBeats];
 let templatesData = [...defaultTemplates];
 let flpData = [...defaultFlp];
-let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [];
-let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
+let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [];        let cart = JSON.parse(localStorage.getItem('fridBeatsCart')) || [];
+
+        // ============================================================
+        // ABANDONED CART RECOVERY (client side)
+        // Anonymous token identifying this browser's cart. While the
+        // checkout page is open with a valid email, the cart is pinged to
+        // the Worker so a reminder email can be sent if the visitor leaves.
+        // A purchase marks the cart recovered (no more emails). Everything
+        // is fire-and-forget — shopping flow is never blocked.
+        // ============================================================
+        function cartToken() {
+            let t = localStorage.getItem('fridBeatsCartToken');
+            if (!t || !/^[a-f0-9]{16}$/i.test(t)) {
+                const bytes = new Uint8Array(8);
+                (self.crypto || window.crypto).getRandomValues(bytes);
+                t = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+                localStorage.setItem('fridBeatsCartToken', t);
+            }
+            return t;
+        }
+
+        function pingAbandonedCart(purchased) {
+            if (!R2_UPLOAD_ENDPOINT || !cart.length) return;
+            const emailEl = document.getElementById('checkoutEmail');
+            const email = (emailEl && emailEl.value && emailEl.value.includes('@')) ? emailEl.value.trim() : '';
+            if (!email) return;
+            try {
+                fetch(R2_UPLOAD_ENDPOINT + '/cart-ping', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: cartToken(), email, items: cart, total: getCartTotal(), purchased: !!purchased })
+                }).catch(() => {});
+            } catch (e) { /* never block the shop */ }
+        }
+
+        // While the visitor sits on checkout with an email, keep the cart fresh
+        // (so the 1h timer restarts from their latest activity and the items
+        // stay accurate). Stops when they leave the page or complete a purchase.
+        let cartPingTimer = null;
+        function startCartPingLoop() {
+            stopCartPingLoop();
+            pingAbandonedCart(false);
+            cartPingTimer = setInterval(() => {
+                const stillOnCheckout = document.getElementById('page-checkout') && document.getElementById('page-checkout').classList.contains('active');
+                if (!stillOnCheckout || !cart.length) { stopCartPingLoop(); return; }
+                pingAbandonedCart(false);
+            }, 5 * 60 * 1000);
+        }
+        function stopCartPingLoop() { if (cartPingTimer) { clearInterval(cartPingTimer); cartPingTimer = null; } }
+
+        // Promo code from a recovery email link (?promo=FRID15-XXXXX).
+        // Deterministic per-cart codes (FRID15-<5 chars>) get 15% off; they are
+        // validated server-side style here by format and applied to the total.
+        function getPromoCode() {
+            try {
+                const m = (location.search || '').match(/promo=([A-Za-z0-9-]{6,24})/);
+                return m ? m[1].toUpperCase() : (sessionStorage.getItem('fridBeatsPromo') || '');
+            } catch (e) { return ''; }
+        }
+        function validPromo(code) { return /^FRID15-[A-Z0-9]{5}$/.test(String(code || '').toUpperCase()); }
+        function promoDiscountPct(code) { return validPromo(code) ? 15 : 0; }
+        function getCartTotal() {
+            const gross = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const pct = promoDiscountPct(getPromoCode());
+            return Math.max(0, gross * (1 - pct / 100));
+        }
 
         // ============================================================
         // BACKEND CONFIGURATION (SUPABASE + PAYPAL)
@@ -3146,12 +3218,12 @@ document.addEventListener('keydown', function(e) {
         }
 
         function removeFromCart(index) { cart.splice(index, 1); saveCart(); renderCart(); updateCartCount(); }
+        // NOTE: getCartTotal() is defined once, earlier in this file, WITH the
+        // abandoned-cart promo code discount applied. Do not re-define it here.
         function updateCartQuantity(index, delta) {
             if (cart[index]) { cart[index].quantity += delta; if (cart[index].quantity <= 0) cart.splice(index, 1); saveCart(); renderCart(); updateCartCount(); }
         }
         function updateCartCount() { const count = cart.reduce((s, i) => s + i.quantity, 0); const el = document.getElementById('cartCount'); if (el) el.textContent = count; }
-        function getCartTotal() { return cart.reduce((s, i) => s + (i.price * i.quantity), 0); }
-
         function renderCart() {
             const container = document.getElementById('cartContent');
             if (!container) return;
@@ -3198,10 +3270,16 @@ document.addEventListener('keydown', function(e) {
                     </div>
                 </div>
                 <div class="form-group"><label>Email</label><input type="email" id="checkoutEmail" placeholder="youremail@gmail.com"></div>
+                ${(() => { const p = getPromoCode(); return validPromo(p) ? `<div style="background:rgba(34,197,94,0.08);border:1px solid #22c55e;border-radius:var(--radius-lg);padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#22c55e;">✅ Promo code <strong>${p}</strong> applied — 15% off</div>` : ''; })()}
                 <div id="paypal-button-container" style="margin-top:0.5rem;min-height:45px;"></div>
                 <p style="text-align:center;color:var(--text-muted);font-size:0.75rem;margin-top:0.5rem;font-weight:300;">You will be redirected to PayPal to complete your payment</p>
             `;
+            const promo = getPromoCode();
+            if (validPromo(promo)) { try { sessionStorage.setItem('fridBeatsPromo', promo); } catch (e) {} }
             renderPayPalButtons();
+            startCartPingLoop();
+            const emailInput = document.getElementById('checkoutEmail');
+            if (emailInput) emailInput.addEventListener('change', () => pingAbandonedCart(false));
         }
 
         function validCheckoutEmail() {
@@ -3318,6 +3396,9 @@ document.addEventListener('keydown', function(e) {
             cart = [];
             saveCart();
             updateCartCount();
+            stopCartPingLoop();
+            pingAbandonedCart(true); // mark this cart recovered — no reminder emails
+            try { sessionStorage.removeItem('fridBeatsPromo'); } catch (e) {}
             navigateTo('success');
         }
 
@@ -4462,6 +4543,30 @@ document.addEventListener('keydown', function(e) {
             if (templateCount) templateCount.textContent = templatesData.length;
             if (flpCount) flpCount.textContent = flpData.length;
             if (subCount) subCount.textContent = subscribers.length;
+        }
+
+        // Abandoned-cart recovery: send the exact reminder email a customer
+        // would receive, for THIS browser's last tracked cart, to the admin
+        // email — without waiting for the hourly cron. Admin-only (JWT).
+        async function adminTestCartEmail(stage) {
+            if (!(await supabaseAdminReady())) { alert('⚠️ Log in as admin first.'); return; }
+            const token = cartToken();
+            const session = (await supabaseClient.auth.getSession()).data.session;
+            if (!session) { alert('⚠️ Session expired — log in again.'); return; }
+            const btnLabel = stage === 2 ? 'Send 24h test email' : 'Send 1h test email';
+            try {
+                const res = await fetch(R2_UPLOAD_ENDPOINT + '/admin-cart-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.access_token },
+                    body: JSON.stringify({ cartId: token, stage })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.sent) alert('✅ Test recovery email sent to ' + data.email + ' (stage ' + data.stage + '). Check your inbox!');
+                else if (res.status === 404) alert('⚠️ No tracked cart found for this browser yet.\n\nTo test: put a beat in the cart, go to Checkout, type your email, wait ~10 seconds, then come back here.');
+                else alert('⚠️ Could not send test email: ' + (data.error || res.status));
+            } catch (e) {
+                alert('⚠️ Error: ' + e.message);
+            }
         }
 
         function switchAdminTab(tab) {
