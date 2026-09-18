@@ -2180,6 +2180,16 @@ input[type="range"]::-moz-range-thumb {
                                 <button class="btn btn-secondary btn-sm" onclick="adminTestCartEmail(2)">Send 24h test email (+promo)</button>
                             </div>
                         </div>
+                        <div style="border-top:1px solid var(--border);margin-top:1.2rem;padding-top:1rem;">
+                            <h4 style="margin-bottom:0.6rem;font-weight:400;">📧 Welcome Drip Sequence — Test</h4>
+                            <p class="text-muted" style="font-size:0.75rem;margin-bottom:0.8rem;font-weight:300;">What every FLP subscriber automatically receives: day 0 welcome (instant), day 2 your best beat, day 5 promo code FRID15-WELCOME, plus New Beat Friday each week. Preview any of them:</p>
+                            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestDripEmail(0)">Day 0 — Welcome</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestDripEmail(2)">Day 2 — Best beat</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestDripEmail(5)">Day 5 — 15% promo</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adminTestDripEmail(7)">Friday — New Beat</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="admin-tab-content" id="adminTabMessages">
@@ -3785,7 +3795,10 @@ document.addEventListener('keydown', function(e) {
                 saveSubscribers();
                 updateAdminStats();
                 // Tell the ADMIN about the new subscriber (non-blocking).
-                notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length });
+                // This also enrolls the subscriber into the automated drip
+                // sequence (day 0 welcome + day 2 + day 5 promo) and emails
+                // them the instant welcome — handled entirely by the Worker.
+                notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length, flpTitle: (flp && flp.title) || 'the FLP remake' });
             }
             
             // Show success message with animation and download button
@@ -4564,6 +4577,26 @@ document.addEventListener('keydown', function(e) {
                 if (res.ok && data.sent) alert('✅ Test recovery email sent to ' + data.email + ' (stage ' + data.stage + '). Check your inbox!');
                 else if (res.status === 404) alert('⚠️ No tracked cart found for this browser yet.\n\nTo test: put a beat in the cart, go to Checkout, type your email, wait ~10 seconds, then come back here.');
                 else alert('⚠️ Could not send test email: ' + (data.error || res.status));
+            } catch (e) {
+                alert('⚠️ Error: ' + e.message);
+            }
+        }
+
+        // Drip sequence preview: send one of the automated subscriber emails
+        // to the admin inbox without waiting for the real schedule.
+        async function adminTestDripEmail(stage) {
+            if (!(await supabaseAdminReady())) { alert('⚠️ Log in as admin first.'); return; }
+            const session = (await supabaseClient.auth.getSession()).data.session;
+            if (!session) { alert('⚠️ Session expired — log in again.'); return; }
+            try {
+                const res = await fetch(R2_UPLOAD_ENDPOINT + '/admin-drip-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.access_token },
+                    body: JSON.stringify({ stage })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.sent) alert('✅ Test drip email (stage ' + data.stage + ') sent to ' + data.to + '. Check your inbox!');
+                else alert('⚠️ Could not send: ' + (data.error || res.status));
             } catch (e) {
                 alert('⚠️ Error: ' + e.message);
             }
