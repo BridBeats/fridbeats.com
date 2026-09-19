@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRID BEATS | Music Producer & Beatmaker</title>
+    <title>FRID BEATS | Buy Beats, Instrumentals & FL Studio Remakes — Kompa, Afrobeat, Trap, Drill</title>
 
     <!-- ===== GOOGLE ANALYTICS ===== -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMJLDB23E4"></script>
@@ -15,7 +15,8 @@
 </script>
 
     <!-- ===== SEO META DESCRIPTION ===== -->
-    <meta name="description" content="FRID BEATS - Music Producer & Beatmaker. Achetez des beats premium en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
+    <meta name="description" content="Buy premium beats & FL Studio remakes by Frid Beats. Instrumentals in Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap — instant download, free FLP remakes, licensing from $14.99." />
+    <meta name="keywords" content="fridbeats, frid beats, buy beats, instrumentals, type beat, FL Studio remake, FLP remake, kompa beat, afrobeat instrumental, trap beat, drill beat, dancehall beat, reggaeton beat, boom bap instrumental, free flp download" />
     <meta name="keywords" content="beatmaker, music producer, beats, FL Studio, Kompa, Afrobeat, Reggaeton, Trap, Drill, Dancehall, Boom Bap, Zouk, Reggae, Hip-Hop" />
     <meta name="author" content="Frid Beats" />
     <meta name="msvalidate.01" content="0B6E04211357A55720B7537D1C282836" />
@@ -2255,6 +2256,8 @@ input[type="range"]::-moz-range-thumb {
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
             <div class="footer-bottom"><span onclick="secretAdminTap()" style="cursor:default;">© 2026 Frid Beats. All rights reserved.</span><span data-i18n="footer_tagline">Made by Frid Beats 🎵</span></div>
+            <!-- SEO: crawlable per-product links (Google indexes each beat/template/FLP page) -->
+            <div id="seoProductLinks" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.65rem;line-height:1.9;"></div>
         </div>
     </footer>
     <!-- ===== GLOBAL AUDIO PLAYER ===== -->
@@ -2492,10 +2495,17 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 return m ? m[1].toUpperCase() : (sessionStorage.getItem('fridBeatsPromo') || '');
             } catch (e) { return ''; }
         }
-        // Promo codes: FRID15-XXXXX (5 chars, per-cart recovery codes) and
-        // FRID15-WELCOME (the drip sequence's welcome discount).
-        function validPromo(code) { return /^FRID15-[A-Z0-9]{5,10}$/.test(String(code || '').toUpperCase()); }
-        function promoDiscountPct(code) { return validPromo(code) ? 15 : 0; }
+        // Promo codes:
+        //   FRID15-XXXXX  (5 chars, per-cart recovery codes) → 15% off
+        //   FRID15-WELCOME (drip sequence welcome discount)  → 15% off
+        //   FRID50-XXXXX  (post-purchase upgrade offer)      → 50% off
+        function validPromo(code) { return /^FRID(15|50)-[A-Z0-9]{5,10}$/.test(String(code || '').toUpperCase()); }
+        function promoDiscountPct(code) {
+            const c = String(code || '').toUpperCase();
+            if (/^FRID50-/.test(c)) return 50;
+            if (/^FRID15-/.test(c)) return 15;
+            return 0;
+        }
         function getCartTotal() {
             const gross = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
             const pct = promoDiscountPct(getPromoCode());
@@ -2891,6 +2901,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             } catch (e) {
                 console.error('Error loading data from Supabase, falling back to local data:', e);
             }
+            renderSeoProductLinks(); // crawlable links refresh whenever data loads
         }
 
         // ============================================================
@@ -3455,7 +3466,7 @@ document.addEventListener('keydown', function(e) {
                     </div>
                 </div>
                 <div class="form-group"><label>Email</label><input type="email" id="checkoutEmail" placeholder="youremail@gmail.com"></div>
-                ${(() => { const p = getPromoCode(); return validPromo(p) ? `<div style="background:rgba(34,197,94,0.08);border:1px solid #22c55e;border-radius:var(--radius-lg);padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#22c55e;">✅ Promo code <strong>${p}</strong> applied — 15% off</div>` : ''; })()}
+                ${(() => { const p = getPromoCode(); const pct = promoDiscountPct(p); return (validPromo(p) && pct) ? `<div style="background:rgba(34,197,94,0.08);border:1px solid #22c55e;border-radius:var(--radius-lg);padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#22c55e;">✅ Promo code <strong>${p}</strong> applied — ${pct}% off</div>` : ''; })()}
                 <div id="paypal-button-container" style="margin-top:0.5rem;min-height:45px;"></div>
                 <p style="text-align:center;color:var(--text-muted);font-size:0.75rem;margin-top:0.5rem;font-weight:300;">You will be redirected to PayPal to complete your payment</p>
             `;
@@ -3643,13 +3654,20 @@ document.addEventListener('keydown', function(e) {
             if (gpTitleEl) gpTitleEl.textContent = beat.title;
             if (gpArtistEl) gpArtistEl.textContent = beat.artist;
 
-            // Load / draw the real waveform for this track — delayed slightly so this extra
-            // download doesn't compete for bandwidth with the audio file itself while it's
-            // trying to start playing (this was making playback feel slow to start).
+            // Load / draw the real waveform for this track. Cached peaks (memory
+            // or localStorage) render INSTANTLY; a fresh decode waits 900ms so it
+            // doesn't compete with the audio file download for bandwidth.
             if (waveformCache[beatId]) {
                 loadWaveformForBeat(beatId, beat.preview);
             } else {
-                setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
+                const cachedPeaks = loadPeaksFromStorage(beatId);
+                if (cachedPeaks) {
+                    waveformCache[beatId] = cachedPeaks;
+                    currentWaveformPeaks = cachedPeaks;
+                    renderWaveform(0);
+                } else {
+                    setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
+                }
             }
 
             attemptPlay(audio, beatId, false);
@@ -3752,6 +3770,23 @@ document.addEventListener('keydown', function(e) {
             if (!grid) return;
             const featured = getFeaturedBeats().slice(0, 4);
             grid.innerHTML = featured.map(beat => createBeatCardHTML(beat)).join('');
+        }
+
+        function renderSeoProductLinks() {
+            // Crawlable <a> links to every product's SEO landing page. The SPA
+            // renders products client-side (invisible to crawlers on a fresh
+            // visit) — these static links let Google discover every beat,
+            // template and FLP page, boosting search visibility.
+            const box = document.getElementById('seoProductLinks');
+            if (!box) return;
+            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(p.id)}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
+            const escapeHtmlLocal = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            const links = [
+                ...beatsData.map(b => mk('beat', b)),
+                ...templatesData.map(t => mk('template', t)),
+                ...flpData.map(f => mk('flp', f)),
+            ].join('');
+            box.innerHTML = '<span style="color:var(--text-tertiary);">Browse: </span>' + links;
         }
 
         function renderBeats() {
@@ -4852,6 +4887,30 @@ document.addEventListener('keydown', function(e) {
 let audioCtx = null;
 let waveformCache = {};      // beatId -> Float32Array of ~80 normalized peaks
 
+// Waveform peaks persist in localStorage so REPEAT plays render the wave
+// instantly (no re-download + re-decode of the MP3). ~80 floats × 80 bars
+// ≈ 2-6 KB per beat as compact base64 — well under quota with trimming.
+function peaksStorageKey(beatId) { return 'fridBeats_wave_' + beatId; }
+function savePeaksToStorage(beatId, peaks) {
+    try {
+        const arr = Array.from(peaks, v => Math.round(v * 100)); // 0-100 ints
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('fridBeats_wave_'));
+        if (keys.length >= 40) { // trim oldest entries beyond 40 beats
+            keys.sort(); localStorage.removeItem(keys[0]);
+        }
+        localStorage.setItem(peaksStorageKey(beatId), JSON.stringify(arr));
+    } catch (e) { /* quota or private mode — memory cache still works */ }
+}
+function loadPeaksFromStorage(beatId) {
+    try {
+        const raw = localStorage.getItem(peaksStorageKey(beatId));
+        if (!raw) return null;
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr) || arr.length !== 80) return null;
+        return Float32Array.from(arr, v => v / 100);
+    } catch (e) { return null; }
+}
+
 // ============================================================
 // PLAY TRACKING — fire-and-forget counter for the admin panel
 // Counts each play (per beat, per browser session, throttled). The Worker
@@ -5005,6 +5064,7 @@ async function loadWaveformForBeat(beatId, url) {
         for (let i = 0; i < peaks.length; i++) peaks[i] = peaks[i] / max;
 
         waveformCache[beatId] = peaks;
+        savePeaksToStorage(beatId, peaks); // next play renders instantly, no re-decode
         if (currentBeatId === beatId) {
             currentWaveformPeaks = peaks;
             const percent = (currentAudio && currentAudio.duration) ? (currentAudio.currentTime / currentAudio.duration) : 0;
