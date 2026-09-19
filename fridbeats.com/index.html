@@ -5439,6 +5439,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                     setTimeout(backToCheckout, 1200);
                     setTimeout(() => window.addEventListener('hashchange', backToCheckout, { once: true }), 1500);
                 }
+                // SEO landing pages (/template/<id>, /flp/<id>) link here with
+                // ?open=template/<id> — wait briefly for Supabase data (admin-added
+                // items are not in the local defaults), then jump to the product.
+                const openParam = params.get('open');
+                if (openParam && /^[a-z]+\/[A-Za-z0-9_-]{1,64}$/i.test(openParam)) {
+                    const slashIdx = openParam.indexOf('/');
+                    const oType = openParam.slice(0, slashIdx);
+                    const oId = openParam.slice(slashIdx + 1);
+                    if (oType === 'template' || oType === 'flp') {
+                        const waitAndOpen = (tries) => {
+                            const pool = oType === 'template' ? templatesData : flpData;
+                            if ((pool || []).some(x => x.id === oId)) { selectSearchResult(oType, oId); return; }
+                            if (tries > 0) setTimeout(() => waitAndOpen(tries - 1), 300);
+                            else selectSearchResult(oType, oId); // fall back — highlight anyway
+                        };
+                        waitAndOpen(12);
+                    }
+                }
                 const playId = params.get('play');
             if (!playId || !getBeatById(playId)) return;
             showBeatDetail(playId);
