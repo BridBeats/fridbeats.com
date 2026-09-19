@@ -35,8 +35,8 @@
     <meta property="og:url" content="https://fridbeats.com" />
     <meta property="og:type" content="website" />
 
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="apple-touch-icon" href="favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f12'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%231a5a4a' stroke-width='3.5'/%3E%3Ctext x='32' y='41' font-family='Arial,sans-serif' font-size='22' font-weight='bold' fill='%23e8e6e1' text-anchor='middle'%3EFB%3C/text%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f12'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%231a5a4a' stroke-width='3.5'/%3E%3Ctext x='32' y='41' font-family='Arial,sans-serif' font-size='22' font-weight='bold' fill='%23e8e6e1' text-anchor='middle'%3EFB%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
     <link rel="preconnect" href="https://frid-beats-r2-upload.fridbeats.workers.dev" />
     <link rel="preconnect" href="https://cdn.fridbeats.com" />
@@ -2622,15 +2622,22 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 return { file: new File([blob], base + '.webp', { type: 'image/webp' }), bytes: blob.size };
             } catch (e) { console.warn('Optimize URL failed:', e); return null; }
         }
-        // Admin tool: re-encode + re-upload every beat artwork (skips small ones)
+        // Admin tool: re-encode + re-upload EVERY product image (beats, templates,
+        // FLP thumbnails) and rewrite the static page images (logo, hero, partners)
+        // to their optimized ~120 KB WebP copies. Cuts first-load weight massively.
         async function optimizeAllArtwork() {
             if (!(await supabaseAdminReady())) { alert('⚠️ Log in as admin first.'); return; }
             const btn = document.getElementById('btnOptimizeArtwork');
             if (btn) { btn.disabled = true; btn.textContent = '⏳ Optimizing…'; }
             let done = 0, skipped = 0, failed = 0;
-            for (const beat of beatsData) {
+            const items = [
+                ...beatsData.map(b => ({ row: b, field: 'artwork', table: 'beat' })),
+                ...templatesData.map(t => ({ row: t, field: 'artwork', table: 'template' })),
+                ...flpData.map(f => ({ row: f, field: 'thumbnail', table: 'flp' })),
+            ];
+            for (const { row, field, table } of items) {
                 try {
-                    const url = beat.artwork || '';
+                    const url = row[field] || '';
                     if (!url || url.startsWith('data:')) { skipped++; continue; }
                     const head = await fetch(url, { method: 'HEAD' });
                     const len = parseInt(head.headers.get('Content-Length') || '0', 10);
@@ -2645,15 +2652,44 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                     });
                     const d = await r.json().catch(() => ({}));
                     if (r.ok && d.publicUrl) {
-                        beat.artwork = d.publicUrl;
-                        await upsertRowToSupabase('beat', beat);
+                        row[field] = d.publicUrl;
+                        await upsertRowToSupabase(table, row);
                         done++;
                     } else failed++;
                 } catch (e) { failed++; }
             }
-            renderBeats(); renderFeatured(); renderAdminBeats();
-            if (btn) { btn.disabled = false; btn.textContent = '🖼 Optimize artwork'; }
-            alert(`✅ Optimized: ${done} · already small: ${skipped} · failed: ${failed}\n\nRemember to commit the updated index.html to GitHub so the new URLs go live.`);
+            // Static page images (logo, hero, partner logos): swap heavy originals
+            // for optimized copies and persist the rewrite for future visits.
+            let staticDone = 0;
+            try {
+                const map = JSON.parse(safeLocalStorageGet('fridBeats_imgOptMap') || '{}');
+                const imgs = [...document.querySelectorAll('img[src*="' + SUPABASE_STORAGE_HOST + '"]')];
+                for (const img of imgs) {
+                    try {
+                        const src = img.getAttribute('src');
+                        if (map[src]) { img.src = map[src]; continue; }
+                        const head = await fetch(src, { method: 'HEAD' });
+                        const len = parseInt(head.headers.get('Content-Length') || '0', 10);
+                        if (len && len <= 300 * 1024) continue;
+                        const opt = await optimizeArtworkUrl(src);
+                        if (!opt) continue;
+                        const m = src.match(/frid-files\/(public\/(?:logo|profile)\/[^?#]+)/i);
+                        const path = m ? m[1].replace(/[^a-zA-Z0-9._\/-]/g, '_').replace(/(\.[a-zA-Z]+)$/, '_opt$1')
+                                       : 'public/logo/' + Date.now() + '_' + opt.file.name;
+                        const r = await fetch(R2_UPLOAD_ENDPOINT + '/artwork-optimize?path=' + encodeURIComponent(path), {
+                            method: 'POST',
+                            headers: { 'Content-Type': opt.file.type, ...(await adminAuthHeader()) },
+                            body: opt.file,
+                        });
+                        const d = await r.json().catch(() => ({}));
+                        if (r.ok && d.publicUrl) { map[src] = d.publicUrl; img.src = d.publicUrl; staticDone++; }
+                    } catch (e) { /* keep original */ }
+                }
+                safeLocalStorageSet('fridBeats_imgOptMap', JSON.stringify(map));
+            } catch (e) { /* non-fatal */ }
+            renderBeats(); renderTemplates(); renderFLP(); renderFeatured(); renderAdminBeats(); renderAdminTemplates(); renderAdminFlp();
+            if (btn) { btn.disabled = false; btn.textContent = '🖼 Optimize images'; }
+            alert(`✅ Optimized: ${done} product images + ${staticDone} page images · already small: ${skipped} · failed: ${failed}\n\nRemember to commit the updated index.html to GitHub so the new URLs go live.`);
         }
         async function adminAuthHeader() {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -2707,8 +2743,11 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             });
             if (!doneRes.ok) throw new Error('Multipart complete failed: ' + doneRes.status);
             const done = await doneRes.json();
-            if (!done.publicUrl && bucket !== 'private') throw new Error('No public URL returned');
-            return done.publicUrl || null; // private files are served via signed links
+            if (!done || !done.path) throw new Error('Multipart complete returned no path');
+            // Same path-carrying URL convention as uploadToR2 (see above) — private
+            // files have no public URL, so the storage path rides in ?k=.
+            const base = done.publicUrl || (R2_UPLOAD_ENDPOINT + '/pub/x/' + done.path);
+            return base + '?k=' + encodeURIComponent(done.path);
         }
 
         // Upload via the R2 Worker (admin session is verified server-side by the Worker).
@@ -2730,8 +2769,14 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                         if (xhr.status >= 200 && xhr.status < 300) {
                             try {
                                 const res = JSON.parse(xhr.responseText);
-                                if (res && res.publicUrl) resolve(res.publicUrl);
-                                else reject(new Error('R2 Worker did not return publicUrl'));
+                                if (!res || !res.path) { reject(new Error('R2 Worker response missing path')); return; }
+                                // Public files: /pub/... URL. Private files (MP3/WAV/trackout ZIP) have
+                                // NO public URL by design — they are only served via signed links. We
+                                // return a path-carrying URL instead: the visible part is a non-listable
+                                // Worker path, and the real storage path rides in ?k= so the order
+                                // record can still resolve the file for secure downloads.
+                                const base = res.publicUrl || (R2_UPLOAD_ENDPOINT + '/pub/x/' + res.path);
+                                resolve(base + '?k=' + encodeURIComponent(res.path));
                             } catch (err) { reject(err); }
                         } else {
                             reject(new Error('R2 upload HTTP ' + xhr.status + ': ' + xhr.responseText));
@@ -2752,6 +2797,15 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
         // Returns null when the file is not in a known private folder.
         function privateFilePath(url) {
             if (!url || typeof url !== 'string' || url.startsWith('data:')) return null;
+            // New uploads carry their exact storage path in ?k= (see uploadToR2) —
+            // prefer it over URL parsing so signed links always resolve.
+            const k = url.match(/[?&]k=([^&\s]+)/);
+            if (k) {
+                try {
+                    const decoded = decodeURIComponent(k[1]);
+                    if (/^(beat|template|templates|flp|private)\//i.test(decoded)) return decoded;
+                } catch (e) { /* fall through to legacy URL parsing */ }
+            }
             // R2-style paths: .../beat/mp3/..., .../beat/wav/..., .../beat/trackout/...,
             // .../beat/..., .../template/... (sing), .../templates/... (plur),
             // .../private/flp/..., .../private/templates/...
@@ -2997,6 +3051,9 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 console.warn(`⚠️ localStorage full or blocked, skipping local cache for "${key}":`, e);
                 return false;
             }
+        }
+        function safeLocalStorageGet(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
         }
         function saveBeats() { safeLocalStorageSet('fridBeats_beats', JSON.stringify(beatsData)); }
         function saveTemplates() { safeLocalStorageSet('fridBeats_templates', JSON.stringify(templatesData)); }
@@ -3654,20 +3711,24 @@ document.addEventListener('keydown', function(e) {
             if (gpTitleEl) gpTitleEl.textContent = beat.title;
             if (gpArtistEl) gpArtistEl.textContent = beat.artist;
 
-            // Load / draw the real waveform for this track. Cached peaks (memory
-            // or localStorage) render INSTANTLY; a fresh decode waits 900ms so it
-            // doesn't compete with the audio file download for bandwidth.
-            if (waveformCache[beatId]) {
-                loadWaveformForBeat(beatId, beat.preview);
+            // Cached peaks (memory or localStorage) render the REAL wave instantly;
+            // otherwise show a static placeholder + prefetch on hover, and start the
+            // decode after a short delay so it doesn't compete with the audio download.
+            const cachedPeaks = waveformCache[beatId] || loadPeaksFromStorage(beatId);
+            if (cachedPeaks) {
+                waveformCache[beatId] = cachedPeaks;
+                currentWaveformPeaks = cachedPeaks;
+                renderWaveform(0);
             } else {
-                const cachedPeaks = loadPeaksFromStorage(beatId);
-                if (cachedPeaks) {
-                    waveformCache[beatId] = cachedPeaks;
-                    currentWaveformPeaks = cachedPeaks;
-                    renderWaveform(0);
-                } else {
-                    setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
-                }
+                currentWaveformPeaks = null;
+                drawFlatWaveform(document.getElementById('gpWaveform')); // static idle wave — no dancing bars
+                const card = document.querySelector('.beat-card button[data-beat-id="' + beatId + '"]');
+                const hoverEl = card || document.getElementById('detailPlayBtn');
+                if (hoverEl) hoverEl.addEventListener('mouseenter', function once() {
+                    hoverEl.removeEventListener('mouseenter', once);
+                    prefetchPeaksForBeat(beatId, beat.preview);
+                });
+                setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
             }
 
             attemptPlay(audio, beatId, false);
@@ -3779,8 +3840,8 @@ document.addEventListener('keydown', function(e) {
             // template and FLP page, boosting search visibility.
             const box = document.getElementById('seoProductLinks');
             if (!box) return;
-            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(p.id)}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
             const escapeHtmlLocal = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(p.id)}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
             const links = [
                 ...beatsData.map(b => mk('beat', b)),
                 ...templatesData.map(t => mk('template', t)),
@@ -4895,18 +4956,41 @@ function savePeaksToStorage(beatId, peaks) {
     try {
         const arr = Array.from(peaks, v => Math.round(v * 100)); // 0-100 ints
         const keys = Object.keys(localStorage).filter(k => k.startsWith('fridBeats_wave_'));
-        if (keys.length >= 40) { // trim oldest entries beyond 40 beats
+        if (keys.length >= 60) { // trim oldest entries beyond 60 beats
             keys.sort(); localStorage.removeItem(keys[0]);
         }
         localStorage.setItem(peaksStorageKey(beatId), JSON.stringify(arr));
     } catch (e) { /* quota or private mode — memory cache still works */ }
+}
+
+// PREFETCH — decode a beat's peaks in the background BEFORE the user presses
+// play (triggered on card hover / details open). By the time they click, the
+// real waveform renders instantly. Runs once per beat per page load.
+const _prefetched = {};
+function prefetchPeaksForBeat(beatId, url) {
+    if (!beatId || !url || _prefetched[beatId]) return;
+    _prefetched[beatId] = true;
+    if (waveformCache[beatId] || loadPeaksFromStorage(beatId)) return; // already cached
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
+        .then(ab => ctx.decodeAudioData(ab))
+        .then(decoded => {
+            if (currentBeatId === beatId) return; // user is already playing it — normal path handles it
+            const peaks = computePeaksFromBuffer(decoded, waveGeometry().barCount);
+            waveformCache[beatId] = peaks;
+            savePeaksToStorage(beatId, peaks);
+            if (currentBeatId && waveformCache[currentBeatId] === undefined) { /* noop */ }
+        })
+        .catch(() => { _prefetched[beatId] = false; }); // allow retry on next hover
 }
 function loadPeaksFromStorage(beatId) {
     try {
         const raw = localStorage.getItem(peaksStorageKey(beatId));
         if (!raw) return null;
         const arr = JSON.parse(raw);
-        if (!Array.isArray(arr) || arr.length !== 80) return null;
+        // 80 (mobile) or 160 (desktop) — length must match the current geometry
+        if (!Array.isArray(arr) || (arr.length !== 80 && arr.length !== 160)) return null;
         return Float32Array.from(arr, v => v / 100);
     } catch (e) { return null; }
 }
@@ -4931,7 +5015,50 @@ function trackBeatPlay(beatId) {
     } catch (e) { /* ignore */ }
 }
 let currentWaveformPeaks = null;
-const WAVEFORM_BARS = 80;
+// Bars follow the active geometry (160 desktop / 80 touch). localStorage
+// entries saved for the other size are ignored and re-computed on demand.
+function activeWaveBars() { return waveGeometry().barCount; }
+
+// Average |sample| per block, normalized to 0-1 — shared by the play path and
+// the hover prefetch so both produce identical peak arrays.
+function computePeaksFromBuffer(decoded, bars) {
+    const channelData = decoded.getChannelData(0);
+    const blockSize = Math.max(1, Math.floor(channelData.length / bars));
+    const peaks = new Float32Array(bars);
+    for (let i = 0; i < bars; i++) {
+        const start = i * blockSize;
+        let sum = 0;
+        for (let j = 0; j < blockSize; j++) sum += Math.abs(channelData[start + j] || 0);
+        peaks[i] = sum / blockSize;
+    }
+    let max = 0;
+    for (let i = 0; i < peaks.length; i++) if (peaks[i] > max) max = peaks[i];
+    if (max < 0.0001) max = 0.0001;
+    for (let i = 0; i < peaks.length; i++) peaks[i] = peaks[i] / max;
+    return peaks;
+}
+
+// Warm the waveform cache for every beat on the page during idle time —
+// by the time the user clicks play, most waves render instantly.
+function scheduleIdlePrefetch() {
+    if (!('requestIdleCallback' in window)) return;
+    const jobs = [];
+    const collect = () => {
+        document.querySelectorAll('.beat-play-btn[data-beat-id]').forEach(btn => {
+            const id = btn.getAttribute('data-beat-id');
+            const b = beatsData.find(x => x.id === id);
+            if (b && b.preview) jobs.push({ id, url: b.preview });
+        });
+    };
+    const step = (deadline) => {
+        while (jobs.length && deadline.timeRemaining() > 8) {
+            const j = jobs.shift();
+            if (j) prefetchPeaksForBeat(j.id, j.url);
+        }
+        if (jobs.length) requestIdleCallback(step, { timeout: 20000 });
+    };
+    requestIdleCallback(() => { collect(); if (jobs.length) requestIdleCallback(step, { timeout: 20000 }); }, { timeout: 6000 });
+}
 
 function getAudioCtx() {
     if (!audioCtx) {
@@ -5043,25 +5170,19 @@ async function loadWaveformForBeat(beatId, url) {
     try {
         const ctx = getAudioCtx();
         if (!ctx || !url) throw new Error('No audio context / URL');
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Fetch failed');
-        const arrayBuffer = await res.arrayBuffer();
+        // Range request: only the first ~1.5 MB is enough to shape the wave —
+        // cuts waveform load time from (full MP3) to a fraction on slow links.
+        const RANGE_BYTES = 1536 * 1024;
+        const res = await fetch(url, { headers: { 'Range': 'bytes=0-' + (RANGE_BYTES - 1) } }).catch(() => null);
+        const ranged = res && res.status === 206;
+        const fetchRes = res || await fetch(url);
+        if (!fetchRes.ok) throw new Error('Fetch failed');
+        const arrayBuffer = await fetchRes.arrayBuffer();
         const decoded = await ctx.decodeAudioData(arrayBuffer);
         if (currentBeatId !== beatId) return; // track changed while decoding
 
         const channelData = decoded.getChannelData(0);
-        const blockSize = Math.max(1, Math.floor(channelData.length / WAVEFORM_BARS));
-        const peaks = new Float32Array(WAVEFORM_BARS);
-        for (let i = 0; i < WAVEFORM_BARS; i++) {
-            const start = i * blockSize;
-            let sum = 0;
-            for (let j = 0; j < blockSize; j++) sum += Math.abs(channelData[start + j] || 0);
-            peaks[i] = sum / blockSize;
-        }
-        let max = 0;
-        for (let i = 0; i < peaks.length; i++) if (peaks[i] > max) max = peaks[i];
-        if (max < 0.0001) max = 0.0001;
-        for (let i = 0; i < peaks.length; i++) peaks[i] = peaks[i] / max;
+        const peaks = computePeaksFromBuffer(decoded, activeWaveBars());
 
         waveformCache[beatId] = peaks;
         savePeaksToStorage(beatId, peaks); // next play renders instantly, no re-decode
@@ -5662,6 +5783,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderAdminFlp();
     renderTemplates();
     renderFLP();
+    scheduleIdlePrefetch(); // pre-decode waveforms in idle time → instant waves on play
     updateAdminStats();
     document.body.classList.remove('app-loading');
     document.getElementById('appLoadingScreen')?.remove();
