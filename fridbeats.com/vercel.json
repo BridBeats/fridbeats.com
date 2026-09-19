@@ -1,14 +1,10 @@
 {
-  "rewrites": {
-    "beforeFiles": [
-      { "source": "/sitemap.xml", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/sitemap.xml" }
-    ],
-    "afterFiles": [
-      { "source": "/beat/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/beat/:path*" },
-      { "source": "/template/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/template/:path*" },
-      { "source": "/flp/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/flp/:path*" },
-      { "source": "/:path*", "destination": "/index.html" }
-    ]
-  },
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/sitemap.xml" },
+    { "source": "/beat/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/beat/:path*" },
+    { "source": "/template/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/template/:path*" },
+    { "source": "/flp/:path*", "destination": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/flp/:path*" },
+    { "source": "/:path*", "destination": "/index.html" }
+  ],
   "cleanUrls": true
 }
