@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
+    },
+    {
+      "src": "/audio/(.*)",
+      "dest": "/audio/$1"
+    },
+    {
+      "src": "/downloads/(.*)",
+      "dest": "/downloads/$1"
+    },
+    {
+      "src": "/favicon.png",
+      "dest": "/favicon.png"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/sitemap.xml"
+    },
+    {
+      "src": "/beat/(.*)",
+      "dest": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/beat/$1"
+    },
+    {
+      "src": "/template/(.*)",
+      "dest": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/template/$1"
+    },
+    {
+      "src": "/flp/(.*)",
+      "dest": "https://frid-beats-r2-upload.fridbeats.workers.dev/seo/flp/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "cleanUrls": true
+}
