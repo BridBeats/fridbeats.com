@@ -37,6 +37,7 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
+    <link rel="preconnect" href="https://frid-beats-r2-upload.fridbeats.workers.dev" />
     <link rel="preconnect" href="https://cdn.fridbeats.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
@@ -222,19 +223,26 @@
     right: 22px;
     transform: translateX(20px);
     width: 168px;
-    padding: 0;
+    padding: 10px 10px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 500;
+    z-index: 10001; /* ALWAYS above the player bar (9999) — never covered by the waveform */
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
     cursor: grab;
     transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+    /* True frosted-glass chrome: translucent panel + blur of what's behind */
+    background: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 45%, rgba(0,0,0,0.25));
+    -webkit-backdrop-filter: blur(14px) saturate(1.35);
+    backdrop-filter: blur(14px) saturate(1.35);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 14px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .vu-meter-panel.vu-active {
-    opacity: 0.62; /* translucent while parked — content behind stays readable */
+    opacity: 0.9; /* glass stays readable — the blur does the transparency, not fading */
     pointer-events: auto;
     transform: translateX(0);
     visibility: visible;
@@ -242,22 +250,24 @@
 /* Solid while interacting so the gauge is easy to read when you grab it */
 .vu-meter-panel.vu-active:hover,
 .vu-meter-panel.vu-dragging {
-    opacity: 0.97;
+    opacity: 1;
 }
 .vu-meter-panel.vu-dragging { cursor: grabbing; transition: none; }
+/* The dial itself is glass too — semi-transparent face, blurred backdrop shows through */
+.vu-meter-svg { width: 100%; height: auto; touch-action: none; }
+.vu-face-frame { fill: rgba(10, 12, 16, 0.72); stroke: rgba(255,255,255,0.14); stroke-width: 1; }
 /* On small screens the panel would overlap the player bar / cards — pin it
    above the bottom player with a compact size instead of hiding it. */
 @media (max-width: 1300px) {
     .vu-meter-panel {
         width: 104px;
         top: auto;
-        bottom: 84px;   /* sits above the 70px global player bar */
+        bottom: 92px;   /* floats above the player bar, visibly separated */
         right: 10px;
-        z-index: 600;
+        z-index: 10002;
+        padding: 6px 6px 5px;
     }
 }
-.vu-meter-svg { width: 100%; height: auto; touch-action: none; }
-.vu-face-frame { fill: #0c0c0c; stroke: #000; stroke-width: 1; }
 .vu-sign { font-size: 13px; font-weight: 700; fill: var(--accent-primary); }
 .vu-sign-red { fill: #b5261f; }
 .vu-tick { stroke: var(--accent-primary); stroke-width: 1.4; }
@@ -2142,9 +2152,13 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                     <div style="overflow-x:auto;">
                         <table class="admin-table">
-                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Plays</th><th>Actions</th></tr></thead>
                             <tbody id="adminBeatList"></tbody>
                         </table>
+                        <div id="adminPlayStatsNote" style="font-size:0.7rem;color:var(--text-muted);margin-top:0.6rem;"></div>
+                        <div style="margin-top:0.8rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+                            <button class="btn btn-secondary btn-sm" id="btnOptimizeArtwork" onclick="optimizeAllArtwork()">🖼 Optimize artwork</button>
+                        </div>
                     </div>
                 </div>
                 <div class="admin-tab-content" id="adminTabTemplates">
@@ -2534,11 +2548,159 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
         async function uploadToStorage(file, folder, onProgress, bucket) {
             if (!file) return null;
             if (R2_UPLOAD_ENDPOINT) {
-                try { return await uploadToR2(file, folder, onProgress, bucket); }
-                catch (e) { console.warn('R2 upload failed, falling back to Supabase Storage:', e); }
+                // Large files (stems ZIP/RAR, WAV) go through multipart — reliable for 50-300 MB
+                const BIG = 25 * 1024 * 1024;
+                if (file.size > BIG) {
+                    try { return await uploadToMultipart(file, folder, onProgress, bucket); }
+                    catch (e) { console.warn('Multipart upload failed, trying single-shot:', e); }
+                } else {
+                    try { return await uploadToR2(file, folder, onProgress, bucket); }
+                    catch (e) { console.warn('R2 upload failed, falling back to Supabase Storage:', e); }
+                }
             }
             return uploadToSupabaseStorage(file, folder);
         }
+        // ============================================================
+        // ARTWORK OPTIMIZER — resize + re-encode in the browser (canvas)
+        // Turns heavy camera/PNG artwork (2-6 MB) into a crisp ~120 KB WebP
+        // (800x800) so cards and the hero load instantly. Used automatically
+        // for big uploads and via the Optimize Artwork admin tool.
+        // ============================================================
+        async function optimizeArtworkFile(file, maxDim = 800, quality = 0.82) {
+            if (!file || !/^image\//.test(file.type)) return null;
+            if (file.size <= 300 * 1024) return null; // already small — keep original
+            try {
+                const img = await new Promise((resolve, reject) => {
+                    const im = new Image();
+                    im.onload = () => resolve(im);
+                    im.onerror = reject;
+                    im.src = URL.createObjectURL(file);
+                });
+                const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+                const w = Math.max(1, Math.round(img.width * scale));
+                const h = Math.max(1, Math.round(img.height * scale));
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', quality));
+                URL.revokeObjectURL(img.src);
+                if (!blob || blob.size >= file.size) return null; // no gain — keep original
+                const name = file.name.replace(/\.[^.]+$/, '') + '.webp';
+                return new File([blob], name, { type: 'image/webp' });
+            } catch (e) { console.warn('Artwork optimize failed, using original:', e); return null; }
+        }
+        // Re-encode an EXISTING artwork URL (admin Optimize Artwork tool)
+        async function optimizeArtworkUrl(url) {
+            try {
+                const img = await new Promise((resolve, reject) => {
+                    const im = new Image();
+                    im.crossOrigin = 'anonymous';
+                    im.onload = () => resolve(im);
+                    im.onerror = reject;
+                    im.src = url;
+                });
+                const scale = Math.min(1, 800 / Math.max(img.width, img.height));
+                const w = Math.max(1, Math.round(img.width * scale));
+                const h = Math.max(1, Math.round(img.height * scale));
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.82));
+                if (!blob) return null;
+                const base = (url.split('/').pop() || 'artwork').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+                return { file: new File([blob], base + '.webp', { type: 'image/webp' }), bytes: blob.size };
+            } catch (e) { console.warn('Optimize URL failed:', e); return null; }
+        }
+        // Admin tool: re-encode + re-upload every beat artwork (skips small ones)
+        async function optimizeAllArtwork() {
+            if (!(await supabaseAdminReady())) { alert('⚠️ Log in as admin first.'); return; }
+            const btn = document.getElementById('btnOptimizeArtwork');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Optimizing…'; }
+            let done = 0, skipped = 0, failed = 0;
+            for (const beat of beatsData) {
+                try {
+                    const url = beat.artwork || '';
+                    if (!url || url.startsWith('data:')) { skipped++; continue; }
+                    const head = await fetch(url, { method: 'HEAD' });
+                    const len = parseInt(head.headers.get('Content-Length') || '0', 10);
+                    if (len && len <= 300 * 1024) { skipped++; continue; } // already small
+                    const opt = await optimizeArtworkUrl(url);
+                    if (!opt) { failed++; continue; }
+                    const path = 'public/beats/' + Date.now() + '_' + opt.file.name;
+                    const r = await fetch(R2_UPLOAD_ENDPOINT + '/artwork-optimize?path=' + encodeURIComponent(path), {
+                        method: 'POST',
+                        headers: { 'Content-Type': opt.file.type, ...(await adminAuthHeader()) },
+                        body: opt.file,
+                    });
+                    const d = await r.json().catch(() => ({}));
+                    if (r.ok && d.publicUrl) {
+                        beat.artwork = d.publicUrl;
+                        await upsertRowToSupabase('beat', beat);
+                        done++;
+                    } else failed++;
+                } catch (e) { failed++; }
+            }
+            renderBeats(); renderFeatured(); renderAdminBeats();
+            if (btn) { btn.disabled = false; btn.textContent = '🖼 Optimize artwork'; }
+            alert(`✅ Optimized: ${done} · already small: ${skipped} · failed: ${failed}\n\nRemember to commit the updated index.html to GitHub so the new URLs go live.`);
+        }
+        async function adminAuthHeader() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            return session && session.access_token ? { 'Authorization': 'Bearer ' + session.access_token } : {};
+        }
+
+        // ============================================================
+        // MULTIPART UPLOAD — for LARGE files (ZIP/RAR stems 50-300 MB).
+        // Chunks the file in the browser (8 MB parts) and streams each part
+        // to the Worker → B2. Much more reliable than one giant POST: a
+        // failed part retries alone instead of restarting the whole upload.
+        // ============================================================
+        const MPART_CHUNK_MB = 8;
+        async function uploadToMultipart(file, folder, onProgress, bucket) {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const path = `${folder}/${Date.now()}_${safeName}`;
+            const auth = await adminAuthHeader();
+            if (!auth.Authorization) throw new Error('No admin session');
+            const H = (extra) => Object.assign({ 'Authorization': auth.Authorization }, extra || {});
+            // 1) init
+            const initRes = await fetch(R2_UPLOAD_ENDPOINT + '/upload-mpart?path=' + encodeURIComponent(path) + '&bucket=' + encodeURIComponent(bucket || 'public'), { method: 'POST', headers: H() });
+            if (!initRes.ok) throw new Error('Multipart init failed: ' + initRes.status + ' ' + (await initRes.text().catch(() => '')));
+            const { uploadId } = await initRes.json();
+            // 2) parts
+            const totalParts = Math.ceil(file.size / (MPART_CHUNK_MB * 1024 * 1024));
+            const parts = [];
+            for (let partNumber = 1; partNumber <= totalParts; partNumber++) {
+                const start = (partNumber - 1) * MPART_CHUNK_MB * 1024 * 1024;
+                const chunk = file.slice(start, Math.min(file.size, start + MPART_CHUNK_MB * 1024 * 1024));
+                let etag = null, attempt = 0;
+                while (attempt < 3 && !etag) {
+                    attempt++;
+                    try {
+                        const r = await fetch(R2_UPLOAD_ENDPOINT + '/upload-mpart-part?path=' + encodeURIComponent(path) + '&bucket=' + encodeURIComponent(bucket || 'public') + '&uploadId=' + encodeURIComponent(uploadId) + '&partNumber=' + partNumber, {
+                            method: 'PUT', headers: H(), body: chunk,
+                        });
+                        if (!r.ok) throw new Error('Part ' + partNumber + ' failed: ' + r.status);
+                        etag = (await r.json()).etag;
+                    } catch (e) {
+                        if (attempt >= 3) { try { await fetch(R2_UPLOAD_ENDPOINT + '/upload-mpart-abort?path=' + encodeURIComponent(path) + '&bucket=' + encodeURIComponent(bucket || 'public'), { method: 'POST', headers: H({'Content-Type':'application/json'}), body: JSON.stringify({ uploadId }) }); } catch (e2) {} }
+                        else { await new Promise(res => setTimeout(res, 800 * attempt)); }
+                    }
+                }
+                if (!etag) throw new Error('Part ' + partNumber + ' failed after 3 attempts');
+                parts.push({ partNumber, etag });
+                if (onProgress) onProgress(Math.round((partNumber / totalParts) * 100));
+            }
+            // 3) complete
+            const doneRes = await fetch(R2_UPLOAD_ENDPOINT + '/upload-mpart-complete?path=' + encodeURIComponent(path) + '&bucket=' + encodeURIComponent(bucket || 'public'), {
+                method: 'POST', headers: H({ 'Content-Type': 'application/json' }), body: JSON.stringify({ uploadId, parts }),
+            });
+            if (!doneRes.ok) throw new Error('Multipart complete failed: ' + doneRes.status);
+            const done = await doneRes.json();
+            if (!done.publicUrl && bucket !== 'private') throw new Error('No public URL returned');
+            return done.publicUrl || null; // private files are served via signed links
+        }
+
         // Upload via the R2 Worker (admin session is verified server-side by the Worker).
         function uploadToR2(file, folder, onProgress, bucket) {
             return new Promise((resolve, reject) => {
@@ -3169,6 +3331,7 @@ document.addEventListener('keydown', function(e) {
         renderAdminFlp();
         updateAdminStats();
         loadAdminMessages();
+        loadPlayStats(); // async — fills the ▶ Plays column when it arrives
     } else {
         gate.style.display = 'block';
         panel.style.display = 'none';
@@ -3491,6 +3654,7 @@ document.addEventListener('keydown', function(e) {
 
             attemptPlay(audio, beatId, false);
             updatePlayButtons(beatId, true);
+            trackBeatPlay(beatId); // fire-and-forget play counter (admin stats)
 
             audio.onended = () => { updatePlayButtons(beatId, false); renderWaveform(0); };
             audio.onpause = () => { if (!audio.ended) updatePlayButtons(beatId, false); };
@@ -4314,6 +4478,7 @@ document.addEventListener('keydown', function(e) {
                         const progressEl = document.getElementById('f_artwork_progress');
                         if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
+                        artwork = await optimizeArtworkFile(artwork) || artwork; // auto-shrink heavy images
                         artworkData = await uploadToStorage(artwork, 'public/beats', p => { if (progressEl) progressEl.style.width = p + '%'; });
                         if (statusEl) { statusEl.textContent = artworkData ? '✅ Uploaded!' : '⚠️ Upload failed'; statusEl.className = artworkData ? 'file-status done' : 'file-status'; }
                         if (progressEl) progressEl.style.width = '100%';
@@ -4332,6 +4497,7 @@ document.addEventListener('keydown', function(e) {
                         const progressEl = document.getElementById('f_thumbnail_progress');
                         if (statusEl) { statusEl.textContent = '⏳ Uploading...'; statusEl.className = 'file-status uploading'; }
                         if (progressEl) progressEl.style.width = '50%';
+                        thumbnail = await optimizeArtworkFile(thumbnail) || thumbnail; // auto-shrink
                         thumbnailData = await uploadToStorage(thumbnail, 'public/flp', p => { if (progressEl) progressEl.style.width = p + '%'; });
                         if (statusEl) { statusEl.textContent = thumbnailData ? '✅ Uploaded!' : '⚠️ Upload failed'; statusEl.className = thumbnailData ? 'file-status done' : 'file-status'; }
                         if (progressEl) progressEl.style.width = '100%';
@@ -4353,7 +4519,10 @@ document.addEventListener('keydown', function(e) {
                             return url;
                         } catch (e) {
                             if (statusEl) { statusEl.textContent = '⚠️ Upload failed'; statusEl.className = 'file-status'; }
-                            alert('⚠️ Could not upload a file to storage.');
+                            const msg = String(e && e.message || e);
+                            if (/401|session|Authorization/i.test(msg)) alert('⚠️ Upload failed: your admin session expired.\n\nLog out of the Admin panel, log back in, and try again.');
+                            else if (/413|too large/i.test(msg)) alert('⚠️ Upload failed: file too large (max 300 MB).');
+                            else alert('⚠️ Could not upload a file to storage.\n\n' + msg.slice(0, 200));
                             return null;
                         }
                     };
@@ -4497,6 +4666,20 @@ document.addEventListener('keydown', function(e) {
             else if (type === 'flp') { flpData = flpData.filter(d => d.id !== id); saveFlp(); deleteRowFromSupabase(type, id); renderAdminFlp(); renderFLP(); updateAdminStats(); }
         }
 
+        let playStats = {}; // beatId -> play count (loaded from Worker /admin-stats)
+        async function loadPlayStats() {
+            try {
+                if (!window.R2_UPLOAD_ENDPOINT || !(await supabaseAdminReady())) return;
+                const r = await fetch(R2_UPLOAD_ENDPOINT + '/admin-stats', { headers: await adminAuthHeader() });
+                if (!r.ok) return;
+                const d = await r.json();
+                if (d && d.ok && d.stats) playStats = d.stats;
+                const el = document.getElementById('adminPlayStatsNote');
+                if (el) el.textContent = '▶ Plays are counted each time a visitor plays a beat (server-side, deduped per 30s).';
+            } catch (e) { /* stats are optional — never block the admin panel */ }
+            renderAdminBeats();
+        }
+
         function renderAdminBeats() {
             const tbody = document.getElementById('adminBeatList');
             if (!tbody) return;
@@ -4507,6 +4690,7 @@ document.addEventListener('keydown', function(e) {
                     <td>${beat.genre}</td>
                     <td>${beat.bpm}</td>
                     <td style="color:var(--text-secondary);">$${beat.price.basic}</td>
+                    <td style="color:var(--accent-primary);font-weight:600;">▶ ${playStats[beat.id] || 0}</td>
                     <td>
                         <div class="admin-actions">
                             <button class="btn btn-sm ${beat.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('beat', '${beat.id}')" title="${beat.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
@@ -4667,6 +4851,26 @@ document.addEventListener('keydown', function(e) {
 // ============================================================
 let audioCtx = null;
 let waveformCache = {};      // beatId -> Float32Array of ~80 normalized peaks
+
+// ============================================================
+// PLAY TRACKING — fire-and-forget counter for the admin panel
+// Counts each play (per beat, per browser session, throttled). The Worker
+// accumulates counts server-side, so numbers survive browser clears.
+// ============================================================
+const _playTracked = {}; // beatId -> timestamp of last ping
+function trackBeatPlay(beatId) {
+    try {
+        const now = Date.now();
+        if (_playTracked[beatId] && now - _playTracked[beatId] < 30000) return; // max 1 ping / 30s / beat
+        _playTracked[beatId] = now;
+        if (!window.R2_UPLOAD_ENDPOINT) return;
+        fetch(R2_UPLOAD_ENDPOINT + '/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ kind: 'play', id: String(beatId).slice(0, 64) }),
+        }).catch(() => {}); // never blocks or notifies — pure analytics
+    } catch (e) { /* ignore */ }
+}
 let currentWaveformPeaks = null;
 const WAVEFORM_BARS = 80;
 
@@ -4704,14 +4908,15 @@ function drawFlatWaveform(canvas) {
     const ctx = canvas.getContext('2d');
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
-    const gap = 2 * dpr;
-    const barW = (w - gap * (WAVEFORM_BARS - 1)) / WAVEFORM_BARS;
+    const n = waveGeometry().barCount;
+    const gap = waveGeometry().gap;
+    const barW = (w - gap * (n - 1)) / n;
     ctx.fillStyle = 'rgba(255,255,255,0.14)';
-    for (let i = 0; i < WAVEFORM_BARS; i++) {
+    for (let i = 0; i < n; i++) {
         const barH = h * 0.22;
         const x = i * (barW + gap);
         const y = (h - barH) / 2;
-        roundRectPath(ctx, x, y, barW, barH, barW / 2);
+        roundRectPath(ctx, x, y, barW, barH, Math.min(barW / 2, 2 * dpr));
         ctx.fill();
     }
 }
@@ -4728,23 +4933,41 @@ function renderWaveform(percent) {
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    const barCount = currentWaveformPeaks.length;
-    const gap = 2 * dpr;
+    // Premium thin-bar geometry: many slim bars with hairline gaps (desktop),
+    // upscaled from the ~80 cached peaks with linear interpolation.
+    const geo = waveGeometry();
+    const barCount = geo.barCount;
+    const gap = geo.gap;
     const barW = (w - gap * (barCount - 1)) / barCount;
+    const src = currentWaveformPeaks.length;
     const playedBars = Math.round(percent * barCount);
 
     const styles = getComputedStyle(document.documentElement);
     const accentLight = (styles.getPropertyValue('--accent-light') || '#3a7a6a').trim();
 
     for (let i = 0; i < barCount; i++) {
-        const amp = Math.max(currentWaveformPeaks[i], 0.06);
+        // Map display bar -> cached peak (interpolate for smoothness on desktop)
+        const t = barCount === 1 ? 0 : i * (src - 1) / (barCount - 1);
+        const i0 = Math.floor(t), i1 = Math.min(src - 1, i0 + 1), f = t - i0;
+        const raw = currentWaveformPeaks[i0] * (1 - f) + currentWaveformPeaks[i1] * f;
+        const amp = Math.max(raw, 0.06);
         const barH = Math.max(amp * h, 3 * dpr);
         const x = i * (barW + gap);
         const y = (h - barH) / 2;
         ctx.fillStyle = i < playedBars ? accentLight : 'rgba(255,255,255,0.18)';
-        roundRectPath(ctx, x, y, barW, barH, barW / 2);
+        roundRectPath(ctx, x, y, barW, barH, Math.min(barW / 2, 2 * dpr));
         ctx.fill();
     }
+}
+
+// Waveform bar geometry — thin & dense on desktop (premium look), slightly
+// wider on touch screens where hairlines get muddy.
+function waveGeometry() {
+    const fine = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+    const wide = window.innerWidth > 768;
+    return (fine && wide)
+        ? { barCount: 160, gap: 1 }   // desktop: slim bars, hairline gaps
+        : { barCount: 80, gap: 2 };   // touch / narrow: slightly chunkier
 }
 
 async function loadWaveformForBeat(beatId, url) {
