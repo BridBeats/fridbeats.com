@@ -26,8 +26,8 @@
     <meta property="og:title" content="FRID BEATS | Music Producer & Beatmaker" />
     <meta property="og:description" content="Premium beats en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
     <meta property="og:site_name" content="FRID BEATS" />
-    <meta property="og:image" content="https://www.fridbeats.com/social-share.png?v=5" />
-    <meta property="og:image:secure_url" content="https://www.fridbeats.com/social-share.png?v=5" />
+    <meta property="og:image" content="https://www.fridbeats.com/social-share.png?v=6" />
+    <meta property="og:image:secure_url" content="https://www.fridbeats.com/social-share.png?v=6" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1000" />
     <meta property="og:image:height" content="1000" />
@@ -35,8 +35,8 @@
     <meta property="og:url" content="https://fridbeats.com" />
     <meta property="og:type" content="website" />
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f12'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%231a5a4a' stroke-width='3.5'/%3E%3Ctext x='32' y='41' font-family='Arial,sans-serif' font-size='22' font-weight='bold' fill='%23e8e6e1' text-anchor='middle'%3EFB%3C/text%3E%3C/svg%3E" />
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f12'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%231a5a4a' stroke-width='3.5'/%3E%3Ctext x='32' y='41' font-family='Arial,sans-serif' font-size='22' font-weight='bold' fill='%23e8e6e1' text-anchor='middle'%3EFB%3C/text%3E%3C/svg%3E" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
     <link rel="preconnect" href="https://frid-beats-r2-upload.fridbeats.workers.dev" />
     <link rel="preconnect" href="https://cdn.fridbeats.com" />
@@ -49,7 +49,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="FRID BEATS | Music Producer & Beatmaker" />
     <meta name="twitter:description" content="Premium beats en Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap, Zouk, Reggae, Hip-Hop, Pop, R&amp;B." />
-    <meta name="twitter:image" content="https://www.fridbeats.com/social-share.png?v=5" />
+    <meta name="twitter:image" content="https://www.fridbeats.com/social-share.png?v=6" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -4951,7 +4951,9 @@ let waveformCache = {};      // beatId -> Float32Array of ~80 normalized peaks
 // Waveform peaks persist in localStorage so REPEAT plays render the wave
 // instantly (no re-download + re-decode of the MP3). ~80 floats × 80 bars
 // ≈ 2-6 KB per beat as compact base64 — well under quota with trimming.
-function peaksStorageKey(beatId) { return 'fridBeats_wave_' + beatId; }
+// v2 storage prefix — invalidates peaks computed by the old algorithm
+// (mean-based, partial-file decode) so every beat gets a correct waveform.
+function peaksStorageKey(beatId) { return 'fridBeats_wave2_' + beatId; }
 function savePeaksToStorage(beatId, peaks) {
     try {
         const arr = Array.from(peaks, v => Math.round(v * 100)); // 0-100 ints
@@ -5019,23 +5021,40 @@ let currentWaveformPeaks = null;
 // entries saved for the other size are ignored and re-computed on demand.
 function activeWaveBars() { return waveGeometry().barCount; }
 
-// Average |sample| per block, normalized to 0-1 — shared by the play path and
-// the hover prefetch so both produce identical peak arrays.
+// True waveform shape (v2) — shared by the play path and the prefetch so both
+// produce identical peak arrays.
+//   • max |sample| per block  → preserves the real envelope & transients
+//     (the old mean-based version smoothed hits away and misshaped beats)
+//   • normalize by the 95th percentile, clamp at 1 → one loud hit can no
+//     longer flatten the rest of the wave (SoundCloud-style scaling)
+//   • light 3-tap smoothing → bars flow naturally without losing detail
 function computePeaksFromBuffer(decoded, bars) {
     const channelData = decoded.getChannelData(0);
     const blockSize = Math.max(1, Math.floor(channelData.length / bars));
     const peaks = new Float32Array(bars);
     for (let i = 0; i < bars; i++) {
         const start = i * blockSize;
-        let sum = 0;
-        for (let j = 0; j < blockSize; j++) sum += Math.abs(channelData[start + j] || 0);
-        peaks[i] = sum / blockSize;
+        const end = Math.min(channelData.length, start + blockSize);
+        let mx = 0;
+        for (let j = start; j < end; j++) {
+            const a = Math.abs(channelData[j]);
+            if (a > mx) mx = a;
+        }
+        peaks[i] = mx;
     }
-    let max = 0;
-    for (let i = 0; i < peaks.length; i++) if (peaks[i] > max) max = peaks[i];
-    if (max < 0.0001) max = 0.0001;
-    for (let i = 0; i < peaks.length; i++) peaks[i] = peaks[i] / max;
-    return peaks;
+    // carry the last real value into any tail blocks beyond the buffer
+    for (let i = 1; i < bars; i++) if (peaks[i] === 0) peaks[i] = peaks[i - 1];
+
+    const sorted = Float32Array.from(peaks).sort();
+    const p95 = sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.95))] || 0;
+    const norm = Math.max(p95, 0.0001);
+    for (let i = 0; i < bars; i++) peaks[i] = Math.min(1, peaks[i] / norm);
+
+    const smooth = Float32Array.from(peaks);
+    for (let i = 1; i < bars - 1; i++) {
+        smooth[i] = peaks[i - 1] * 0.25 + peaks[i] * 0.5 + peaks[i + 1] * 0.25;
+    }
+    return smooth;
 }
 
 // Warm the waveform cache for every beat on the page during idle time —
@@ -5170,12 +5189,10 @@ async function loadWaveformForBeat(beatId, url) {
     try {
         const ctx = getAudioCtx();
         if (!ctx || !url) throw new Error('No audio context / URL');
-        // Range request: only the first ~1.5 MB is enough to shape the wave —
-        // cuts waveform load time from (full MP3) to a fraction on slow links.
-        const RANGE_BYTES = 1536 * 1024;
-        const res = await fetch(url, { headers: { 'Range': 'bytes=0-' + (RANGE_BYTES - 1) } }).catch(() => null);
-        const ranged = res && res.status === 206;
-        const fetchRes = res || await fetch(url);
+        // Decode the FULL file so the wave matches the real audio from start to
+        // finish (a partial range decode drew a wrong shape on some beats).
+        // Speed is preserved by the hover/idle prefetch + localStorage cache.
+        const fetchRes = await fetch(url);
         if (!fetchRes.ok) throw new Error('Fetch failed');
         const arrayBuffer = await fetchRes.arrayBuffer();
         const decoded = await ctx.decodeAudioData(arrayBuffer);
@@ -5758,6 +5775,17 @@ setLang = function(lang) {
 };
 
 document.addEventListener('DOMContentLoaded', async function() {
+    // Favicon safety net: favicon.png is the brand mark (also the social-share
+    // image). If it ever 404s, swap to an embedded SVG copy so the tab never
+    // shows the browser's default globe again.
+    (function guardFavicon() {
+        const probe = new Image();
+        probe.onerror = () => {
+            const svg = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0d0f12"/><circle cx="32" cy="32" r="21" fill="none" stroke="#1a5a4a" stroke-width="3.5"/><text x="32" y="41" font-family="Arial,sans-serif" font-size="22" font-weight="bold" fill="#e8e6e1" text-anchor="middle">FB</text></svg>');
+            document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(l => { l.href = svg; });
+        };
+        probe.src = 'favicon.png?_=' + Date.now();
+    })();
     await loadDataFromSupabase();
     setLang(localStorage.getItem('fridBeats_lang') || 'en');
 
