@@ -2911,6 +2911,49 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             }
         }
 
+        // Delete a previously-uploaded file from storage (B2 via the Worker) when the
+        // admin replaces or removes it. Best-effort: if the URL cannot be resolved to
+        // a storage path (legacy Supabase URL, external link) we just skip deletion —
+        // the DB update is what matters.
+        async function removeStoredFile(fileUrl) {
+            if (!fileUrl || typeof fileUrl !== 'string') return;
+            if (!R2_UPLOAD_ENDPOINT || fileUrl.startsWith('data:') || fileUrl.startsWith('blob:')) return;
+            try {
+                const path = privateFilePath(fileUrl);
+                if (!path) return; // external link or unknown URL — nothing to delete
+                const auth = await adminAuthHeader();
+                if (!auth.Authorization) return;
+                const bucket = /^beat\//i.test(path) ? 'private' : 'public';
+                await fetch(R2_UPLOAD_ENDPOINT + '/delete-file?bucket=' + encodeURIComponent(bucket), {
+                    method: 'POST',
+                    headers: Object.assign({ 'Content-Type': 'application/json' }, auth),
+                    body: JSON.stringify({ path })
+                });
+            } catch (e) { console.warn('Could not delete replaced file (non-fatal):', e); }
+        }
+        // Remove button in the admin modal: deletes the stored file for one license
+        // slot (mp3 / wav / trackout) AND clears it from the beat record immediately
+        // (localStorage + Supabase), without touching the other fields the admin
+        // may still be editing in the form.
+        async function removeSlotFile(slot) {
+            if (!['mp3', 'wav', 'trackout'].includes(slot) || editingType !== 'beat' || !editingId) return;
+            const item = beatsData.find(d => d.id === editingId);
+            if (!item || !item.files || !item.files[slot]) return;
+            if (!confirm('Remove this file from storage?\n\nThe license that delivers it will stop including it until you upload a replacement.')) return;
+            const statusEl = document.getElementById('f_' + slot + '_status');
+            if (statusEl) { statusEl.textContent = '⏳ Removing...'; statusEl.className = 'file-status uploading'; }
+            await removeStoredFile(item.files[slot]);
+            item.files[slot] = null;
+            saveBeats();
+            const ok = await upsertRowToSupabase('beat', item);
+            if (statusEl) { statusEl.textContent = ok ? '🗑 Removed' : '⚠️ Removed in THIS browser only'; statusEl.className = 'file-status'; }
+            const input = document.getElementById('f_' + slot);
+            const nameEl = input ? input.closest('.file-row').querySelector('.file-name') : null;
+            if (nameEl) nameEl.textContent = 'Choose file';
+            const linkEl = document.getElementById('f_' + slot + '_link');
+            if (linkEl) linkEl.value = '';
+        }
+
         // Normalize URL fields of a content row (beat/template/flp) through the CDN layer.
         function normalizeRowUrls(row) {
             if (!row || typeof row !== 'object') return row;
@@ -4268,6 +4311,7 @@ document.addEventListener('keydown', function(e) {
                             <div class="progress-bar"><div class="progress-fill" id="f_mp3_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_mp3_status">${item && item.files && item.files.mp3 ? '✅ Loaded' : 'No file'}</span>
+                                ${item && item.files && item.files.mp3 ? `<button type="button" class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="removeSlotFile('mp3')" title="Delete this file from storage">🗑 Remove</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -4282,6 +4326,7 @@ document.addEventListener('keydown', function(e) {
                             <div class="progress-bar"><div class="progress-fill" id="f_wav_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_wav_status">${item && item.files && item.files.wav ? '✅ Loaded' : 'No file'}</span>
+                                ${item && item.files && item.files.wav ? `<button type="button" class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="removeSlotFile('wav')" title="Delete this file from storage">🗑 Remove</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -4296,6 +4341,7 @@ document.addEventListener('keydown', function(e) {
                             <div class="progress-bar"><div class="progress-fill" id="f_trackout_progress"></div></div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
                                 <span class="file-status" id="f_trackout_status">${item && item.files && item.files.trackout ? '✅ Loaded' : 'No file'}</span>
+                                ${item && item.files && item.files.trackout ? `<button type="button" class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="removeSlotFile('trackout')" title="Delete this file from storage">🗑 Remove</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -4773,6 +4819,19 @@ document.addEventListener('keydown', function(e) {
                 if (id) {
                     const index = data.findIndex(d => d.id === id);
                     if (index !== -1) {
+                        // Free storage: any file that WAS referenced but is now replaced
+                        // or cleared gets deleted from the bucket, so re-uploading a WAV
+                        // or trackout ZIP no longer leaves the old copy as a duplicate.
+                        // Best-effort + non-blocking (removeStoredFile never throws).
+                        if (type === 'beat' && data[index].files) {
+                            ['mp3', 'wav', 'trackout'].forEach(k => {
+                                const oldU = data[index].files[k];
+                                const newU = newItem.files ? newItem.files[k] : undefined;
+                                if (oldU && oldU !== newU) removeStoredFile(oldU);
+                            });
+                        }
+                        if (type === 'template' && data[index].download && data[index].download !== newItem.download) removeStoredFile(data[index].download);
+                        if (type === 'flp' && data[index].download && data[index].download !== newItem.download) removeStoredFile(data[index].download);
                         // Preserve existing file data if not replaced
                         if (type === 'beat') {
                             if (!artworkData && data[index].artwork) newItem.artwork = data[index].artwork;
