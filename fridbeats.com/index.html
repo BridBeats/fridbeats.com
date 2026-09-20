@@ -2561,8 +2561,28 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 // Large files (stems ZIP/RAR, WAV) go through multipart — reliable for 50-300 MB
                 const BIG = 25 * 1024 * 1024;
                 if (file.size > BIG) {
-                    try { return await uploadToMultipart(file, folder, onProgress, bucket); }
-                    catch (e) { console.warn('Multipart upload failed, trying single-shot:', e); }
+                    // B2 hiccups are usually transient — retry multipart once before falling back.
+                    let lastErr = null;
+                    for (let i = 0; i < 2; i++) {
+                        try { return await uploadToMultipart(file, folder, onProgress, bucket); }
+                        catch (e) {
+                            lastErr = e;
+                            console.warn('Multipart upload attempt ' + (i + 1) + '/2 failed:', e);
+                            if (i === 0) await new Promise(r => setTimeout(r, 1200));
+                        }
+                    }
+                    // Single-shot keeps the whole file in Worker memory — only safe
+                    // under the ~100 MB request body limit (use a margin).
+                    if (file.size <= 95 * 1024 * 1024) {
+                        try { return await uploadToR2(file, folder, onProgress, bucket); }
+                        catch (e) { lastErr = e; console.warn('Single-shot R2 fallback failed:', e); }
+                    }
+                    // Last resort: Supabase (only works under its bucket size limit).
+                    try { return await uploadToSupabaseStorage(file, folder); }
+                    catch (e) {
+                        console.error('All upload paths failed:', e);
+                        throw lastErr || e;
+                    }
                 } else {
                     try { return await uploadToR2(file, folder, onProgress, bucket); }
                     catch (e) { console.warn('R2 upload failed, falling back to Supabase Storage:', e); }
@@ -3664,10 +3684,29 @@ document.addEventListener('keydown', function(e) {
         if (isNaN(savedVolume)) savedVolume = 70;
 
         function attemptPlay(audio, beatId, isRetry) {
-            audio.play().catch((err) => {
+            // STALE GUARD — if the user already switched to another beat, this
+            // audio element must NEVER (re)play. Retrying a stale play() is
+            // exactly what made two beats play at once with no way to stop
+            // the background one from the UI.
+            if (currentAudio !== audio || currentBeatId !== beatId) {
+                try { audio.pause(); } catch (e) {}
+                return;
+            }
+            const token = (audio._playToken = (audio._playToken || 0) + 1);
+            audio._pendingPlay = true; // play() requested but the sound has not started yet
+            audio.play().then(() => {
+                if (audio._playToken === token) audio._pendingPlay = false;
+            }).catch((err) => {
+                if (audio._playToken !== token) return; // a newer play/pause superseded this request
+                audio._pendingPlay = false;
+                // User paused or switched beats while the file was still loading —
+                // the play() was aborted on purpose: never retry, never alert.
+                if (currentAudio !== audio || currentBeatId !== beatId) return;
+                if (err && err.name === 'AbortError') return;
                 if (!isRetry) {
                     // First try often fails just because the file is still loading (not really "missing") — wait a beat and retry once before alerting.
-                    setTimeout(() => attemptPlay(audio, beatId, true), 300);
+                    const tokenAtFail = token;
+                    setTimeout(() => { if (audio._playToken === tokenAtFail) attemptPlay(audio, beatId, true); }, 300);
                 } else {
                     console.warn('Playback failed for beat', beatId, err);
                     alert('Audio preview not found! Add the file to the audio/ folder.');
@@ -3681,16 +3720,31 @@ document.addEventListener('keydown', function(e) {
 
             // Same beat already loaded -> toggle play/pause (also handles replaying after it finished)
             if (currentBeatId === beatId && currentAudio) {
-                if (!currentAudio.paused) { currentAudio.pause(); }
-                else {
-                    if (currentAudio.ended) currentAudio.currentTime = 0; // restart from the top instead of doing nothing
-                    attemptPlay(currentAudio, beatId, false);
+                const a = currentAudio;
+                // A play() that is still loading counts as "playing": clicking
+                // again must CANCEL it — otherwise there was no way to stop a
+                // beat that hadn't started making sound yet.
+                if (!a.paused || a._pendingPlay) {
+                    a._playToken = (a._playToken || 0) + 1; // invalidate any in-flight play()/retry
+                    a._pendingPlay = false;
+                    a.pause();
+                } else {
+                    if (a.ended) a.currentTime = 0; // restart from the top instead of doing nothing
+                    attemptPlay(a, beatId, false);
                 }
                 return;
             }
 
-            // Different beat -> stop old one, start new one
-            if (currentAudio) { currentAudio.pause(); currentAudio = null; updatePlayButtons(currentBeatId, false); }
+            // Different beat -> stop old one COMPLETELY (including a pending
+            // play() that hadn't made sound yet), then start the new one.
+            if (currentAudio) {
+                const old = currentAudio;
+                old._playToken = (old._playToken || 0) + 1; // invalidate any in-flight play()/retry
+                old._pendingPlay = false;
+                old.pause();
+                updatePlayButtons(currentBeatId, false);
+                currentAudio = null;
+            }
 
             const audio = new Audio(beat.preview);
             audio.preload = 'auto';
@@ -4232,10 +4286,10 @@ document.addEventListener('keydown', function(e) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Trackout ZIP (Premium & Exclusive License adds this)</label>
+                        <label>Trackout ZIP — stems only, one WAV per track (Premium & Exclusive licenses deliver MP3 + WAV + this automatically)</label>
                         <div class="file-input-wrapper">
                             <div class="file-row">
-                                <input type="file" id="f_trackout" accept=".zip" />
+                                <input type="file" id="f_trackout" accept=".zip,.rar" />
                                 <span class="file-name">${item && item.files && item.files.trackout ? item.files.trackout.split('/').pop() : 'Choose file'}</span>
                             </div>
                             <input type="text" id="f_trackout_link" placeholder="Or paste an external link (Google Drive, Dropbox...)" style="width:100%;margin-top:0.4rem;padding:0.5rem 0.75rem;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-lg);color:var(--text-primary);font-size:0.85rem;">
@@ -4617,8 +4671,8 @@ document.addEventListener('keydown', function(e) {
                             if (statusEl) { statusEl.textContent = '⚠️ Upload failed'; statusEl.className = 'file-status'; }
                             const msg = String(e && e.message || e);
                             if (/401|session|Authorization/i.test(msg)) alert('⚠️ Upload failed: your admin session expired.\n\nLog out of the Admin panel, log back in, and try again.');
-                            else if (/413|too large/i.test(msg)) alert('⚠️ Upload failed: file too large (max 300 MB).');
-                            else alert('⚠️ Could not upload a file to storage.\n\n' + msg.slice(0, 200));
+                            else if (/413|too large|maximum allowed size|payload/i.test(msg)) alert('⚠️ Upload failed: file too large (max 300 MB on R2/B2, 50 MB on the Supabase fallback).\n\nDetails: ' + msg.slice(0, 200));
+                            else alert('⚠️ Could not upload a file to storage.\n\n' + msg.slice(0, 300));
                             return null;
                         }
                     };
