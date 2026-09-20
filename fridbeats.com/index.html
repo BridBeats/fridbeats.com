@@ -36,6 +36,17 @@
     <meta property="og:type" content="website" />
     <link rel="canonical" href="https://www.fridbeats.com/" />
 
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '935272779173808');
+    fbq('track', 'PageView');
+    // Meta Pixel e-commerce events — never throws (Pixel blocked/offline → silent no-op)
+    function metaTrack(type, params) { try { if (window.fbq) fbq('track', type, params || {}); } catch (e) {} }
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=935272779173808&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel -->
+
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="preconnect" href="https://myyfdrttulefdmjnybuk.supabase.co" />
@@ -3530,6 +3541,8 @@ document.addEventListener('keydown', function(e) {
             const existing = cart.find(i => i.id === itemId && i.type === type && i.license === license);
             if (existing) { existing.quantity += 1; } else { cart.push({ id: itemId, type, price, title, artwork, quantity: 1, license: license || null }); }
             saveCart(); renderCart(); updateCartCount();
+            // Meta Pixel: item added to cart
+            try { metaTrack('AddToCart', { content_name: title, content_ids: [itemId], content_type: 'product', value: Number(price) || 0, currency: 'USD' }); } catch (e) {}
             const btn = document.querySelector(`[data-add="${itemId}"]`);
             if (btn) { const orig = btn.innerHTML; btn.innerHTML = '<i class="fas fa-check"></i> Added!'; setTimeout(() => btn.innerHTML = orig, 1500); }
         }
@@ -3576,6 +3589,8 @@ document.addEventListener('keydown', function(e) {
         function renderCheckout() {
             const container = document.getElementById('checkoutContent');
             if (!container) return;
+            // Meta Pixel: checkout started (once per page load)
+            try { if (cart.length && !window._metaInitCheckout) { window._metaInitCheckout = true; metaTrack('InitiateCheckout', { value: getCartTotal(), currency: 'USD', num_items: cart.reduce((s, i) => s + i.quantity, 0) }); } } catch (e) {}
             const total = getCartTotal();
             if (cart.length === 0) { navigateTo('cart'); return; }
             container.innerHTML = `
@@ -3677,6 +3692,8 @@ document.addEventListener('keydown', function(e) {
                 catch (e) { console.error('Error saving order to Supabase:', e); }
             }
             if (email && !subscribers.includes(email)) { subscribers.push(email); saveSubscribers(); }
+            // Meta Pixel: purchase completed ✅
+            try { metaTrack('Purchase', { value: Number(orderRecord.total) || getCartTotal(), currency: 'USD', num_items: orderRecord.items.reduce((s, i) => s + i.quantity, 0), content_ids: orderRecord.items.map(i => i.id), content_type: 'product' }); } catch (e) {}
 
             const missing = [];
             const exclusiveBeatIds = [];
@@ -4012,6 +4029,8 @@ document.addEventListener('keydown', function(e) {
         function showBeatDetail(beatId) {
             const beat = getBeatById(beatId);
             if (!beat) return;
+            // Meta Pixel: product viewed
+            try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); } catch (e) {}
             const container = document.getElementById('beatDetailContent');
             if (!container) return;
             container.innerHTML = `
