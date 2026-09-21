@@ -5124,13 +5124,13 @@ let waveformCache = {};      // beatId -> Float32Array of ~80 normalized peaks
 // Waveform peaks persist in localStorage so REPEAT plays render the wave
 // instantly (no re-download + re-decode of the MP3). ~80 floats × 80 bars
 // ≈ 2-6 KB per beat as compact base64 — well under quota with trimming.
-// v2 storage prefix — invalidates peaks computed by the old algorithm
-// (mean-based, partial-file decode) so every beat gets a correct waveform.
-function peaksStorageKey(beatId) { return 'fridBeats_wave2_' + beatId; }
+// v3 storage prefix — invalidates peaks saved by any earlier version (the
+// partial-decode build saved truncated waves that looked half-real, half-flat).
+function peaksStorageKey(beatId) { return 'fridBeats_wave3_' + beatId; }
 function savePeaksToStorage(beatId, peaks) {
     try {
         const arr = Array.from(peaks, v => Math.round(v * 100)); // 0-100 ints
-        const keys = Object.keys(localStorage).filter(k => k.startsWith('fridBeats_wave_'));
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('fridBeats_wave_') || k.startsWith('fridBeats_wave2_'));
         if (keys.length >= 60) { // trim oldest entries beyond 60 beats
             keys.sort(); localStorage.removeItem(keys[0]);
         }
@@ -5166,6 +5166,14 @@ function loadPeaksFromStorage(beatId) {
         const arr = JSON.parse(raw);
         // 80 (mobile) or 160 (desktop) — length must match the current geometry
         if (!Array.isArray(arr) || (arr.length !== 80 && arr.length !== 160)) return null;
+        // Poisoned-cache guard: old partial-decode waves have a long flat tail
+        // (bars beyond the decoded portion all carry one value). If >50% of the
+        // tail is exactly constant while the head varies, treat as corrupt.
+        const tailStart = Math.floor(arr.length * 0.5);
+        const tail = arr.slice(tailStart);
+        const tailUnique = new Set(tail).size;
+        const headUnique = new Set(arr.slice(0, tailStart)).size;
+        if (tailUnique <= 2 && headUnique > 4) return null; // regenerate from audio
         return Float32Array.from(arr, v => v / 100);
     } catch (e) { return null; }
 }
