@@ -1219,6 +1219,7 @@ background-clip: text;
     background: rgba(10, 14, 26, 0.95);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
+    overflow: hidden;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -1227,11 +1228,27 @@ background-clip: text;
     padding: 0 1rem;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
 }
+/* The currently-playing beat's artwork, dimmed + blurred behind the bar.
+   Set via --gp-bg-artwork in playPreview(); cleared when the bar hides. */
+.global-player::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--gp-bg-artwork, none);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.16;
+    filter: blur(14px) saturate(1.15);
+    transition: background-image 0.4s ease;
+    pointer-events: none;
+}
 body.has-global-player { padding-bottom: 78px; }
 @media (max-width:768px) { body.has-global-player { padding-bottom: 130px; } }
 
 .gp-track {
     display: grid;
+    position: relative;
+    z-index: 1;
     grid-template-columns: minmax(140px, 1fr) minmax(320px, 640px) minmax(140px, 1fr);
     align-items: center;
     gap: 1.5rem;
@@ -1239,6 +1256,23 @@ body.has-global-player { padding-bottom: 78px; }
     max-width: 1100px;
     margin: 0 auto;
 }
+
+.gp-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+.gp-close:hover { color: #fff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); }
 
 .gp-left {
     display: flex;
@@ -1319,9 +1353,10 @@ body.has-global-player { padding-bottom: 78px; }
         padding: 0.6rem 0.75rem;
     }
     .gp-track {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr auto;
         row-gap: 0.5rem;
     }
+    .gp-close { width: 100%; max-width: 46px; height: 38px; }
     .gp-left {
         order: 0;
     }
@@ -2296,6 +2331,7 @@ input[type="range"]::-moz-range-thumb {
         <input type="range" id="gpVolume" min="0" max="100" value="70" oninput="setGlobalVolume(this.value)" style="width:80px;">
     </div>
 </div>
+<button onclick="closeGlobalPlayer()" class="gp-close" title="Close player" aria-label="Close player"><i class="fas fa-times"></i></button>
     </div>
 </div>
 
@@ -3820,7 +3856,11 @@ document.addEventListener('keydown', function(e) {
             const artwork = document.getElementById('gpArtwork');
             const gpTitleEl = document.getElementById('gpTitle');
             const gpArtistEl = document.getElementById('gpArtist');
-            if (player) player.style.display = 'flex';
+            if (player) {
+                player.style.display = 'flex';
+                // Artwork of the playing beat, dimmed + blurred, behind the bar.
+                try { player.style.setProperty('--gp-bg-artwork', 'url("' + new URL(beat.artwork, location.href).href + '")'); } catch (e) { try { player.style.setProperty('--gp-bg-artwork', 'url("' + beat.artwork + '")'); } catch (e2) {} }
+            }
             document.body.classList.add('has-global-player');
             if (artwork) artwork.src = beat.artwork;
             if (gpTitleEl) gpTitleEl.textContent = beat.title;
@@ -5613,6 +5653,28 @@ function initGlobalPlayer() {
 function toggleGlobalPlay() {
     if (!currentAudio || !currentBeatId) return;
     playPreview(currentBeatId);
+}
+
+// Hide the bottom player bar completely (Close ✕): pauses audio, clears the
+// artwork background, and removes the padding it reserved — so the bar never
+// sits at the bottom with nothing playing.
+function closeGlobalPlayer() {
+    if (currentAudio) {
+        const old = currentAudio;
+        old._playToken = (old._playToken || 0) + 1; // invalidate any in-flight play()/retry
+        old._pendingPlay = false;
+        old.pause();
+    }
+    updatePlayButtons(currentBeatId, false);
+    currentAudio = null;
+    currentBeatId = null;
+    currentWaveformPeaks = null;
+    const player = document.getElementById('globalPlayer');
+    if (player) {
+        player.style.display = 'none';
+        player.style.removeProperty('--gp-bg-artwork');
+    }
+    document.body.classList.remove('has-global-player');
 }
 
 function seekGlobalAudio(event) {
