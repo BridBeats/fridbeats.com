@@ -1274,6 +1274,25 @@ body.has-global-player { padding-bottom: 78px; }
 }
 .gp-close:hover { color: #fff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); }
 
+/* Desktop: the close button is a 4th child of the 3-column .gp-track grid —
+   left in flow it wrapped to a second row hidden by the bar's overflow:hidden.
+   position:fixed anchors it to the bar (always fixed at bottom:0) while
+   escaping .gp-track's relative containing block. */
+@media (min-width: 769px) {
+    .global-player { padding-right: 64px; } /* reserve room so volume never sits under the ✕ */
+    .gp-close {
+        position: fixed;
+        right: 15px;
+        bottom: 18px;   /* (70px bar − 34px button) / 2 */
+        width: 34px;
+        height: 34px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        z-index: 10001; /* above the bar (9999) */
+    }
+    .gp-close:hover { transform: scale(1.08); }
+}
+
 .gp-left {
     display: flex;
     align-items: center;
