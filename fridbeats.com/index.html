@@ -5138,6 +5138,15 @@ function savePeaksToStorage(beatId, peaks) {
     } catch (e) { /* quota or private mode — memory cache still works */ }
 }
 
+// Cache-bypassing fetch for audio archives/waveforms: a busted Cloudflare edge
+// entry once served a 0-byte / truncated body. Appending a changing query param
+// guarantees a fresh origin fetch every time. (Audio playback uses <audio> and
+// Range requests, which are unaffected; this protects decode + prefetch.)
+function fetchSafeAudio(url) {
+    const sep = url.includes('?') ? '&' : '?';
+    return fetch(url + sep + '_cb=' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
+}
+
 // PREFETCH — decode a beat's peaks in the background BEFORE the user presses
 // play (triggered on card hover / details open). By the time they click, the
 // real waveform renders instantly. Runs once per beat per page load.
@@ -5148,7 +5157,9 @@ function prefetchPeaksForBeat(beatId, url) {
     if (waveformCache[beatId] || loadPeaksFromStorage(beatId)) return; // already cached
     const ctx = getAudioCtx();
     if (!ctx) return;
-    fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
+    // Same safe channel as playback: bypasses poisoned edge-cache entries so
+    // the decoded wave can never be truncated by a broken cached copy.
+    fetchSafeAudio(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
         .then(ab => ctx.decodeAudioData(ab))
         .then(decoded => {
             if (currentBeatId === beatId) return; // user is already playing it — normal path handles it
@@ -5373,7 +5384,7 @@ async function loadWaveformForBeat(beatId, url) {
         // Decode the FULL file so the wave matches the real audio from start to
         // finish (a partial range decode drew a wrong shape on some beats).
         // Speed is preserved by the hover/idle prefetch + localStorage cache.
-        const fetchRes = await fetch(url);
+        const fetchRes = await fetchSafeAudio(url);
         if (!fetchRes.ok) throw new Error('Fetch failed');
         const arrayBuffer = await fetchRes.arrayBuffer();
         const decoded = await ctx.decodeAudioData(arrayBuffer);
