@@ -4015,7 +4015,19 @@ document.addEventListener('keydown', function(e) {
             const box = document.getElementById('seoProductLinks');
             if (!box) return;
             const escapeHtmlLocal = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(p.id)}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
+            // Keyword-slug URLs — MUST match productSlug() in the Worker exactly
+            // (slugs are the canonical URLs Google indexes).
+            const productSlug = (title, type) => {
+                const suffix = type === 'beat' ? 'instrumental' : type === 'flp' ? 'flp-remake' : 'template';
+                const base = String(title || '')
+                    .toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .replace(/&/g, ' and ')
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                return (base ? base + '-' : '') + suffix;
+            };
+            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(productSlug(p.title, type))}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
             const links = [
                 ...beatsData.map(b => mk('beat', b)),
                 ...templatesData.map(t => mk('template', t)),
