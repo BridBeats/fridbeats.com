@@ -4211,7 +4211,7 @@ document.addEventListener('keydown', function(e) {
                         <p class="flp-artist">${flp.artist} • ${flp.genre}</p>
                         <p class="flp-desc card-desc" style="font-weight:300;">${localizedText(flp.description)}</p>
                         <div class="flp-download-form">
-                            <input type="email" id="flpEmail_${flp.id}" name="flp_email_${flp.id}" autocomplete="off" placeholder="Enter your email">
+                            <input type="text" id="flpEmail_${flp.id}" name="flp_email_${flp.id}" inputmode="email" autocomplete="off" spellcheck="false" placeholder="Enter your email">
                             <button class="btn btn-primary btn-sm" onclick="downloadFLP('${flp.id}')">
                                 <i class="fas fa-download"></i> Download
                             </button>
