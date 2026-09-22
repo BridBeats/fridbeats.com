@@ -4285,28 +4285,24 @@ document.addEventListener('keydown', function(e) {
             }, 15000);
         }
 
-        async function startFLPDownload(filePath) {
+        // Instant download: navigate the browser straight to the file URL.
+        // The Worker (/pub/ and /file) already sends Content-Disposition: attachment,
+        // so the browser streams the ZIP to disk immediately — no waiting for the
+        // whole file to be fetched into memory first (the old blob() approach made
+        // 20-500 MB downloads feel "stuck" before anything started).
+        function startFLPDownload(filePath) {
             if (!filePath) {
                 alert('⚠️ This file is not available yet. The producer still needs to upload the real ZIP in the Admin panel.');
                 return;
             }
-            try {
-                const response = await fetch(filePath);
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                const filename = filePath.split('/').pop().split('?')[0] || 'download';
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-            } catch (e) {
-                console.warn('Direct download failed (likely an external cross-origin link), opening it in a new tab instead:', e);
-                window.open(filePath, '_blank');
-            }
+            const filename = decodeURIComponent(filePath.split('/').pop().split('?')[0] || 'download');
+            const a = document.createElement('a');
+            a.href = filePath;
+            a.download = filename; // hint only — cross-origin uses the server header
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         // ============================================================
