@@ -43,6 +43,9 @@
     fbq('track', 'PageView');
     // Meta Pixel e-commerce events — never throws (Pixel blocked/offline → silent no-op)
     function metaTrack(type, params) { try { if (window.fbq) fbq('track', type, params || {}); } catch (e) {} }
+    // GA4 conversion mirror — same events as Meta Pixel, so Google Analytics
+    // reports leads & purchases too (Analytics → Events / Key events).
+    function gaTrack(name, params) { try { if (window.gtag) gtag('event', name, params || {}); } catch (e) {} }
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=935272779173808&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel -->
@@ -3597,7 +3600,7 @@ document.addEventListener('keydown', function(e) {
             if (existing) { existing.quantity += 1; } else { cart.push({ id: itemId, type, price, title, artwork, quantity: 1, license: license || null }); }
             saveCart(); renderCart(); updateCartCount();
             // Meta Pixel: item added to cart
-            try { metaTrack('AddToCart', { content_name: title, content_ids: [itemId], content_type: 'product', value: Number(price) || 0, currency: 'USD' }); } catch (e) {}
+            try { metaTrack('AddToCart', { content_name: title, content_ids: [itemId], content_type: 'product', value: Number(price) || 0, currency: 'USD' }); gaTrack('add_to_cart', { currency: 'USD', value: Number(price) || 0, items: [{ item_id: itemId, item_name: title }] }); } catch (e) {}
             const btn = document.querySelector(`[data-add="${itemId}"]`);
             if (btn) { const orig = btn.innerHTML; btn.innerHTML = '<i class="fas fa-check"></i> Added!'; setTimeout(() => btn.innerHTML = orig, 1500); }
         }
@@ -3645,7 +3648,7 @@ document.addEventListener('keydown', function(e) {
             const container = document.getElementById('checkoutContent');
             if (!container) return;
             // Meta Pixel: checkout started (once per page load)
-            try { if (cart.length && !window._metaInitCheckout) { window._metaInitCheckout = true; metaTrack('InitiateCheckout', { value: getCartTotal(), currency: 'USD', num_items: cart.reduce((s, i) => s + i.quantity, 0) }); } } catch (e) {}
+            try { if (cart.length && !window._metaInitCheckout) { window._metaInitCheckout = true; metaTrack('InitiateCheckout', { value: getCartTotal(), currency: 'USD', num_items: cart.reduce((s, i) => s + i.quantity, 0) }); gaTrack('begin_checkout', { currency: 'USD', value: getCartTotal() }); } } catch (e) {}
             const total = getCartTotal();
             if (cart.length === 0) { navigateTo('cart'); return; }
             container.innerHTML = `
@@ -3748,7 +3751,7 @@ document.addEventListener('keydown', function(e) {
             }
             if (email && !subscribers.includes(email)) { subscribers.push(email); saveSubscribers(); }
             // Meta Pixel: purchase completed ✅
-            try { metaTrack('Purchase', { value: Number(orderRecord.total) || getCartTotal(), currency: 'USD', num_items: orderRecord.items.reduce((s, i) => s + i.quantity, 0), content_ids: orderRecord.items.map(i => i.id), content_type: 'product' }); } catch (e) {}
+            try { metaTrack('Purchase', { value: Number(orderRecord.total) || getCartTotal(), currency: 'USD', num_items: orderRecord.items.reduce((s, i) => s + i.quantity, 0), content_ids: orderRecord.items.map(i => i.id), content_type: 'product' }); gaTrack('purchase', { transaction_id: orderRecord.id || ('ord_' + Date.now()), currency: 'USD', value: Number(orderRecord.total) || getCartTotal(), items: (orderRecord.items || []).map(i => ({ item_id: i.id, item_name: i.title })) }); } catch (e) {}
 
             const missing = [];
             const exclusiveBeatIds = [];
@@ -4101,7 +4104,7 @@ document.addEventListener('keydown', function(e) {
             const beat = getBeatById(beatId);
             if (!beat) return;
             // Meta Pixel: product viewed
-            try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); } catch (e) {}
+            try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); gaTrack('view_item', { currency: 'USD', value: _p, items: [{ item_id: beat.id, item_name: beat.title }] }); } catch (e) {}
             const container = document.getElementById('beatDetailContent');
             if (!container) return;
             container.innerHTML = `
@@ -4256,6 +4259,8 @@ document.addEventListener('keydown', function(e) {
                 // them the instant welcome — handled entirely by the Worker.
                 notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length, flpTitle: (flp && flp.title) || 'the FLP remake' });
             }
+            // GA4: free FLP download = lead (Analytics → Engagement → Events)
+            try { gaTrack('generate_lead', { currency: 'USD', items: [{ item_id: flpId, item_name: (flp && flp.title) || 'FLP remake' }] }); } catch (e) {}
             
             // Show success message with animation and download button
             const msg = document.getElementById('flpMessage');
