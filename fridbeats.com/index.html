@@ -1982,6 +1982,25 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="flp_title">FLP <span>Remakes</span></h1><p class="text-muted" data-i18n="flp_subtitle">Download FLP remakes for free. Enter your email to get the download link.</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
+            <!-- ===== AI BEAT FINDER (Frid Finder) ===== -->
+            <div id="aiFinder" style="background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(56,189,248,0.05));border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+                    <span style="font-size:1.2rem;">🤖</span>
+                    <h3 style="margin:0;font-size:1.05rem;color:var(--text-primary);">AI Beat Finder</h3>
+                    <span style="font-size:0.68rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:2px 8px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
+                </div>
+                <p style="color:var(--text-tertiary);font-size:0.82rem;margin:0 0 1rem;">Describe what you're looking for — mood, genre, artist style — and I'll find it in the catalog. Try: "rihanna type flp remake", "dark reggaeton beat", "afrobeat for a summer hit".</p>
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                    <input type="text" id="aiSearchInput" placeholder="e.g. dark reggaeton beat for a sad chorus..."
+                           style="flex:1;min-width:220px;padding:0.75rem 1.1rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--text-primary);font-size:0.9rem;outline:none;"
+                           onkeydown="if(event.key==='Enter')aiFind()">
+                    <button onclick="aiFind()" id="aiSearchBtn"
+                            style="padding:0.75rem 1.6rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;">
+                        ✨ Find
+                    </button>
+                </div>
+                <div id="aiResults" style="margin-top:1rem;"></div>
+            </div>
             <div class="flp-grid" id="flpGrid">
                 <div class="loading-state"><div class="loading-spinner"></div><span>Loading FLP remakes…</span></div>
             </div>
@@ -4238,6 +4257,54 @@ document.addEventListener('keydown', function(e) {
                 </div>
             `).join('');
         }
+        // ===== AI BEAT FINDER (Frid Finder) =====
+        // Sends the natural-language query to the Worker's /ai-search endpoint.
+        // The Worker (optionally via Workers AI) extracts filters and scores the
+        // catalog; we render the top matches with links + GA4 tracking.
+        let _aiSearchAbort = null;
+        async function aiFind() {
+            const input = document.getElementById('aiSearchInput');
+            const resultsEl = document.getElementById('aiResults');
+            const btn = document.getElementById('aiSearchBtn');
+            const q = (input.value || '').trim();
+            if (!q) { input.focus(); return; }
+            if (_aiSearchAbort) _aiSearchAbort.abort();
+            _aiSearchAbort = new AbortController();
+            btn.disabled = true; btn.textContent = '🔍 Searching...';
+            try { gaTrack('ai_search', { query: q.slice(0, 100) }); } catch (e) {}
+            try {
+                const res = await fetch('https://frid-beats-r2-upload.fridbeats.workers.dev/ai-search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: q }),
+                    signal: _aiSearchAbort.signal,
+                });
+                const data = await res.json();
+                const items = (data && data.items) || [];
+                if (!items.length) {
+                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.85rem;">😕 Nothing matched that description — try different words, or <a href="#" onclick="navigateTo(\'beats\');return false;" style="color:#4ade80;">browse all beats</a>.</p>';
+                } else {
+                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.75rem;margin:0 0 0.6rem;">Top ' + items.length + ' match' + (items.length > 1 ? 'es' : '') + ':</p>' + items.map((it, i) => `
+                        <a href="${it.url}" target="_blank" rel="noopener" onclick="try{gaTrack('ai_search_click',{result_rank:${i + 1},result_type:'${it.type}',result_title:'${String(it.title).replace(/'/g, "\\'").slice(0, 60)}'});}catch(e){}"
+                           style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0.8rem;margin-bottom:0.5rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-md);text-decoration:none;transition:border-color 0.2s ease;"
+                           onmouseover="this.style.borderColor='rgba(74,222,128,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+                            ${it.artwork ? `<img src="${it.artwork}" alt="" loading="lazy" style="width:44px;height:44px;border-radius:8px;object-fit:cover;">` : ''}
+                            <div style="flex:1;min-width:0;">
+                                <div style="color:var(--text-primary);font-size:0.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.title}</div>
+                                <div style="color:var(--text-tertiary);font-size:0.72rem;">${it.artist ? it.artist + ' · ' : ''}${it.type.toUpperCase()}${it.genre ? ' · ' + it.genre : ''}${it.price ? ' · $' + it.price : ' · FREE'}</div>
+                            </div>
+                            <span style="color:#4ade80;font-size:0.8rem;">→</span>
+                        </a>`).join('');
+                }
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    resultsEl.innerHTML = '<p style="color:#f87171;font-size:0.85rem;">⚠️ Search temporarily unavailable — please try again.</p>';
+                }
+            } finally {
+                btn.disabled = false; btn.textContent = '✨ Find';
+            }
+        }
+
         function downloadFLP(flpId) {
             const input = document.getElementById(`flpField_${flpId}`);
             if (!input || !input.value || !input.value.includes('@')) {
