@@ -1877,6 +1877,29 @@ input[type="range"]::-moz-range-thumb {
                 </div>
             </div>
         </section>
+        <!-- ===== AI BEAT FINDER (Frid Finder) — HOME ===== -->
+        <section class="glass-section" id="aiFinderSection">
+    <div class="container">
+        <div id="aiFinder" style="background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(56,189,248,0.05));border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:0.5rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+                    <span style="font-size:1.2rem;">🤖</span>
+                    <h3 style="margin:0;font-size:1.05rem;color:var(--text-primary);">AI Beat Finder</h3>
+                    <span style="font-size:0.68rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:2px 8px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
+                </div>
+                <p style="color:var(--text-tertiary);font-size:0.82rem;margin:0 0 1rem;">Describe what you're looking for — mood, genre, artist style — and I'll find it in the whole catalog: beats, templates and FLP remakes. Try: "rihanna type flp remake", "dark reggaeton beat", "afrobeat for a summer hit".</p>
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                    <input type="text" id="aiSearchInput" placeholder="e.g. dark reggaeton beat for a sad chorus..."
+                           style="flex:1;min-width:220px;padding:0.75rem 1.1rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--text-primary);font-size:0.9rem;outline:none;"
+                           onkeydown="if(event.key==='Enter')aiFind()">
+                    <button onclick="aiFind()" id="aiSearchBtn"
+                            style="padding:0.75rem 1.6rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;">
+                        ✨ Find
+                    </button>
+                </div>
+                <div id="aiResults" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+</section>
         <section class="glass-section">
     <div class="container">
         <h2 class="section-title" data-i18n="home_featured_title">Featured <span>Beats</span></h2>
@@ -1981,25 +2004,6 @@ input[type="range"]::-moz-range-thumb {
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="flp_title">FLP <span>Remakes</span></h1><p class="text-muted" data-i18n="flp_subtitle">Download FLP remakes for free. Enter your email to get the download link.</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
-            </div>
-            <!-- ===== AI BEAT FINDER (Frid Finder) ===== -->
-            <div id="aiFinder" style="background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(56,189,248,0.05));border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;">
-                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
-                    <span style="font-size:1.2rem;">🤖</span>
-                    <h3 style="margin:0;font-size:1.05rem;color:var(--text-primary);">AI Beat Finder</h3>
-                    <span style="font-size:0.68rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:2px 8px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
-                </div>
-                <p style="color:var(--text-tertiary);font-size:0.82rem;margin:0 0 1rem;">Describe what you're looking for — mood, genre, artist style — and I'll find it in the catalog. Try: "rihanna type flp remake", "dark reggaeton beat", "afrobeat for a summer hit".</p>
-                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
-                    <input type="text" id="aiSearchInput" placeholder="e.g. dark reggaeton beat for a sad chorus..."
-                           style="flex:1;min-width:220px;padding:0.75rem 1.1rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--text-primary);font-size:0.9rem;outline:none;"
-                           onkeydown="if(event.key==='Enter')aiFind()">
-                    <button onclick="aiFind()" id="aiSearchBtn"
-                            style="padding:0.75rem 1.6rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;">
-                        ✨ Find
-                    </button>
-                </div>
-                <div id="aiResults" style="margin-top:1rem;"></div>
             </div>
             <div class="flp-grid" id="flpGrid">
                 <div class="loading-state"><div class="loading-spinner"></div><span>Loading FLP remakes…</span></div>
