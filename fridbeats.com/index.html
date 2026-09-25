@@ -1883,15 +1883,15 @@ input[type="range"]::-moz-range-thumb {
             <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
                 <div style="display:flex;align-items:center;gap:0.4rem;flex-shrink:0;">
                     <span style="font-size:1.05rem;">🤖</span>
-                    <strong style="font-size:0.88rem;color:var(--text-primary);white-space:nowrap;">AI Beat Finder</strong>
+                    <strong style="font-size:0.88rem;color:var(--text-primary);white-space:nowrap;" data-i18n="ai_title">AI Beat Finder</strong>
                     <span style="font-size:0.62rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:1px 7px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
                 </div>
                 <div style="display:flex;gap:0.5rem;flex:1;min-width:250px;">
-                    <input type="text" id="aiSearchInput" placeholder='Try "rihanna type flp remake", "dark reggaeton beat"...'
+                    <input type="text" id="aiSearchInput" data-i18n-placeholder="ai_placeholder" placeholder='Try "rihanna type flp remake", "dark reggaeton beat"...'
                            style="flex:1;min-width:180px;padding:0.6rem 1rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--text-primary);font-size:0.85rem;outline:none;"
                            onkeydown="if(event.key==='Enter')aiFind()">
                     <button onclick="aiFind()" id="aiSearchBtn"
-                            style="padding:0.6rem 1.3rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.3s ease;flex-shrink:0;">
+                            style="padding:0.6rem 1.3rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.3s ease;flex-shrink:0;" data-i18n="ai_find">
                         ✨ Find
                     </button>
                 </div>
@@ -3256,7 +3256,8 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_form_email: "Email *", contact_form_message: "Message *", contact_form_send: "Send",
                 contact_click_chat: "Click to chat →", contact_send_message: "Send a message →", contact_follow_me: "Follow Me",
                 footer_pages: "Pages", footer_services: "Services", footer_custom_beats: "Custom Beats", footer_mixing: "Mixing & Vocal",
-                footer_licensing: "Licensing", footer_tagline: "Made by Frid Beats 🎵"
+                footer_licensing: "Licensing", footer_tagline: "Made by Frid Beats 🎵",
+                ai_title: "AI Beat Finder", ai_placeholder: 'Try "rihanna type flp remake", "dark reggaeton beat"...', ai_find: "✨ Find", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again."
             },
             es: {
                 nav_home: "Inicio", nav_beats: "Beats", nav_templates: "Plantillas", nav_flp: "Remakes FLP", nav_about: "Sobre mí", nav_contact: "Contacto",
@@ -3286,7 +3287,8 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_form_email: "Correo *", contact_form_message: "Mensaje *", contact_form_send: "Enviar",
                 contact_click_chat: "Haz clic para chatear →", contact_send_message: "Enviar un mensaje →", contact_follow_me: "Sígueme",
                 footer_pages: "Páginas", footer_services: "Servicios", footer_custom_beats: "Beats Personalizados", footer_mixing: "Mezcla y Voz",
-                footer_licensing: "Licencias", footer_tagline: "Hecho por Frid Beats 🎵"
+                footer_licensing: "Licencias", footer_tagline: "Hecho por Frid Beats 🎵",
+                ai_title: "Buscador IA de Beats", ai_placeholder: 'Prueba "flp remake tipo rihanna", "beat reggaetón oscuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Mejores", ai_matches_suffix: "coincidencia(s):", ai_no_results: '😕 Nada coincidió con esa descripción — prueba otras palabras o', ai_browse_beats: "explora todos los beats", ai_unavailable: "⚠️ Búsqueda temporalmente no disponible — intenta de nuevo."
             },
             pt: {
                 nav_home: "Início", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "Remakes FLP", nav_about: "Sobre", nav_contact: "Contato",
@@ -3316,7 +3318,8 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_form_email: "E-mail *", contact_form_message: "Mensagem *", contact_form_send: "Enviar",
                 contact_click_chat: "Clique para conversar →", contact_send_message: "Enviar uma mensagem →", contact_follow_me: "Me Siga",
                 footer_pages: "Páginas", footer_services: "Serviços", footer_custom_beats: "Beats Personalizados", footer_mixing: "Mixagem e Vocal",
-                footer_licensing: "Licenciamento", footer_tagline: "Feito por Frid Beats 🎵"
+                footer_licensing: "Licenciamento", footer_tagline: "Feito por Frid Beats 🎵",
+                ai_title: "Buscador IA de Beats", ai_placeholder: 'Tente "flp remake tipo rihanna", "beat reggaetão escuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Melhores", ai_matches_suffix: "correspondência(s):", ai_no_results: '😕 Nada correspondeu a essa descrição — tente outras palavras ou', ai_browse_beats: "explorar todos os beats", ai_unavailable: "⚠️ Pesquisa temporariamente indisponível — tente novamente."
             },
             fr: {
                 nav_home: "Accueil", nav_beats: "Beats", nav_templates: "Modèles", nav_flp: "Remakes FLP", nav_about: "À propos", nav_contact: "Contact",
@@ -3346,7 +3349,8 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_form_email: "E-mail *", contact_form_message: "Message *", contact_form_send: "Envoyer",
                 contact_click_chat: "Cliquez pour discuter →", contact_send_message: "Envoyer un message →", contact_follow_me: "Suivez-Moi",
                 footer_pages: "Pages", footer_services: "Services", footer_custom_beats: "Beats Personnalisés", footer_mixing: "Mixage et Voix",
-                footer_licensing: "Licences", footer_tagline: "Fait par Frid Beats 🎵"
+                footer_licensing: "Licences", footer_tagline: "Fait par Frid Beats 🎵",
+                ai_title: "Recherche IA de Beats", ai_placeholder: 'Essayez "flp remake type rihanna", "beat reggaeton sombre"...', ai_find: "✨ Chercher", ai_searching: "🔍 Recherche...", ai_top_matches: "Meilleures", ai_matches_suffix: "correspondance(s) :", ai_no_results: '😕 Rien ne correspond à cette description — essayez d\'autres mots ou', ai_browse_beats: "parcourir tous les beats", ai_unavailable: "⚠️ Recherche temporairement indisponible — réessayez."
             },
             ht: {
                 nav_home: "Akèy", nav_beats: "Beats", nav_templates: "Modèl", nav_flp: "Remakes FLP", nav_about: "Konsènan Mwen", nav_contact: "Kontak",
@@ -3376,7 +3380,8 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_form_email: "Imèl *", contact_form_message: "Mesaj *", contact_form_send: "Voye",
                 contact_click_chat: "Klike pou chat →", contact_send_message: "Voye yon mesaj →", contact_follow_me: "Swiv Mwen",
                 footer_pages: "Paj", footer_services: "Sèvis", footer_custom_beats: "Beats Pèsonalize", footer_mixing: "Mixaj & Vwa",
-                footer_licensing: "Lisans", footer_tagline: "Fèt pa Frid Beats 🎵"
+                footer_licensing: "Lisans", footer_tagline: "Fèt pa Frid Beats 🎵",
+                ai_title: "Chèche Beats AI", ai_placeholder: 'Eseye "flp remake jan rihanna", "beat reggaeton nwa"...', ai_find: "✨ Chèche", ai_searching: "🔍 Ap chèche...", ai_top_matches: "Top", ai_matches_suffix: "rezilta :", ai_no_results: 'Tokenizer anyen pa koresponn ak deskripsyon sa a — eseye lòt mo oswa', ai_browse_beats: "gade tout beats yo", ai_unavailable: "⚠️ Rechèch la pa disponib kounye a — eseye ankò."
             }
         };
 
@@ -3458,6 +3463,13 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 if (el && el.value.trim()) obj[l.code] = el.value.trim();
             });
             return obj;
+        }
+
+        // Helper i18n: returns the translated string for the current language.
+        function t_(key) {
+            const lang = localStorage.getItem('fridBeats_lang') || 'en';
+            const dict = translations[lang] || translations.en;
+            return dict[key] || translations.en[key] || key;
         }
 
         function setLang(lang) {
@@ -4273,7 +4285,7 @@ document.addEventListener('keydown', function(e) {
             if (!q) { input.focus(); return; }
             if (_aiSearchAbort) _aiSearchAbort.abort();
             _aiSearchAbort = new AbortController();
-            btn.disabled = true; btn.textContent = '🔍 Searching...';
+            btn.disabled = true; btn.textContent = t_('ai_searching');
             try { gaTrack('ai_search', { query: q.slice(0, 100) }); } catch (e) {}
             try {
                 const res = await fetch('https://frid-beats-r2-upload.fridbeats.workers.dev/ai-search', {
@@ -4285,9 +4297,9 @@ document.addEventListener('keydown', function(e) {
                 const data = await res.json();
                 const items = (data && data.items) || [];
                 if (!items.length) {
-                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.85rem;">😕 Nothing matched that description — try different words, or <a href="#" onclick="navigateTo(\'beats\');return false;" style="color:#4ade80;">browse all beats</a>.</p>';
+                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.85rem;">' + t_('ai_no_results') + ' <a href="#" onclick="navigateTo(\'beats\');return false;" style="color:#4ade80;">' + t_('ai_browse_beats') + '</a>.</p>';
                 } else {
-                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.75rem;margin:0 0 0.6rem;">Top ' + items.length + ' match' + (items.length > 1 ? 'es' : '') + ':</p>' + items.map((it, i) => `
+                    resultsEl.innerHTML = '<p style="color:var(--text-tertiary);font-size:0.75rem;margin:0 0 0.6rem;">' + t_('ai_top_matches') + ' ' + items.length + ' ' + t_('ai_matches_suffix') + '</p>' + items.map((it, i) => `
                         <a href="${it.url}" target="_blank" rel="noopener" onclick="try{gaTrack('ai_search_click',{result_rank:${i + 1},result_type:'${it.type}',result_title:'${String(it.title).replace(/'/g, "\\'").slice(0, 60)}'});}catch(e){}"
                            style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0.8rem;margin-bottom:0.5rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-md);text-decoration:none;transition:border-color 0.2s ease;"
                            onmouseover="this.style.borderColor='rgba(74,222,128,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
@@ -4301,10 +4313,10 @@ document.addEventListener('keydown', function(e) {
                 }
             } catch (e) {
                 if (e.name !== 'AbortError') {
-                    resultsEl.innerHTML = '<p style="color:#f87171;font-size:0.85rem;">⚠️ Search temporarily unavailable — please try again.</p>';
+                    resultsEl.innerHTML = '<p style="color:#f87171;font-size:0.85rem;">' + t_('ai_unavailable') + '</p>';
                 }
             } finally {
-                btn.disabled = false; btn.textContent = '✨ Find';
+                btn.disabled = false; btn.textContent = t_('ai_find');
             }
         }
 
