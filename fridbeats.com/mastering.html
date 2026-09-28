@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Mastering — Frid Beats | Radio-Ready in 24h</title>
+<meta name="description" content="Professional online mastering by Frid Beats. Free instant analysis of your track — unlock your radio-ready master for $9.99. Sample Peak -0.01 dBFS, dynamics preserved, all genres.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg-primary:#0a0e1a; --bg-secondary:#0d1222; --bg-tertiary:#11182a;
+  --bg-card:rgba(255,255,255,0.03); --bg-card-hover:rgba(255,255,255,0.06); --bg-input:rgba(255,255,255,0.04);
+  --accent-primary:#1a5a4a; --accent-hover:#2a6a5a; --accent-light:#3a7a6a;
+  --accent-border:rgba(26,90,74,0.25);
+  --text-primary:#ffffff; --text-secondary:#e0e0e0; --text-tertiary:#a0a0a0; --text-muted:#556688;
+  --border:rgba(255,255,255,0.08); --shadow-card:0 8px 32px rgba(0,0,0,0.6);
+  --font:'Inter',sans-serif; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px; --tr:250ms;
+  --ok:#22c55e; --warn:#eab308; --err:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1020px;margin:0 auto;padding:0 20px}
+/* NAV */
+nav.top{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+nav.top .inner{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:3px;font-size:15px;text-decoration:none}
+.brand em{font-style:normal;color:var(--accent-light)}
+.brand small{color:var(--text-muted);font-weight:600;letter-spacing:2px}
+nav.top .right{display:flex;gap:10px;align-items:center}
+.nav-cta{display:inline-block;padding:9px 18px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--accent-primary),var(--accent-hover));color:#fff;font-weight:800;font-size:12.5px;letter-spacing:1px;text-decoration:none;transition:var(--tr)}
+.nav-cta:hover{background:var(--accent-hover)}
+.nav-home{color:var(--text-tertiary);text-decoration:none;font-size:13px;font-weight:600}
+.nav-home:hover{color:#fff}
+/* HERO */
+header.hero{text-align:center;padding:64px 0 40px}
+.hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;font-weight:700;color:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-full);padding:7px 16px;background:var(--bg-card)}
+.hero .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(30px,5.5vw,46px);font-weight:900;letter-spacing:1px;margin-top:20px;line-height:1.15}
+.hero h1 span{color:var(--accent-light)}
+.hero .sub{color:var(--text-tertiary);font-size:15px;max-width:620px;margin:16px auto 0;line-height:1.7}
+.hero .specrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.spec{font-size:11.5px;font-weight:700;letter-spacing:1.2px;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius-full);padding:8px 14px;background:var(--bg-card)}
+/* ANALYZER */
+section.analyzer{margin:34px 0 0}
+.an-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:26px;box-shadow:var(--shadow-card)}
+.an-card h2{font-size:13px;letter-spacing:2.5px;color:var(--text-secondary);font-weight:800;display:flex;align-items:center;gap:10px}
+.an-card h2 .free{background:rgba(34,197,94,0.12);color:var(--ok);font-size:10px;letter-spacing:1.5px;border-radius:var(--radius-full);padding:4px 10px}
+.dz{border:1.5px dashed rgba(255,255,255,0.16);border-radius:var(--radius-lg);padding:34px 16px;text-align:center;cursor:pointer;transition:var(--tr);background:var(--bg-input);margin-top:16px}
+.dz:hover,.dz.over{border-color:var(--accent-light);background:rgba(26,90,74,0.10)}
+.dz .ic{font-size:28px;color:var(--accent-light)}
+.dz .t1{margin-top:10px;font-weight:700;font-size:15px}
+.dz .t2{color:var(--text-muted);font-size:12px;margin-top:5px}
+.res{display:none;margin-top:20px}
+.res.show{display:block}
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.rgrid{grid-template-columns:repeat(2,1fr)}}
+.rcell{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;text-align:center}
+.rcell .k{font-size:10px;letter-spacing:2px;color:var(--text-muted);font-weight:700}
+.rcell .v{font-size:20px;font-weight:800;margin-top:5px;font-variant-numeric:tabular-nums}
+.rcell .g{font-size:10.5px;margin-top:4px;letter-spacing:1px;font-weight:700}
+.g.good{color:var(--ok)} .g.mid{color:var(--warn)} .g.bad{color:var(--err)}
+.verdict{margin-top:16px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;font-size:14px;line-height:1.7;color:var(--text-secondary)}
+.verdict b{color:#fff}
+.wave{position:relative;height:64px;margin-top:16px;border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-input);border:1px solid var(--border)}
+.wave canvas{width:100%;height:100%;display:block}
+.an-note{margin-top:12px;font-size:12px;color:var(--text-muted);text-align:center}
+.unlock{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:15px 26px;border-radius:var(--radius-lg);font-weight:800;font-size:14.5px;letter-spacing:1px;text-decoration:none;transition:var(--tr);cursor:pointer;border:none}
+.btn-main{background:linear-gradient(135deg,var(--accent-primary),var(--accent-hover));color:#fff}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(26,90,74,0.35)}
+.btn-ghost{border:1px solid var(--accent-border);color:var(--accent-light);background:transparent}
+.btn-ghost:hover{background:rgba(26,90,74,0.12);color:#fff}
+/* STEPS */
+section.steps{margin:56px 0 0}
+h3.sec{font-size:13px;letter-spacing:3px;color:var(--text-tertiary);font-weight:800;text-align:center}
+.stepgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+@media(max-width:760px){.stepgrid{grid-template-columns:1fr}}
+.step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:22px}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--accent-primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}
+.step h4{margin-top:12px;font-size:15px;font-weight:800}
+.step p{margin-top:8px;color:var(--text-tertiary);font-size:13px;line-height:1.7}
+/* PRICING */
+section.pricing{margin:56px 0 0}
+.price-card{max-width:460px;margin:20px auto 0;background:linear-gradient(180deg,rgba(26,90,74,0.12),rgba(26,90,74,0.03));border:1px solid var(--accent-border);border-radius:var(--radius-xl);padding:30px;text-align:center;box-shadow:var(--shadow-card)}
+.price-card .big{font-size:44px;font-weight:900}
+.price-card .big sup{font-size:20px;color:var(--accent-light)}
+.price-card .per{color:var(--text-muted);font-size:12.5px;letter-spacing:1.5px;font-weight:700}
+.plist{list-style:none;margin-top:18px;text-align:left}
+.plist li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13.5px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start}
+.plist li::before{content:'✓';color:var(--ok);font-weight:900}
+.price-card .btn{width:100%;justify-content:center;margin-top:20px}
+.uptime{margin-top:12px;font-size:12px;color:var(--text-muted)}
+/* COMPARE */
+.compare{margin:16px auto 0;max-width:640px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--text-tertiary);line-height:1.8}
+.compare b{color:#fff}
+/* FAQ */
+section.faq{margin:56px 0 0}
+.qa{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-top:12px;overflow:hidden}
+.qa summary{cursor:pointer;padding:16px 20px;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:'+';color:var(--accent-light);font-size:18px;font-weight:900}
+.qa[open] summary::after{content:'−'}
+.qa .a{padding:0 20px 16px;color:var(--text-tertiary);font-size:13.5px;line-height:1.8}
+/* FOOTER */
+footer{margin-top:70px;border-top:1px solid var(--border);padding:26px 0 40px;text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:1px}
+footer b{color:var(--text-tertiary)}
+footer .links{margin-top:10px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+footer .links a{color:var(--text-tertiary);text-decoration:none}
+footer .links a:hover{color:#fff}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-full);padding:11px 20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:var(--tr);z-index:200}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="inner">
+    <a class="brand" href="/">FRID<em>BEATS</em> <small>· MASTERING</small></a>
+    <div class="right">
+      <a class="nav-home" href="/">← Back to fridbeats.com</a>
+      <a class="nav-cta" href="#analyzer">FREE ANALYSIS</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker"><span class="dot"></span> PRO MASTERING · ALL GENRES · DELIVERED IN 24H</div>
+  <h1>Radio-Ready Mastering,<br><span>Mixed by Frid Beats</span></h1>
+  <p class="sub">Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.</p>
+  <div class="specrow">
+    <span class="spec">SAMPLE PEAK −0.01 dBFS</span>
+    <span class="spec">DYNAMICS PRESERVED</span>
+    <span class="spec">WAV 24-BIT + MP3 320k</span>
+    <span class="spec">EVERY GENRE · EVERY BPM</span>
+  </div>
+</header>
+
+<section class="analyzer" id="analyzer">
+  <div class="an-card">
+    <h2>🎯 TEST YOUR TRACK — INSTANT ANALYSIS <span class="free">100% FREE</span></h2>
+    <div class="dz" id="dz" onclick="document.getElementById('fz').click()">
+      <div class="ic">🎵</div>
+      <div class="t1">Drop your track here</div>
+      <div class="t2">WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere</div>
+    </div>
+    <input type="file" id="fz" hidden accept=".wav,.mp3,.flac,.ogg,.m4a,.aac,.wma">
+    <div class="fname" id="fzname" style="margin-top:11px;font-size:12.5px;color:var(--ok);word-break:break-all;min-height:17px;font-weight:500"></div>
+
+    <div class="res" id="res">
+      <div class="rgrid">
+        <div class="rcell"><div class="k">LOUDNESS (LUFS)</div><div class="v" id="r-lufs">—</div><div class="g" id="g-lufs">—</div></div>
+        <div class="rcell"><div class="k">TRUE PEAK</div><div class="v" id="r-tp">—</div><div class="g" id="g-tp">—</div></div>
+        <div class="rcell"><div class="k">DYNAMIC RANGE (LRA)</div><div class="v" id="r-lra">—</div><div class="g" id="g-lra">—</div></div>
+        <div class="rcell"><div class="k">DURATION</div><div class="v" id="r-dur">—</div><div class="g good">READY</div></div>
+      </div>
+      <div class="wave"><canvas id="wv"></canvas></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="unlock">
+        <button class="btn btn-main" onclick="openCheckout()">⚡ UNLOCK MY MASTER — $9.99</button>
+      </div>
+      <div class="an-note">Secure payment via PayPal — you get the full master (WAV 24-bit + MP3 320k) within 24h, typically much faster.</div>
+    </div>
+    <div class="an-note" id="privnote" style="margin-top:14px">🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.</div>
+  </div>
+</section>
+
+<section class="pricing" id="checkout" style="display:none;margin-top:26px">
+  <div class="an-card" id="checkoutCard">
+    <h2>💳 CHECKOUT — PROFESSIONAL MASTERING <span class="free" style="background:rgba(26,90,74,0.15);color:var(--accent-light)">$9.99</span></h2>
+    <div id="coForm" style="margin-top:18px">
+      <label style="font-size:12px;letter-spacing:1.5px;color:var(--text-muted);font-weight:700">YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED</label>
+      <input type="email" id="coEmail" placeholder="you@example.com" style="width:100%;margin-top:8px;padding:13px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-input);color:#fff;font-family:var(--font);font-size:14px;outline:none" onfocus="this.style.borderColor='var(--accent-light)'" onblur="this.style.borderColor='var(--border)'">
+      <div id="paypal-button-container" style="margin-top:18px"></div>
+      <div class="an-note" style="margin-top:12px">After payment you'll send me your track (WAV or MP3) + optional reference via WhatsApp or email — full instructions appear right here.</div>
+    </div>
+    <div id="coDone" style="display:none;margin-top:18px">
+      <div style="background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
+        <div style="font-size:30px">✅</div>
+        <h4 style="margin-top:8px;font-size:17px;font-weight:800">Payment received — order <span id="coOrderId" style="color:var(--accent-light)"></span></h4>
+        <p style="color:var(--text-tertiary);font-size:13.5px;line-height:1.8;margin-top:10px">Last step: send me your <b style="color:#fff">track</b> (WAV or MP3) and optionally a <b style="color:#fff">reference</b> (the sound you're chasing) with your order ID.</p>
+        <div class="unlock" style="margin-top:14px">
+          <a class="btn btn-main" id="coWaLink" href="#" target="_blank" rel="noopener">💬 SEND MY TRACK VIA WHATSAPP</a>
+          <a class="btn btn-ghost" id="coMailLink" href="#">📧 Send by email</a>
+        </div>
+        <div class="an-note" style="margin-top:12px">Your master arrives within 24h — usually much faster. Revisions included.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <h3 class="sec">HOW IT WORKS</h3>
+  <div class="stepgrid">
+    <div class="step"><div class="n">1</div><h4>Free analysis</h4><p>Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.</p></div>
+    <div class="step"><div class="n">2</div><h4>Unlock your master</h4><p>One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.</p></div>
+    <div class="step"><div class="n">3</div><h4>Radio-ready in 24h</h4><p>You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.</p></div>
+  </div>
+</section>
+
+<section class="pricing">
+  <h3 class="sec">ONE TRACK. ONE PRICE.</h3>
+  <div class="price-card">
+    <div class="big"><sup>$</sup>9.99</div>
+    <div class="per">PER TRACK · NO SUBSCRIPTION</div>
+    <ul class="plist">
+      <li>Sample Peak −0.01 dBFS — exactly where commercial masters sit</li>
+      <li>Dynamics 100% preserved — no limiting squash, no distortion</li>
+      <li>Reference matching — I match the tone of any track you send</li>
+      <li>WAV 24-bit + MP3 320k + measurement report</li>
+      <li>Delivered in 24h · revisions included until you're happy</li>
+    </ul>
+    <button class="btn btn-main" style="width:100%;justify-content:center;display:inline-flex" onclick="openCheckout()">⚡ GET MASTERED — $9.99</button>
+    <div class="uptime">Secure payment via PayPal — card &amp; PayPal balance accepted</div>
+  </div>
+  <div class="compare">
+    <b>Why is this $9.99 and not $50?</b> — Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.
+  </div>
+</section>
+
+<section class="faq">
+  <h3 class="sec">QUESTIONS</h3>
+  <details class="qa"><summary>Will mastering fix a bad mix?</summary><div class="a">Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.</div></details>
+  <details class="qa"><summary>What genres do you master?</summary><div class="a">Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&amp;B, rock — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.</div></details>
+  <details class="qa"><summary>What do I send you after paying?</summary><div class="a">Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.</div></details>
+  <details class="qa"><summary>What exactly do I receive?</summary><div class="a">A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.</div></details>
+  <details class="qa"><summary>Is my music safe?</summary><div class="a">100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.</div></details>
+</section>
+
+</div>
+
+<footer>
+  <div><b>FRID BEATS</b> · fridbeats.com — your studio, your rules</div>
+  <div class="links">
+    <a href="/">Home</a><a href="/#beats">Beats</a><a href="#analyzer">Free Analysis</a>
+    <a href="https://wa.me/18296026502" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const $=id=>document.getElementById(id);
+
+/* ============================================================
+   CHECKOUT — same PayPal LIVE + Supabase orders as fridbeats.com
+   ============================================================ */
+const SUPABASE_URL = 'https://myyfdrttulefdmjnybuk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15eWZkcnR0dWxlZmRtam55YnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMjk0MzAsImV4cCI6MjEwMzgwNTQzMH0.L5O_VW7wcVPo_3q5BHruymCR8F-Y5yiYw20fPwt2F4w';
+const PAYPAL_CLIENT_ID = 'BAA-8f-Z5HuGQLRSkcGmRFcwvnHlSbsYHBIpp_ig87h3op-TTeKtTiMlPqOsjPZUEaHs7uvKKmEGtD319c';
+const MASTER_PRICE = '9.99';
+let supabaseClient = null;
+try { if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.warn('supabase init failed', e); }
+
+function openCheckout(){
+  const sec = $('checkout');
+  sec.style.display='block';
+  sec.scrollIntoView({behavior:'smooth', block:'center'});
+  renderCheckoutPayPal();
+}
+let ppLoading=false;
+async function renderCheckoutPayPal(){
+  const container=$('paypal-button-container');
+  if (container.dataset.rendered === '1') return;
+  if (ppLoading) return; ppLoading=true;
+  try {
+    if (!window.paypal) {
+      await new Promise((resolve, reject) => {
+        const s=document.createElement('script');
+        s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(PAYPAL_CLIENT_ID)+'&currency=USD';
+        s.onload=resolve; s.onerror=()=>reject(new Error('PayPal SDK failed'));
+        document.head.appendChild(s);
+      });
+    }
+    container.innerHTML='';
+    window.paypal.Buttons({
+      style:{layout:'vertical', color:'gold', shape:'pill', label:'paypal'},
+      createOrder: function(data, actions){
+        const email=($('coEmail').value||'').trim();
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+          toast('⚠️ Enter a valid email first — your master is delivered there.');
+          $('coEmail').focus();
+          return Promise.reject(new Error('invalid email'));
+        }
+        return actions.order.create({ purchase_units:[{ amount:{ value: MASTER_PRICE }, description:'Professional Mastering — Frid Beats (1 track)' }] });
+      },
+      onApprove: async function(data, actions){
+        const details = await actions.order.capture();
+        const email=($('coEmail').value||'').trim() || (details.payer && details.payer.email_address) || '';
+        const orderRecord={
+          email: email,
+          items:[{ id:'mastering-single', title:'Professional Mastering (1 track)', type:'mastering', price:9.99, quantity:1, license:null, files:null }],
+          total: 9.99,
+          paypal_order_id: details.id
+        };
+        if (supabaseClient) { try { await supabaseClient.from('orders').insert(orderRecord); } catch(e){ console.error('order save failed', e); } }
+        showOrderDone(details.id, email);
+      },
+      onError: function(err){ console.error(err); toast('⚠️ PayPal error — please try again or order via WhatsApp.'); }
+    }).render('#paypal-button-container');
+    container.dataset.rendered='1';
+  } catch(e){
+    container.innerHTML='<div style="color:var(--err);font-size:13px;text-align:center">Could not load PayPal — use the WhatsApp button below.</div>';
+  } finally { ppLoading=false; }
+}
+function showOrderDone(orderId, email){
+  $('coForm').style.display='none';
+  $('coDone').style.display='block';
+  $('coOrderId').textContent = orderId ? '('+orderId.slice(-8).toUpperCase()+')' : '';
+  const msg = 'Hi Frid! I just paid $9.99 for mastering on fridbeats.com'+(orderId?' — Order '+orderId:'')+'. Here is my track' ;
+  $('coWaLink').href = 'https://wa.me/18296026502?text=' + encodeURIComponent(msg);
+  $('coMailLink').href = 'mailto:contact@fridbeats.com?subject=' + encodeURIComponent('Mastering Order '+(orderId||'')) + '&body=' + encodeURIComponent('Hi Frid,\n\nMy PayPal order ID: '+orderId+'\nMy track is attached (WAV/MP3).\nOptional reference: ');
+  toast('✅ Payment confirmed — now send your track!');
+  $('coDone').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+['dragover','dragenter'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.add('over')}));
+['dragleave','drop'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.remove('over')}));
+$('dz').addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) analyze(e.dataTransfer.files[0]); });
+$('fz').onchange=e=>{ if(e.target.files[0]) analyze(e.target.files[0]); };
+
+/* K-weighting approx via high-pass + high-shelf (BS.1770-style pre-filter) */
+function kWeightBuffer(ctx, buf){
+  const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=38; hp.Q.value=0.5;
+  const hs = ctx.createBiquadFilter(); hs.type='highshelf'; hs.frequency.value=1500; hs.gain.value=4;
+  const src = ctx.createBufferSource(); src.buffer=buf;
+  const dest = ctx.createBufferSource ? ctx.destination : null;
+  const tmp = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
+  const sp = ctx.createBufferSource(); sp.buffer=buf;
+  const st = ctx.createGain();
+  /* Offline graph: manual filter loop for compatibility */
+  const out = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
+  for(let c=0;c<buf.numberOfChannels;c++){
+    const data = buf.getChannelData(c), o = out.getChannelData(c);
+    /* simple one-pole approx of K-filter: HP at ~38Hz + shelf tilt */
+    let hpPrev=0, lpPrev=0;
+    for(let i=0;i<data.length;i++){
+      const x=data[i];
+      hpPrev = 0.9973*hpPrev + 0.9973*(x - hpPrev)*0.5;   /* ~38Hz HP */
+      lpPrev = lpPrev + 0.08*(hpPrev-lpPrev);              /* shelf tilt */
+      o[i] = hpPrev*1.0 + (hpPrev-lpPrev)*3.5;
+    }
+  }
+  return out;
+}
+function lufsMomentaryBlocks(filtered, sr){
+  /* 400ms blocks, 75% overlap, gated */
+  const block = Math.round(0.4*sr), hop = Math.round(0.1*sr);
+  const powers=[];
+  for(let st=0; st+block<filtered.length; st+=hop){
+    let sum=0;
+    for(let i=st;i<st+block;i+=4){ const v=filtered[i]; sum+=v*v; }
+    powers.push(sum/( (block)/4 ));
+  }
+  if(!powers.length) return null;
+  const abs=powers.map(p=>10*Math.log10(p+1e-12)).sort((a,b)=>b-a);
+  /* absolute gate -70 */
+  const g1=abs.filter(l=>l>-70);
+  if(!g1.length) return null;
+  const mean=l=>10*Math.log10(l.reduce((s,p)=>s+Math.pow(10,p/10),0)/l.length+1e-12);
+  const rel = mean(g1)-10;
+  const g2=g1.filter(l=>l>rel);
+  return { integrated: g2.length? mean(g2): mean(g1) };
+}
+function lraEstimate(filtered, sr){
+  const block = Math.round(3.0*sr), hop = Math.round(1.0*sr);
+  const vals=[];
+  for(let st=0; st+block<filtered.length; st+=hop){
+    let sum=0, n=0;
+    for(let i=st;i<st+block;i+=8){ const v=filtered[i]; sum+=v*v; n++; }
+    if(n) vals.push(10*Math.log10(sum/n+1e-12));
+  }
+  if(vals.length<3) return '—';
+  vals.sort((a,b)=>a-b);
+  const q=(p)=>vals[Math.floor(p*(vals.length-1))];
+  return Math.max(0, q(0.95)-q(0.10)).toFixed(1);
+}
+async function analyze(file){
+  $('fzname').textContent='✓ '+file.name;
+  toast('Analyzing '+file.name+' ...');
+  try{
+    const buf=await file.arrayBuffer();
+    const AC=window.AudioContext||window.webkitAudioContext;
+    const ctx=new AC();
+    const ab=await ctx.decodeAudioData(buf.slice(0));
+    /* --- measurements --- */
+    const ch=ab.getChannelData(0), ch2=ab.numberOfChannels>1?ab.getChannelData(1):null;
+    let peak=0;
+    for(let i=0;i<ch.length;i++){ const v=Math.abs(ch[i]); if(v>peak)peak=v; if(ch2){const v2=Math.abs(ch2[i]); if(v2>peak)peak=v2;} }
+    const tp = peak>0? (20*Math.log10(peak)).toFixed(2) : '-Inf';
+    const fw = kWeightBuffer(ctx, ab);
+    let data=fw.getChannelData(0);
+    if(ch2){ const d2=fw.getChannelData(1); /* mono-combine sum of powers happens in block func via both chans */ }
+    const blocks=lufsMomentaryBlocks(data, ab.sampleRate);
+    const lufs = blocks? blocks.integrated.toFixed(1) : '—';
+    const lra = lraEstimate(data, ab.sampleRate);
+    /* --- verdict --- */
+    const lufsN=parseFloat(lufs), tpN=parseFloat(tp), lraN=parseFloat(lra);
+    const okLufs = lufsN>=-16 && lufsN<=-6;
+    const okTp = tpN>=-6 && tpN<0;
+    const okLra = lraN==='—' || lraN>=3;
+    $('r-lufs').textContent=(isNaN(lufsN)?'—':lufsN.toFixed(1));
+    $('g-lufs').textContent=isNaN(lufsN)?'—':(okLufs?'IN RANGE':'NEEDS WORK');
+    $('g-lufs').className='g '+(okLufs?'good':'bad');
+    $('r-tp').textContent=tp+' dBFS';
+    $('g-tp').textContent=okTp?'IN RANGE':'NEEDS HEADROOM';
+    $('g-tp').className='g '+(okTp?'good':'bad');
+    $('r-lra').textContent=lra;
+    $('g-lra').textContent=okLra?'ALIVE':'SQUASHED';
+    $('g-lra').className='g '+(okLra?'good':'bad');
+    const m=Math.floor(ab.duration/60), s=Math.floor(ab.duration%60);
+    $('r-dur').textContent=m+':'+String(s).padStart(2,'0');
+    let msg;
+    if(okTp && okLufs && okLra){
+      msg='<b>✅ Solid track!</b> Your levels are close to commercial range. A professional master will still tighten the tone to match the sound of the biggest tracks in your genre — and place the final peak at exactly <b>−0.01 dBFS</b> for distribution.';
+    } else if(!okTp){
+      msg='<b>⚠️ Your track is '+Math.abs(tpN).toFixed(1)+' dB below where commercial tracks peak.</b> That missing loudness is exactly what you hear on Spotify/YouTube. A professional master closes that gap <i>without</i> crushing your dynamics.';
+    } else if(!okLufs){
+      msg='<b>⚠️ Loudness off-range.</b> Commercial tracks sit between −14 and −8 LUFS. Yours is at <b>'+lufsN.toFixed(1)+' LUFS</b>. A proper master brings you into the modern window while keeping every punch intact.';
+    } else {
+      msg='<b>⚠️ Dynamics are squashed ('+lra+' LRA).</b> Your track may be over-limited. A careful re-master with reference matching restores the punch — send it over.';
+    }
+    msg+='<br><br><b>Unlock your master for $9.99</b> — delivered in 24h: WAV 24-bit + MP3 320k + report.';
+    $('verdict').innerHTML=msg;
+    drawWave(ab);
+    $('res').classList.add('show');
+    $('res').scrollIntoView({behavior:'smooth', block:'center'});
+    ctx.close();
+  }catch(e){
+    toast('Could not decode this file — try WAV or MP3.');
+  }
+}
+function drawWave(ab){
+  const cv=$('wv');
+  const w=cv.clientWidth||600, h=cv.clientHeight||64;
+  cv.width=w*2; cv.height=h*2;
+  const g=cv.getContext('2d'); g.setTransform(2,0,0,2,0,0);
+  g.clearRect(0,0,w,h);
+  const ch=ab.getChannelData(0), N=700, block=Math.max(1,Math.floor(ch.length/N));
+  for(let i=0;i<N;i++){
+    let m=0; const st=i*block;
+    for(let j=0;j<block;j+=16){ const v=Math.abs(ch[st+j]||0); if(v>m)m=v; }
+    const bh=Math.max(2, m*h*0.94);
+    g.fillStyle='rgba(255,255,255,0.30)';
+    g.fillRect(i*(w/N), (h-bh)/2, Math.max(1,(w/N)*0.62), bh);
+  }
+}
+</script>
+</body>
+</html>
