@@ -1802,6 +1802,7 @@ input[type="range"]::-moz-range-thumb {
             <a onclick="navigateTo('beats')" data-page="beats" data-i18n="nav_beats">Beats</a>
             <a onclick="navigateTo('templates')" data-page="templates" data-i18n="nav_templates">Templates</a>
             <a onclick="navigateTo('flp')" data-page="flp" data-i18n="nav_flp">FLP Remakes</a>
+            <a href="/mastering.html">Mastering</a>
             <a onclick="navigateTo('about')" data-page="about" data-i18n="nav_about">About</a>
             <a onclick="navigateTo('contact')" data-page="contact" data-i18n="nav_contact">Contact</a>
             <a onclick="navigateTo('admin')" data-page="admin" id="adminNavLink" style="display:none;">Admin</a>
@@ -1846,6 +1847,7 @@ input[type="range"]::-moz-range-thumb {
     <a onclick="navigateTo('beats'); toggleMobileMenu();" data-i18n="nav_beats">Beats</a>
     <a onclick="navigateTo('templates'); toggleMobileMenu();" data-i18n="nav_templates">Templates</a>
     <a onclick="navigateTo('flp'); toggleMobileMenu();" data-i18n="nav_flp">FLP Remakes</a>
+    <a href="/mastering.html" onclick="toggleMobileMenu();">Mastering</a>
     <a onclick="navigateTo('about'); toggleMobileMenu();" data-i18n="nav_about">About</a>
     <a onclick="navigateTo('contact'); toggleMobileMenu();" data-i18n="nav_contact">Contact</a>
     <a onclick="navigateTo('admin'); toggleMobileMenu();" id="adminNavLinkMobile" style="display:none;">Admin</a>
@@ -2342,7 +2344,7 @@ input[type="range"]::-moz-range-thumb {
                         <a href="https://facebook.com/FridBeats" target="_blank" class="social-icon facebook" style="width:34px;height:34px;font-size:0.8rem;"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
-                <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
+                <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a href="/mastering.html">Mastering</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('contact')" data-i18n="footer_mixing">Mixing & Vocal</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
@@ -3833,8 +3835,13 @@ document.addEventListener('keydown', function(e) {
         // ============================================================
         let currentAudio = null;
         let currentBeatId = null;
-        let savedVolume = parseInt(localStorage.getItem('fridBeats_volume') || '70', 10);
-        if (isNaN(savedVolume)) savedVolume = 70;
+        // MOBILE: the volume slider is hidden by CSS (max-width:768px), so a
+        // saved desktop preference (e.g. 70%) would silently reduce playback
+        // volume on phones with no way to change it. Mobile playback is
+        // therefore ALWAYS 100% — desktop keeps the remembered preference.
+        const IS_MOBILE_DEVICE = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+        let savedVolume = IS_MOBILE_DEVICE ? 100 : parseInt(localStorage.getItem('fridBeats_volume') || '70', 10);
+        if (isNaN(savedVolume)) savedVolume = IS_MOBILE_DEVICE ? 100 : 70;
 
         function attemptPlay(audio, beatId, isRetry) {
             // STALE GUARD — if the user already switched to another beat, this
@@ -5604,7 +5611,7 @@ function setupVUForAudio(audio) {
             vuGainNode = ctx.createGain();
             vuGainNode.connect(ctx.destination);
         }
-        vuGainNode.gain.value = savedVolume / 100;
+        vuGainNode.gain.value = IS_MOBILE_DEVICE ? 1 : (savedVolume / 100);
         audio.volume = 1; // real loudness now comes from vuGainNode, not the element itself
         const source = ctx.createMediaElementSource(audio);
         source.connect(vuAnalyser);   // VU reads the TRUE signal level — unaffected by volume
@@ -5617,7 +5624,15 @@ function setupVUForAudio(audio) {
 }
 
 // Applies the user's chosen volume/mute to whichever path is active for the current track.
+// On mobile the control is hidden, so playback is locked at full volume (see IS_MOBILE_DEVICE).
 function applyPlaybackVolume(val) {
+    if (IS_MOBILE_DEVICE) {
+        if (vuHooked && vuGainNode) { vuGainNode.gain.value = 1; }
+        if (currentAudio) currentAudio.volume = 1;
+        const pctEl = document.getElementById('gpVolumePercent');
+        if (pctEl) pctEl.textContent = '100%';
+        return;
+    }
     if (vuHooked && vuGainNode) {
         vuGainNode.gain.value = val / 100;
         if (currentAudio) currentAudio.volume = 1;
@@ -5775,7 +5790,7 @@ function initGlobalPlayer() {
     if (track) track.addEventListener('click', seekGlobalAudio);
     initSeekDrag();
 
-    // Restore remembered volume preference
+    // Restore remembered volume preference (desktop only — mobile is always 100%)
     const volumeSlider = document.getElementById('gpVolume');
     const percentEl = document.getElementById('gpVolumePercent');
     const muteIcon = document.getElementById('gpMuteIcon');
@@ -5892,6 +5907,7 @@ function goToBeatDetails() {
 let vuVolumeBeforeMute = 70;
 
 function toggleGlobalMute() {
+    if (IS_MOBILE_DEVICE) { return; }  // no volume UI on mobile — playback stays at 100%
     const muteIcon = document.getElementById('gpMuteIcon');
     const volumeSlider = document.getElementById('gpVolume');
     const percentEl = document.getElementById('gpVolumePercent');
@@ -5917,6 +5933,7 @@ function toggleGlobalMute() {
     }
 }
 function setGlobalVolume(val) {
+    if (IS_MOBILE_DEVICE) { return; }  // no volume UI on mobile — playback stays at 100%
     val = parseInt(val, 10);
     savedVolume = val;
     localStorage.setItem('fridBeats_volume', savedVolume);
