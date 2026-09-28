@@ -26,15 +26,17 @@ a{color:inherit}
 .wrap{max-width:1020px;margin:0 auto;padding:0 20px}
 /* NAV */
 nav.top{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
-nav.top .inner{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-.brand{font-weight:900;letter-spacing:3px;font-size:15px;text-decoration:none}
+nav.top .inner{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:3px;font-size:15px;text-decoration:none;white-space:nowrap}
 .brand em{font-style:normal;color:var(--accent-light)}
 .brand small{color:var(--text-muted);font-weight:600;letter-spacing:2px}
-nav.top .right{display:flex;gap:10px;align-items:center}
+nav.top .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .nav-cta{display:inline-block;padding:9px 18px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--accent-primary),var(--accent-hover));color:#fff;font-weight:800;font-size:12.5px;letter-spacing:1px;text-decoration:none;transition:var(--tr)}
 .nav-cta:hover{background:var(--accent-hover)}
 .nav-home{color:var(--text-tertiary);text-decoration:none;font-size:13px;font-weight:600}
 .nav-home:hover{color:#fff}
+.lang-btn{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-full);padding:8px 14px;color:var(--text-primary);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:var(--font)}
+.lang-btn:hover{border-color:var(--accent-border)}
 /* HERO */
 header.hero{text-align:center;padding:64px 0 40px}
 .hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;font-weight:700;color:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-full);padding:7px 16px;background:var(--bg-card)}
@@ -48,13 +50,14 @@ header.hero{text-align:center;padding:64px 0 40px}
 /* ANALYZER */
 section.analyzer{margin:34px 0 0}
 .an-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:26px;box-shadow:var(--shadow-card)}
-.an-card h2{font-size:13px;letter-spacing:2.5px;color:var(--text-secondary);font-weight:800;display:flex;align-items:center;gap:10px}
+.an-card h2{font-size:13px;letter-spacing:2.5px;color:var(--text-secondary);font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .an-card h2 .free{background:rgba(34,197,94,0.12);color:var(--ok);font-size:10px;letter-spacing:1.5px;border-radius:var(--radius-full);padding:4px 10px}
 .dz{border:1.5px dashed rgba(255,255,255,0.16);border-radius:var(--radius-lg);padding:34px 16px;text-align:center;cursor:pointer;transition:var(--tr);background:var(--bg-input);margin-top:16px}
 .dz:hover,.dz.over{border-color:var(--accent-light);background:rgba(26,90,74,0.10)}
 .dz .ic{font-size:28px;color:var(--accent-light)}
 .dz .t1{margin-top:10px;font-weight:700;font-size:15px}
 .dz .t2{color:var(--text-muted);font-size:12px;margin-top:5px}
+.fname{margin-top:11px;font-size:12.5px;color:var(--ok);word-break:break-all;min-height:17px;font-weight:500}
 .res{display:none;margin-top:20px}
 .res.show{display:block}
 .rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -70,7 +73,7 @@ section.analyzer{margin:34px 0 0}
 .wave canvas{width:100%;height:100%;display:block}
 .an-note{margin-top:12px;font-size:12px;color:var(--text-muted);text-align:center}
 .unlock{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
-.btn{display:inline-flex;align-items:center;gap:9px;padding:15px 26px;border-radius:var(--radius-lg);font-weight:800;font-size:14.5px;letter-spacing:1px;text-decoration:none;transition:var(--tr);cursor:pointer;border:none}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:15px 26px;border-radius:var(--radius-lg);font-weight:800;font-size:14.5px;letter-spacing:1px;text-decoration:none;transition:var(--tr);cursor:pointer;border:none;font-family:var(--font)}
 .btn-main{background:linear-gradient(135deg,var(--accent-primary),var(--accent-hover));color:#fff}
 .btn-main:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(26,90,74,0.35)}
 .btn-ghost{border:1px solid var(--accent-border);color:var(--accent-light);background:transparent}
@@ -95,9 +98,17 @@ section.pricing{margin:56px 0 0}
 .plist li::before{content:'✓';color:var(--ok);font-weight:900}
 .price-card .btn{width:100%;justify-content:center;margin-top:20px}
 .uptime{margin-top:12px;font-size:12px;color:var(--text-muted)}
-/* COMPARE */
 .compare{margin:16px auto 0;max-width:640px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--text-tertiary);line-height:1.8}
 .compare b{color:#fff}
+/* CHECKOUT */
+section.checkout-sec{margin:26px 0 0}
+label.co-label{font-size:12px;letter-spacing:1.5px;color:var(--text-muted);font-weight:700;display:block}
+input.co-email{width:100%;margin-top:8px;padding:13px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-input);color:#fff;font-family:var(--font);font-size:14px;outline:none}
+input.co-email:focus{border-color:var(--accent-light)}
+.donebox{background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center}
+.donebox h4{margin-top:8px;font-size:17px;font-weight:800}
+.donebox p{color:var(--text-tertiary);font-size:13.5px;line-height:1.8;margin-top:10px}
+.donebox b{color:#fff}
 /* FAQ */
 section.faq{margin:56px 0 0}
 .qa{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-top:12px;overflow:hidden}
@@ -112,7 +123,7 @@ footer b{color:var(--text-tertiary)}
 footer .links{margin-top:10px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
 footer .links a{color:var(--text-tertiary);text-decoration:none}
 footer .links a:hover{color:#fff}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-full);padding:11px 20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:var(--tr);z-index:200}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-full);padding:11px 20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:var(--tr);z-index:200;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -120,10 +131,18 @@ footer .links a:hover{color:#fff}
 
 <nav class="top">
   <div class="inner">
-    <a class="brand" href="/">FRID<em>BEATS</em> <small>· MASTERING</small></a>
+    <a class="brand" href="/">FRID<em>BEATS</em> <small>· <span data-i18n="brand_mastering">MASTERING</span></small></a>
     <div class="right">
-      <a class="nav-home" href="/">← Back to fridbeats.com</a>
-      <a class="nav-cta" href="#analyzer">FREE ANALYSIS</a>
+      <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn"><i class="fas fa-globe"></i> <span id="currentLangLabel">EN</span></button>
+      <div id="langMenu" style="display:none;position:absolute;top:56px;right:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:6px;z-index:300;min-width:170px">
+        <button onclick="setLang('en')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇬🇧 English</button>
+        <button onclick="setLang('es')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇪🇸 Español</button>
+        <button onclick="setLang('pt')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇵🇹 Português</button>
+        <button onclick="setLang('fr')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇫🇷 Français</button>
+        <button onclick="setLang('ht')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇭🇹 Kreyòl</button>
+      </div>
+      <a class="nav-home" href="/">← <span data-i18n="back_home">Back to fridbeats.com</span></a>
+      <a class="nav-cta" href="#analyzer" data-i18n="nav_free_analysis">FREE ANALYSIS</a>
     </div>
   </div>
 </nav>
@@ -131,114 +150,113 @@ footer .links a:hover{color:#fff}
 <div class="wrap">
 
 <header class="hero">
-  <div class="kicker"><span class="dot"></span> PRO MASTERING · ALL GENRES · DELIVERED IN 24H</div>
-  <h1>Radio-Ready Mastering,<br><span>Mixed by Frid Beats</span></h1>
-  <p class="sub">Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.</p>
+  <div class="kicker"><span class="dot"></span> <span data-i18n="hero_kicker">PRO MASTERING · ALL GENRES · DELIVERED IN 24H</span></div>
+  <h1><span data-i18n="hero_title_1">Radio-Ready Mastering,</span><br><span data-i18n="hero_title_2">Mixed by Frid Beats</span></h1>
+  <p class="sub" data-i18n="hero_sub">Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.</p>
   <div class="specrow">
     <span class="spec">SAMPLE PEAK −0.01 dBFS</span>
-    <span class="spec">DYNAMICS PRESERVED</span>
+    <span class="spec" data-i18n="spec_dynamics">DYNAMICS PRESERVED</span>
     <span class="spec">WAV 24-BIT + MP3 320k</span>
-    <span class="spec">EVERY GENRE · EVERY BPM</span>
+    <span class="spec" data-i18n="spec_universal">EVERY GENRE · EVERY BPM</span>
   </div>
 </header>
 
 <section class="analyzer" id="analyzer">
   <div class="an-card">
-    <h2>🎯 TEST YOUR TRACK — INSTANT ANALYSIS <span class="free">100% FREE</span></h2>
+    <h2>🎯 <span data-i18n="an_title">TEST YOUR TRACK — INSTANT ANALYSIS</span> <span class="free" data-i18n="an_free">100% FREE</span></h2>
     <div class="dz" id="dz" onclick="document.getElementById('fz').click()">
       <div class="ic">🎵</div>
-      <div class="t1">Drop your track here</div>
-      <div class="t2">WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere</div>
+      <div class="t1" data-i18n="dz_t1">Drop your track here</div>
+      <div class="t2" data-i18n="dz_t2">WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere</div>
     </div>
     <input type="file" id="fz" hidden accept=".wav,.mp3,.flac,.ogg,.m4a,.aac,.wma">
-    <div class="fname" id="fzname" style="margin-top:11px;font-size:12.5px;color:var(--ok);word-break:break-all;min-height:17px;font-weight:500"></div>
+    <div class="fname" id="fzname"></div>
 
     <div class="res" id="res">
       <div class="rgrid">
-        <div class="rcell"><div class="k">LOUDNESS (LUFS)</div><div class="v" id="r-lufs">—</div><div class="g" id="g-lufs">—</div></div>
-        <div class="rcell"><div class="k">TRUE PEAK</div><div class="v" id="r-tp">—</div><div class="g" id="g-tp">—</div></div>
-        <div class="rcell"><div class="k">DYNAMIC RANGE (LRA)</div><div class="v" id="r-lra">—</div><div class="g" id="g-lra">—</div></div>
-        <div class="rcell"><div class="k">DURATION</div><div class="v" id="r-dur">—</div><div class="g good">READY</div></div>
+        <div class="rcell"><div class="k" data-i18n="k_lufs">LOUDNESS (LUFS)</div><div class="v" id="r-lufs">—</div><div class="g" id="g-lufs">—</div></div>
+        <div class="rcell"><div class="k" data-i18n="k_tp">TRUE PEAK</div><div class="v" id="r-tp">—</div><div class="g" id="g-tp">—</div></div>
+        <div class="rcell"><div class="k" data-i18n="k_lra">DYNAMIC RANGE (LRA)</div><div class="v" id="r-lra">—</div><div class="g" id="g-lra">—</div></div>
+        <div class="rcell"><div class="k" data-i18n="k_dur">DURATION</div><div class="v" id="r-dur">—</div><div class="g good" id="g-dur">—</div></div>
       </div>
       <div class="wave"><canvas id="wv"></canvas></div>
       <div class="verdict" id="verdict"></div>
       <div class="unlock">
-        <button class="btn btn-main" onclick="openCheckout()">⚡ UNLOCK MY MASTER — $9.99</button>
+        <button class="btn btn-main" onclick="openCheckout()">⚡ <span data-i18n="unlock_btn">UNLOCK MY MASTER — $9.99</span></button>
+        <a class="btn btn-ghost" id="waTop" href="#" target="_blank" rel="noopener">💬 <span data-i18n="order_wa">Order via WhatsApp</span></a>
       </div>
-      <div class="an-note">Secure payment via PayPal — you get the full master (WAV 24-bit + MP3 320k) within 24h, typically much faster.</div>
+      <div class="an-note" data-i18n="an_note_pay">Payment unlocks the full master (WAV 24-bit + MP3 320k) — delivered within 24h, typically much faster.</div>
     </div>
-    <div class="an-note" id="privnote" style="margin-top:14px">🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.</div>
-  </div>
-</section>
-
-<section class="pricing" id="checkout" style="display:none;margin-top:26px">
-  <div class="an-card" id="checkoutCard">
-    <h2>💳 CHECKOUT — PROFESSIONAL MASTERING <span class="free" style="background:rgba(26,90,74,0.15);color:var(--accent-light)">$9.99</span></h2>
-    <div id="coForm" style="margin-top:18px">
-      <label style="font-size:12px;letter-spacing:1.5px;color:var(--text-muted);font-weight:700">YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED</label>
-      <input type="email" id="coEmail" placeholder="you@example.com" style="width:100%;margin-top:8px;padding:13px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-input);color:#fff;font-family:var(--font);font-size:14px;outline:none" onfocus="this.style.borderColor='var(--accent-light)'" onblur="this.style.borderColor='var(--border)'">
-      <div id="paypal-button-container" style="margin-top:18px"></div>
-      <div class="an-note" style="margin-top:12px">After payment you'll send me your track (WAV or MP3) + optional reference via WhatsApp or email — full instructions appear right here.</div>
-    </div>
-    <div id="coDone" style="display:none;margin-top:18px">
-      <div style="background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
-        <div style="font-size:30px">✅</div>
-        <h4 style="margin-top:8px;font-size:17px;font-weight:800">Payment received — order <span id="coOrderId" style="color:var(--accent-light)"></span></h4>
-        <p style="color:var(--text-tertiary);font-size:13.5px;line-height:1.8;margin-top:10px">Last step: send me your <b style="color:#fff">track</b> (WAV or MP3) and optionally a <b style="color:#fff">reference</b> (the sound you're chasing) with your order ID.</p>
-        <div class="unlock" style="margin-top:14px">
-          <a class="btn btn-main" id="coWaLink" href="#" target="_blank" rel="noopener">💬 SEND MY TRACK VIA WHATSAPP</a>
-          <a class="btn btn-ghost" id="coMailLink" href="#">📧 Send by email</a>
-        </div>
-        <div class="an-note" style="margin-top:12px">Your master arrives within 24h — usually much faster. Revisions included.</div>
-      </div>
-    </div>
+    <div class="an-note" id="privnote" style="margin-top:14px" data-i18n="priv_note">🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.</div>
   </div>
 </section>
 
 <section class="steps">
-  <h3 class="sec">HOW IT WORKS</h3>
+  <h3 class="sec" data-i18n="steps_title">HOW IT WORKS</h3>
   <div class="stepgrid">
-    <div class="step"><div class="n">1</div><h4>Free analysis</h4><p>Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.</p></div>
-    <div class="step"><div class="n">2</div><h4>Unlock your master</h4><p>One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.</p></div>
-    <div class="step"><div class="n">3</div><h4>Radio-ready in 24h</h4><p>You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.</p></div>
+    <div class="step"><div class="n">1</div><h4 data-i18n="step1_t">Free analysis</h4><p data-i18n="step1_p">Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.</p></div>
+    <div class="step"><div class="n">2</div><h4 data-i18n="step2_t">Unlock your master</h4><p data-i18n="step2_p">One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.</p></div>
+    <div class="step"><div class="n">3</div><h4 data-i18n="step3_t">Radio-ready in 24h</h4><p data-i18n="step3_p">You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.</p></div>
   </div>
 </section>
 
 <section class="pricing">
-  <h3 class="sec">ONE TRACK. ONE PRICE.</h3>
+  <h3 class="sec" data-i18n="price_title">ONE TRACK. ONE PRICE.</h3>
   <div class="price-card">
     <div class="big"><sup>$</sup>9.99</div>
-    <div class="per">PER TRACK · NO SUBSCRIPTION</div>
+    <div class="per" data-i18n="price_per">PER TRACK · NO SUBSCRIPTION</div>
     <ul class="plist">
-      <li>Sample Peak −0.01 dBFS — exactly where commercial masters sit</li>
-      <li>Dynamics 100% preserved — no limiting squash, no distortion</li>
-      <li>Reference matching — I match the tone of any track you send</li>
-      <li>WAV 24-bit + MP3 320k + measurement report</li>
-      <li>Delivered in 24h · revisions included until you're happy</li>
+      <li data-i18n="pl1">Sample Peak −0.01 dBFS — exactly where commercial masters sit</li>
+      <li data-i18n="pl2">Dynamics 100% preserved — no limiting squash, no distortion</li>
+      <li data-i18n="pl3">Reference matching — I match the tone of any track you send</li>
+      <li data-i18n="pl4">WAV 24-bit + MP3 320k + measurement report</li>
+      <li data-i18n="pl5">Delivered in 24h · revisions included until you're happy</li>
     </ul>
-    <button class="btn btn-main" style="width:100%;justify-content:center;display:inline-flex" onclick="openCheckout()">⚡ GET MASTERED — $9.99</button>
-    <div class="uptime">Secure payment via PayPal — card &amp; PayPal balance accepted</div>
+    <button class="btn btn-main" onclick="openCheckout()">⚡ <span data-i18n="price_btn">GET MASTERED — $9.99</span></button>
+    <div class="uptime" data-i18n="price_note">Secure payment via PayPal — card &amp; PayPal balance accepted</div>
   </div>
-  <div class="compare">
-    <b>Why is this $9.99 and not $50?</b> — Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.
+  <div class="compare"><b data-i18n="cmp_t">Why is this $9.99 and not $50?</b> <span data-i18n="cmp_p">— Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.</span></div>
+</section>
+
+<section class="checkout-sec" id="checkout" style="display:none">
+  <div class="an-card" id="checkoutCard">
+    <h2>💳 <span data-i18n="co_title">CHECKOUT — PROFESSIONAL MASTERING</span> <span class="free" style="background:rgba(26,90,74,0.15);color:var(--accent-light)">$9.99</span></h2>
+    <div id="coForm" style="margin-top:18px">
+      <label class="co-label" for="coEmail" data-i18n="co_email_label">YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED</label>
+      <input type="email" id="coEmail" class="co-email" placeholder="you@example.com">
+      <div id="paypal-button-container" style="margin-top:18px"></div>
+      <div class="an-note" style="margin-top:12px" data-i18n="co_note">After payment you'll send me your track (WAV or MP3) + optional reference via WhatsApp or email — full instructions appear right here.</div>
+    </div>
+    <div id="coDone" style="display:none;margin-top:18px">
+      <div class="donebox">
+        <div style="font-size:30px">✅</div>
+        <h4><span data-i18n="co_done">Payment received — order</span> <span id="coOrderId" style="color:var(--accent-light)"></span></h4>
+        <p data-i18n="co_done_p">Last step: send me your track (WAV or MP3) and optionally a reference (the sound you're chasing) with your order ID.</p>
+        <div class="unlock" style="margin-top:14px">
+          <a class="btn btn-main" id="coWaLink" href="#" target="_blank" rel="noopener">💬 <span data-i18n="co_send_wa">SEND MY TRACK VIA WHATSAPP</span></a>
+          <a class="btn btn-ghost" id="coMailLink" href="#">📧 <span data-i18n="co_send_mail">Send by email</span></a>
+        </div>
+        <div class="an-note" style="margin-top:12px" data-i18n="co_done_note">Your master arrives within 24h — usually much faster. Revisions included.</div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="faq">
-  <h3 class="sec">QUESTIONS</h3>
-  <details class="qa"><summary>Will mastering fix a bad mix?</summary><div class="a">Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.</div></details>
-  <details class="qa"><summary>What genres do you master?</summary><div class="a">Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&amp;B, rock — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.</div></details>
-  <details class="qa"><summary>What do I send you after paying?</summary><div class="a">Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.</div></details>
-  <details class="qa"><summary>What exactly do I receive?</summary><div class="a">A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.</div></details>
-  <details class="qa"><summary>Is my music safe?</summary><div class="a">100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.</div></details>
+  <h3 class="sec" data-i18n="faq_title">QUESTIONS</h3>
+  <details class="qa"><summary data-i18n="q1">Will mastering fix a bad mix?</summary><div class="a" data-i18n="a1">Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.</div></details>
+  <details class="qa"><summary data-i18n="q2">What genres do you master?</summary><div class="a" data-i18n="a2">Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.</div></details>
+  <details class="qa"><summary data-i18n="q3">What do I send you after paying?</summary><div class="a" data-i18n="a3">Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.</div></details>
+  <details class="qa"><summary data-i18n="q4">What exactly do I receive?</summary><div class="a" data-i18n="a4">A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.</div></details>
+  <details class="qa"><summary data-i18n="q5">Is my music safe?</summary><div class="a" data-i18n="a5">100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.</div></details>
 </section>
 
 </div>
 
 <footer>
-  <div><b>FRID BEATS</b> · fridbeats.com — your studio, your rules</div>
+  <div><b>FRID BEATS</b> · fridbeats.com — <span data-i18n="footer_tag">your studio, your rules</span></div>
   <div class="links">
-    <a href="/">Home</a><a href="/#beats">Beats</a><a href="#analyzer">Free Analysis</a>
+    <a href="/" data-i18n="f_home">Home</a><a href="/#beats" data-i18n="f_beats">Beats</a><a href="#analyzer" data-i18n="f_analysis">Free Analysis</a>
     <a href="https://wa.me/18296026502" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a>
   </div>
 </footer>
@@ -249,16 +267,287 @@ footer .links a:hover{color:#fff}
 <script>
 const $=id=>document.getElementById(id);
 
-/* ============================================================
-   CHECKOUT — same PayPal LIVE + Supabase orders as fridbeats.com
-   ============================================================ */
+/* ================= I18N — 5 languages ================= */
+const I18N = {
+en: {
+  brand_mastering:"MASTERING", back_home:"Back to fridbeats.com", nav_free_analysis:"FREE ANALYSIS",
+  hero_kicker:"PRO MASTERING · ALL GENRES · DELIVERED IN 24H",
+  hero_title_1:"Radio-Ready Mastering,", hero_title_2:"Mixed by Frid Beats",
+  hero_sub:"Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.",
+  spec_dynamics:"DYNAMICS PRESERVED", spec_universal:"EVERY GENRE · EVERY BPM",
+  an_title:"TEST YOUR TRACK — INSTANT ANALYSIS", an_free:"100% FREE",
+  dz_t1:"Drop your track here", dz_t2:"WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere",
+  k_lufs:"LOUDNESS (LUFS)", k_tp:"TRUE PEAK", k_lra:"DYNAMIC RANGE (LRA)", k_dur:"DURATION",
+  g_ready:"READY", g_in_range:"IN RANGE", g_needs_work:"NEEDS WORK", g_needs_headroom:"NEEDS HEADROOM", g_alive:"ALIVE", g_squashed:"SQUASHED",
+  unlock_btn:"UNLOCK MY MASTER — $9.99", order_wa:"Order via WhatsApp",
+  an_note_pay:"Payment unlocks the full master (WAV 24-bit + MP3 320k) — delivered within 24h, typically much faster.",
+  priv_note:"🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.",
+  steps_title:"HOW IT WORKS",
+  step1_t:"Free analysis", step1_p:"Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.",
+  step2_t:"Unlock your master", step2_p:"One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.",
+  step3_t:"Radio-ready in 24h", step3_p:"You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.",
+  price_title:"ONE TRACK. ONE PRICE.", price_per:"PER TRACK · NO SUBSCRIPTION",
+  pl1:"Sample Peak −0.01 dBFS — exactly where commercial masters sit",
+  pl2:"Dynamics 100% preserved — no limiting squash, no distortion",
+  pl3:"Reference matching — I match the tone of any track you send",
+  pl4:"WAV 24-bit + MP3 320k + measurement report",
+  pl5:"Delivered in 24h · revisions included until you're happy",
+  price_btn:"GET MASTERED — $9.99", price_note:"Secure payment via PayPal — card & PayPal balance accepted",
+  cmp_t:"Why is this $9.99 and not $50?",
+  cmp_p:"— Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.",
+  co_title:"CHECKOUT — PROFESSIONAL MASTERING",
+  co_email_label:"YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED",
+  co_note:"After payment you'll send me your track (WAV or MP3) + optional reference via WhatsApp or email — full instructions appear right here.",
+  co_done:"Payment received — order", co_done_p:"Last step: send me your track (WAV or MP3) and optionally a reference (the sound you're chasing) with your order ID.",
+  co_send_wa:"SEND MY TRACK VIA WHATSAPP", co_send_mail:"Send by email",
+  co_done_note:"Your master arrives within 24h — usually much faster. Revisions included.",
+  faq_title:"QUESTIONS",
+  q1:"Will mastering fix a bad mix?", a1:"Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.",
+  q2:"What genres do you master?", a2:"Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.",
+  q3:"What do I send you after paying?", a3:"Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.",
+  q4:"What exactly do I receive?", a4:"A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.",
+  q5:"Is my music safe?", a5:"100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.",
+  footer_tag:"your studio, your rules", f_home:"Home", f_beats:"Beats", f_analysis:"Free Analysis",
+  toast_analyzing:"Analyzing", toast_badfile:"Could not decode this file — try WAV or MP3.",
+  toast_email:"⚠️ Enter a valid email first — your master is delivered there.",
+  toast_paid:"✅ Payment confirmed — now send your track!", toast_pp_err:"⚠️ PayPal error — please try again or order via WhatsApp.",
+  v_solid:"✅ Solid track!", v_solid_p:" Your levels are close to commercial range. A professional master will still tighten the tone to match the sound of the biggest tracks in your genre — and place the final peak at exactly −0.01 dBFS for distribution.",
+  v_headroom:"⚠️ Your track is", v_headroom_p1:"dB below where commercial tracks peak.", v_headroom_p2:"That missing loudness is exactly what you hear on Spotify/YouTube. A professional master closes that gap without crushing your dynamics.",
+  v_loudness:"⚠️ Loudness off-range.", v_loudness_p1:"Commercial tracks sit between −14 and −8 LUFS. Yours is at", v_loudness_p2:"LUFS. A proper master brings you into the modern window while keeping every punch intact.",
+  v_dyn:"⚠️ Dynamics are squashed", v_dyn_p:"Your track may be over-limited. A careful re-master with reference matching restores the punch — send it over.",
+  v_unlock:"Unlock your master for $9.99", v_unlock_p:"— delivered in 24h: WAV 24-bit + MP3 320k + report.",
+  wa_msg:"Hi Frid! I just ran the free analysis on fridbeats.com and I want my track mastered.",
+  wa_paid:"Hi Frid! I just paid $9.99 for mastering on fridbeats.com", wa_paid_track:". Here is my track",
+  mail_sub:"Mastering Order", mail_body:"Hi Frid,\n\nMy PayPal order ID: {OID}\nMy track is attached (WAV/MP3).\nOptional reference: "
+},
+es: {
+  brand_mastering:"MASTERIZACIÓN", back_home:"Volver a fridbeats.com", nav_free_analysis:"ANÁLISIS GRATIS",
+  hero_kicker:"MASTERING PRO · TODOS LOS GÉNEROS · ENTREGA EN 24H",
+  hero_title_1:"Mastering Listo para Radio,", hero_title_2:"por Frid Beats",
+  hero_sub:"Tu beat, tu canción, tu loop — masterizados al nivel exacto de las canciones comerciales: nítidos, fuertes donde importa, con la dinámica totalmente preservada. Sube, descubre la verdad sobre tu track gratis, desbloquea tu master.",
+  spec_dynamics:"DINÁMICA PRESERVADA", spec_universal:"TODOS LOS GÉNEROS · TODOS LOS BPM",
+  an_title:"PRUEBA TU TRACK — ANÁLISIS INSTANTÁNEO", an_free:"100% GRATIS",
+  dz_t1:"Suelta tu track aquí", dz_t2:"WAV, MP3, FLAC, M4A — analizado en tu navegador, nunca se sube a ningún lado",
+  k_lufs:"SONORIDAD (LUFS)", k_tp:"PICO REAL", k_lra:"RANGO DINÁMICO (LRA)", k_dur:"DURACIÓN",
+  g_ready:"LISTO", g_in_range:"EN RANGO", g_needs_work:"NECESITA TRABAJO", g_needs_headroom:"NECESITA ESPACIO", g_alive:"VIVO", g_squashed:"APLASTADO",
+  unlock_btn:"DESBLOQUEAR MI MASTER — $9.99", order_wa:"Pedir por WhatsApp",
+  an_note_pay:"El pago desbloquea el master completo (WAV 24-bit + MP3 320k) — entrega en 24h, normalmente mucho más rápido.",
+  priv_note:"🔒 Tu audio se analiza localmente en tu navegador — nada se sube hasta que pidas.",
+  steps_title:"CÓMO FUNCIONA",
+  step1_t:"Análisis gratis", step1_p:"Suelta tu track. En segundos ves su sonoridad, picos y dinámica — los mismos números que revisan primero los estudios de mastering.",
+  step2_t:"Desbloquea tu master", step2_p:"Un pago de $9.99. Envíame tu track (y una referencia opcional — el sonido que buscas) por WhatsApp o email.",
+  step3_t:"Listo para radio en 24h", step3_p:"Recibes tu master: WAV 24-bit + MP3 320k, con un reporte de mediciones. Pico −0.01 dBFS, dinámica intacta.",
+  price_title:"UN TRACK. UN PRECIO.", price_per:"POR TRACK · SIN SUSCRIPCIÓN",
+  pl1:"Sample Peak −0.01 dBFS — exactamente donde están los masters comerciales",
+  pl2:"Dinámica 100% preservada — sin aplastamiento, sin distorsión",
+  pl3:"Reference matching — igualo el tono de cualquier track que envíes",
+  pl4:"WAV 24-bit + MP3 320k + reporte de mediciones",
+  pl5:"Entrega en 24h · revisiones incluidas hasta que estés feliz",
+  price_btn:"MASTERIZAR — $9.99", price_note:"Pago seguro vía PayPal — tarjeta y saldo PayPal aceptados",
+  cmp_t:"¿Por qué $9.99 y no $50?",
+  cmp_p:"— Los estudios reales cobran $30–$100 por canción. Mi equipo de mastering está totalmente automatizado por mí: mediciones de precisión, reference matching, cero adivinanzas. Pagas por el resultado, no por la estructura.",
+  co_title:"PAGO — MASTERING PROFESIONAL",
+  co_email_label:"TU EMAIL — DONDE SE ENTREGARÁ TU MASTER",
+  co_note:"Después del pago me envías tu track (WAV o MP3) + referencia opcional por WhatsApp o email — las instrucciones completas aparecen aquí mismo.",
+  co_done:"Pago recibido — orden", co_done_p:"Último paso: envíame tu track (WAV o MP3) y opcionalmente una referencia (el sonido que buscas) con tu número de orden.",
+  co_send_wa:"ENVIAR MI TRACK POR WHATSAPP", co_send_mail:"Enviar por email",
+  co_done_note:"Tu master llega en 24h — normalmente mucho más rápido. Revisiones incluidas.",
+  faq_title:"PREGUNTAS",
+  q1:"¿El mastering arregla una mala mezcla?", a1:"El mastering es el pulido final — no puede reconstruir una mezcla. Si tu track tiene problemas serios (clipping, lodo, voces desbalanceadas), te diré honestamente qué arreglar primero. Prefiero tenerte como cliente a largo plazo que venderte un master que suena mal.",
+  q2:"¿Qué géneros masterizas?", a2:"Todos: trap, drill, afrobeat, kompa, reggaetón, dancehall, pop, R&B — instrumentales, canciones completas con voz, loops, podcasts. El objetivo (Sample Peak −0.01 dBFS, dinámica preservada) es universal porque sigue al track, no a un preset.",
+  q3:"¿Qué te envío después de pagar?", a3:"Tu track (mejor WAV, MP3 aceptado) y opcionalmente una referencia — una canción comercial cuyo sonido quieres igualar. Envía por WhatsApp (+1 829 602 6502) o contact@fridbeats.com justo después de tu pedido.",
+  q4:"¿Qué recibo exactamente?", a4:"Un WAV 24-bit masterizado (para distribución: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes) + un reporte con los números antes/después de tu track.",
+  q5:"¿Mi música está segura?", a5:"100%. Tu track queda privado — solo lo escucho yo, se usa únicamente para tu master y nunca se distribuye ni comparte. El análisis gratis de esta página corre completamente en tu navegador; el audio nunca sale de tu dispositivo.",
+  footer_tag:"tu estudio, tus reglas", f_home:"Inicio", f_beats:"Beats", f_analysis:"Análisis Gratis",
+  toast_analyzing:"Analizando", toast_badfile:"No se pudo decodificar este archivo — prueba WAV o MP3.",
+  toast_email:"⚠️ Primero pon un email válido — ahí se entrega tu master.",
+  toast_paid:"✅ Pago confirmado — ¡ahora envía tu track!", toast_pp_err:"⚠️ Error de PayPal — intenta de nuevo o pide por WhatsApp.",
+  v_solid:"✅ ¡Track sólido!", v_solid_p:" Tus niveles están cerca del rango comercial. Un master profesional aún afinará el tono para igualar el sonido de los más grandes de tu género — y colocará el pico final exactamente en −0.01 dBFS para distribución.",
+  v_headroom:"⚠️ Tu track está", v_headroom_p1:"dB por debajo del pico de las canciones comerciales.", v_headroom_p2:"Esa sonoridad que falta es exactamente lo que escuchas en Spotify/YouTube. Un master profesional cierra esa brecha sin aplastar tu dinámica.",
+  v_loudness:"⚠️ Sonoridad fuera de rango.", v_loudness_p1:"Las canciones comerciales están entre −14 y −8 LUFS. La tuya está en", v_loudness_p2:"LUFS. Un master adecuado te trae a la ventana moderna manteniendo cada golpe intacto.",
+  v_dyn:"⚠️ Dinámica aplastada", v_dyn_p:"Tu track puede estar sobre-limitado. Un re-master cuidadoso con reference matching restaura el golpe — envíalo.",
+  v_unlock:"Desbloquea tu master por $9.99", v_unlock_p:"— entrega en 24h: WAV 24-bit + MP3 320k + reporte.",
+  wa_msg:"¡Hola Frid! Acabo de hacer el análisis gratis en fridbeats.com y quiero masterizar mi track.",
+  wa_paid:"¡Hola Frid! Acabo de pagar $9.99 por mastering en fridbeats.com", wa_paid_track:". Aquí está mi track",
+  mail_sub:"Pedido de Mastering", mail_body:"Hola Frid,\n\nMi ID de orden PayPal: {OID}\nMi track va adjunto (WAV/MP3).\nReferencia opcional: "
+},
+pt: {
+  brand_mastering:"MASTERIZAÇÃO", back_home:"Voltar a fridbeats.com", nav_free_analysis:"ANÁLISE GRÁTIS",
+  hero_kicker:"MASTERING PRO · TODOS OS GÊNEROS · ENTREGA EM 24H",
+  hero_title_1:"Mastering Pronto para Rádio,", hero_title_2:"por Frid Beats",
+  hero_sub:"Seu beat, sua música, seu loop — masterizados no nível exato das faixas comerciais: nítidos, altos onde importa, dinâmica totalmente preservada. Envie, veja a verdade sobre sua faixa grátis, desbloqueie seu master.",
+  spec_dynamics:"DINÂMICA PRESERVADA", spec_universal:"TODOS OS GÊNEROS · TODOS OS BPM",
+  an_title:"TESTE SUA FAIXA — ANÁLISE INSTANTÂNEA", an_free:"100% GRÁTIS",
+  dz_t1:"Solte sua faixa aqui", dz_t2:"WAV, MP3, FLAC, M4A — analisado no seu navegador, nunca enviado a lugar algum",
+  k_lufs:"SONORIDADE (LUFS)", k_tp:"PICO REAL", k_lra:"GAMA DINÂMICA (LRA)", k_dur:"DURAÇÃO",
+  g_ready:"PRONTO", g_in_range:"NA FAIXA", g_needs_work:"PRECISA DE TRABALHO", g_needs_headroom:"PRECISA DE ESPAÇO", g_alive:"VIVO", g_squashed:"ESMAGADO",
+  unlock_btn:"DESBLOQUEAR MEU MASTER — $9.99", order_wa:"Pedir via WhatsApp",
+  an_note_pay:"O pagamento desbloqueia o master completo (WAV 24-bit + MP3 320k) — entrega em 24h, geralmente bem mais rápido.",
+  priv_note:"🔒 Seu áudio é analisado localmente no seu navegador — nada é enviado até você pedir.",
+  steps_title:"COMO FUNCIONA",
+  step1_t:"Análise grátis", step1_p:"Solte sua faixa. Em segundos você vê sua sonoridade, picos e dinâmica — os mesmos números que os estúdios de mastering verificam primeiro.",
+  step2_t:"Desbloqueie seu master", step2_p:"Um pagamento de $9.99. Envie sua faixa (e uma referência opcional — o som que você busca) via WhatsApp ou email.",
+  step3_t:"Pronto para rádio em 24h", step3_p:"Você recebe seu master: WAV 24-bit + MP3 320k, com relatório de medições. Pico −0.01 dBFS, dinâmica intacta.",
+  price_title:"UMA FAIXA. UM PREÇO.", price_per:"POR FAIXA · SEM ASSINATURA",
+  pl1:"Sample Peak −0.01 dBFS — exatamente onde os masters comerciais ficam",
+  pl2:"Dinâmica 100% preservada — sem esmagamento, sem distorção",
+  pl3:"Reference matching — igualo o tom de qualquer faixa que enviar",
+  pl4:"WAV 24-bit + MP3 320k + relatório de medições",
+  pl5:"Entrega em 24h · revisões incluídas até você ficar satisfeito",
+  price_btn:"MASTERIZAR — $9.99", price_note:"Pagamento seguro via PayPal — cartão e saldo PayPal aceitos",
+  cmp_t:"Por que $9.99 e não $50?",
+  cmp_p:"— Estúdios reais cobram $30–$100 por música. Meu rig de mastering é totalmente automatizado por mim: medições de precisão, reference matching, zero achismo. Você paga pelo resultado, não pela estrutura.",
+  co_title:"PAGAMENTO — MASTERING PROFISSIONAL",
+  co_email_label:"SEU EMAIL — ONDE SEU MASTER SERÁ ENTREGUE",
+  co_note:"Após o pagamento você me envia sua faixa (WAV ou MP3) + referência opcional via WhatsApp ou email — as instruções completas aparecem aqui mesmo.",
+  co_done:"Pagamento recebido — pedido", co_done_p:"Último passo: envie sua faixa (WAV ou MP3) e opcionalmente uma referência (o som que busca) com seu número de pedido.",
+  co_send_wa:"ENVIAR MINHA FAIXA VIA WHATSAPP", co_send_mail:"Enviar por email",
+  co_done_note:"Seu master chega em 24h — geralmente bem mais rápido. Revisões incluídas.",
+  faq_title:"PERGUNTAS",
+  q1:"O mastering conserta uma mixagem ruim?", a1:"Mastering é o polimento final — não reconstrói uma mixagem. Se sua faixa tem problemas sérios (clipping, lama, vocais desbalanceados), dirão honestamente o que consertar primeiro. Prefiro tê-lo como cliente de longo prazo do que vender um master que soa errado.",
+  q2:"Quais gêneros você masteriza?", a2:"Todos: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentais, músicas completas com voz, loops, podcasts. O alvo (Sample Peak −0.01 dBFS, dinâmica preservada) é universal porque segue a faixa, não um preset.",
+  q3:"O que envio depois de pagar?", a3:"Sua faixa (WAV preferível, MP3 aceito) e opcionalmente uma referência — uma música comercial cujo som você quer igualar. Envie via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com logo após o pedido.",
+  q4:"O que exatamente recebo?", a4:"Um WAV 24-bit masterizado (para distribuição: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes sociais) + um relatório com os números antes/depois da sua faixa.",
+  q5:"Minha música está segura?", a5:"100%. Sua faixa fica privada — só eu escuto, uso exclusivamente para seu master e nunca distribuo ou compartilho. A análise grátis desta página roda inteiramente no seu navegador; o áudio nunca sai do seu dispositivo.",
+  footer_tag:"seu estúdio, suas regras", f_home:"Início", f_beats:"Beats", f_analysis:"Análise Grátis",
+  toast_analyzing:"Analisando", toast_badfile:"Não foi possível decodificar este arquivo — tente WAV ou MP3.",
+  toast_email:"⚠️ Primeiro coloque um email válido — seu master será entregue nele.",
+  toast_paid:"✅ Pagamento confirmado — agora envie sua faixa!", toast_pp_err:"⚠️ Erro do PayPal — tente novamente ou peça via WhatsApp.",
+  v_solid:"✅ Faixa sólida!", v_solid_p:" Seus níveis estão próximos da faixa comercial. Um master profissional ainda vai afinar o tom para igualar o som dos maiores do seu gênero — e colocar o pico final exatamente em −0.01 dBFS para distribuição.",
+  v_headroom:"⚠️ Sua faixa está", v_headroom_p1:"dB abaixo do pico das faixas comerciais.", v_headroom_p2:"Essa sonoridade que falta é exatamente o que você ouve no Spotify/YouTube. Um master profissional fecha essa lacuna sem esmagar sua dinâmica.",
+  v_loudness:"⚠️ Sonoridade fora da faixa.", v_loudness_p1:"Faixas comerciais ficam entre −14 e −8 LUFS. A sua está em", v_loudness_p2:"LUFS. Um master adequado te traz à janela moderna mantendo cada batida intacta.",
+  v_dyn:"⚠️ Dinâmica esmagada", v_dyn_p:"Sua faixa pode estar super-limitada. Um re-master cuidadoso com reference matching restaura o impacto — envie.",
+  v_unlock:"Desbloqueie seu master por $9.99", v_unlock_p:"— entrega em 24h: WAV 24-bit + MP3 320k + relatório.",
+  wa_msg:"Oi Frid! Acabei de fazer a análise grátis no fridbeats.com e quero masterizar minha faixa.",
+  wa_paid:"Oi Frid! Acabei de pagar $9.99 por mastering no fridbeats.com", wa_paid_track:". Aqui está minha faixa",
+  mail_sub:"Pedido de Mastering", mail_body:"Oi Frid,\n\nMeu ID de pedido PayPal: {OID}\nMinha faixa está anexada (WAV/MP3).\nReferência opcional: "
+},
+fr: {
+  brand_mastering:"MASTERISATION", back_home:"Retour à fridbeats.com", nav_free_analysis:"ANALYSE GRATUITE",
+  hero_kicker:"MASTERING PRO · TOUS GENRES · LIVRÉ EN 24H",
+  hero_title_1:"Mastering Prêt pour la Radio,", hero_title_2:"par Frid Beats",
+  hero_sub:"Ton beat, ta chanson, ton loop — masterisés au niveau exact des titres commerciaux : nets, forts là où il faut, dynamique entièrement préservée. Envoie, découvre la vérité sur ton morceau gratuitement, débloque ton master.",
+  spec_dynamics:"DYNAMIQUE PRÉSERVÉE", spec_universal:"TOUS GENRES · TOUS BPM",
+  an_title:"TESTE TON MORCEAU — ANALYSE INSTANTANÉE", an_free:"100% GRATUIT",
+  dz_t1:"Dépose ton morceau ici", dz_t2:"WAV, MP3, FLAC, M4A — analysé dans ton navigateur, jamais envoyé nulle part",
+  k_lufs:"SONORITÉ (LUFS)", k_tp:"PICS RÉELS", k_lra:"PLAGE DYNAMIQUE (LRA)", k_dur:"DURÉE",
+  g_ready:"PRÊT", g_in_range:"DANS LA PLAGE", g_needs_work:"À TRAVAILLER", g_needs_headroom:"MANQUE DE MARGE", g_alive:"VIVANT", g_squashed:"ÉCRASÉ",
+  unlock_btn:"DÉBLOQUER MON MASTER — $9.99", order_wa:"Commander via WhatsApp",
+  an_note_pay:"Le paiement débloque le master complet (WAV 24-bit + MP3 320k) — livré en 24h, généralement bien plus vite.",
+  priv_note:"🔒 Ton audio est analysé localement dans ton navigateur — rien n'est envoyé avant ta commande.",
+  steps_title:"COMMENT ÇA MARCHE",
+  step1_t:"Analyse gratuite", step1_p:"Dépose ton morceau. En quelques secondes tu vois sa sonorité, ses pics et sa dynamique — les mêmes chiffres que les studios de mastering vérifient en premier.",
+  step2_t:"Débloque ton master", step2_p:"Un paiement de $9.99. Envoie-moi ton morceau (et une référence optionnelle — le son que tu vises) via WhatsApp ou email.",
+  step3_t:"Prêt pour la radio en 24h", step3_p:"Tu reçois ton master : WAV 24-bit + MP3 320k, avec un rapport de mesures. Pics −0.01 dBFS, dynamique intacte.",
+  price_title:"UN MORCEAU. UN PRIX.", price_per:"PAR MORCEAU · SANS ABONNEMENT",
+  pl1:"Sample Peak −0.01 dBFS — exactement là où sont les masters commerciaux",
+  pl2:"Dynamique 100% préservée — aucun écrasement, aucune distorsion",
+  pl3:"Reference matching — j'égale le son de n'importe quel morceau envoyé",
+  pl4:"WAV 24-bit + MP3 320k + rapport de mesures",
+  pl5:"Livré en 24h · révisions incluses jusqu'à ta satisfaction",
+  price_btn:"MASTERISER — $9.99", price_note:"Paiement sécurisé via PayPal — carte et solde PayPal acceptés",
+  cmp_t:"Pourquoi $9.99 et pas $50 ?",
+  cmp_p:"— Les vrais studios facturent $30–$100 par chanson. Mon rig de mastering est entièrement automatisé par moi : mesures de précision, reference matching, zéro approximation. Tu paies le résultat, pas la structure.",
+  co_title:"PAIEMENT — MASTERING PROFESSIONNEL",
+  co_email_label:"TON EMAIL — LÀ OÙ TON MASTER SERA LIVRÉ",
+  co_note:"Après le paiement, tu m'envoies ton morceau (WAV ou MP3) + une référence optionnelle via WhatsApp ou email — les instructions complètes apparaissent ici même.",
+  co_done:"Paiement reçu — commande", co_done_p:"Dernière étape : envoie-moi ton morceau (WAV ou MP3) et éventuellement une référence (le son que tu vises) avec ton numéro de commande.",
+  co_send_wa:"ENVOYER MON MORCEAU VIA WHATSAPP", co_send_mail:"Envoyer par email",
+  co_done_note:"Ton master arrive en 24h — généralement bien plus vite. Révisions incluses.",
+  faq_title:"QUESTIONS",
+  q1:"Le mastering répare-t-il un mauvais mix ?", a1:"Le mastering est la touche finale — il ne peut pas reconstruire un mix. Si ton morceau a de vrais problèmes (clipping, boue, voix déséquilibrées), je te dirai honnêtement quoi corriger d'abord. Je préfère te garder comme client fidèle plutôt que de te vendre un master qui sonne mal.",
+  q2:"Quels genres masterises-tu ?", a2:"Tous : trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentaux, chansons complètes avec voix, loops, podcasts. La cible (Sample Peak −0.01 dBFS, dynamique préservée) est universelle car elle suit le morceau, pas un preset.",
+  q3:"Que t'envoie-je après le paiement ?", a3:"Ton morceau (WAV de préférence, MP3 accepté) et éventuellement une référence — une chanson commerciale dont tu veux égaler le son. Envoie via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com juste après ta commande.",
+  q4:"Que reçois-je exactement ?", a4:"Un WAV 24-bit masterisé (pour la distribution : DistroKid, TuneCore, BeatStars...) + MP3 320k (pour les previews, les réseaux) + un rapport montrant les chiffres avant/après de ton morceau.",
+  q5:"Ma musique est-elle en sécurité ?", a5:"100%. Ton morceau reste privé — je suis le seul à l'écouter, il sert uniquement à ton master et n'est jamais distribué ni partagé. L'analyse gratuite de cette page tourne entièrement dans ton navigateur ; l'audio ne quitte jamais ton appareil.",
+  footer_tag:"ton studio, tes règles", f_home:"Accueil", f_beats:"Beats", f_analysis:"Analyse Gratuite",
+  toast_analyzing:"Analyse de", toast_badfile:"Impossible de décoder ce fichier — essaie WAV ou MP3.",
+  toast_email:"⚠️ Mets d'abord un email valide — ton master y sera livré.",
+  toast_paid:"✅ Paiement confirmé — envoie ton morceau maintenant !", toast_pp_err:"⚠️ Erreur PayPal — réessaie ou commande via WhatsApp.",
+  v_solid:"✅ Morceau solide !", v_solid_p:" Tes niveaux sont proches de la plage commerciale. Un master professionnel affinera quand même le son pour égaler les plus gros titres de ton genre — et placera le pic final exactement à −0.01 dBFS pour la distribution.",
+  v_headroom:"⚠️ Ton morceau est", v_headroom_p1:"dB en dessous du pic des titres commerciaux.", v_headroom_p2:"Cette sonorité manquante est exactement ce que tu entends sur Spotify/YouTube. Un master professionnel comble cet écart sans écraser ta dynamique.",
+  v_loudness:"⚠️ Sonorité hors plage.", v_loudness_p1:"Les titres commerciaux sont entre −14 et −8 LUFS. Le tien est à", v_loudness_p2:"LUFS. Un bon master te ramène dans la fenêtre moderne en gardant chaque punch intact.",
+  v_dyn:"⚠️ Dynamique écrasée", v_dyn_p:"Ton morceau est peut-être sur-limité. Un re-master soigné avec reference matching restaure le punch — envoie-le.",
+  v_unlock:"Débloque ton master pour $9.99", v_unlock_p:"— livré en 24h : WAV 24-bit + MP3 320k + rapport.",
+  wa_msg:"Salut Frid ! Je viens de faire l'analyse gratuite sur fridbeats.com et je veux masteriser mon morceau.",
+  wa_paid:"Salut Frid ! Je viens de payer $9.99 pour le mastering sur fridbeats.com", wa_paid_track:". Voici mon morceau",
+  mail_sub:"Commande de Mastering", mail_body:"Salut Frid,\n\nMon ID de commande PayPal : {OID}\nMon morceau est en pièce jointe (WAV/MP3).\nRéférence optionnelle : "
+},
+ht: {
+  brand_mastering:"MASTERING", back_home:"Retounen fridbeats.com", nav_free_analysis:"ANALIZ GRATUI",
+  hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · LIVRE NAN 24È",
+  hero_title_1:"Mastering Pare pou Radyo,", hero_title_2:"Fèt pa Frid Beats",
+  hero_sub:"Beat ou, mizik ou, loop ou — masterize nivo egzak mizik komenalsyòt rive: klè, fò kote l fò, dinamik 100% konsève. Upload, we verite sou track ou gratis, debloke master ou.",
+  spec_dynamics:"DINAMIK KONSÈVE", spec_universal:"TOUT GENRE · TOUT BPM",
+  an_title:"TESTE TRACK OU — ANALIZ IMEDYA", an_free:"100% GRATUI",
+  dz_t1:"Trase track ou la", dz_t2:"WAV, MP3, FLAC, M4A — analize nan navigatè ou, pa janm upload nenpòt kote",
+  k_lufs:"SONORITE (LUFS)", k_tp:"PIK VRE", k_lra:"PLAJ DINAMIK (LRA)", k_dur:"LONGÈ",
+  g_ready:"PARE", g_in_range:"NAN PLAJ", g_needs_work:"BESE TRAVAY", g_needs_headroom:"BESE ESPAS", g_alive:"VIVAN", g_squashed:"KRAZE",
+  unlock_btn:"DEBLOKE MASTER MWEN — $9.99", order_wa:"Kòmande via WhatsApp",
+  an_note_pay:"Peman an debloke master konplè a (WAV 24-bit + MP3 320k) — delivre nan 24è, jeneralman pi vit.",
+  priv_note:"🔒 Odyo ou analize lokalman nan navigatè ou — anyen pa upload jiskaske ou kòmande.",
+  steps_title:"KÒMAN L FONKSYONE",
+  step1_t:"Analiz gratis", step1_p:"Trase track ou. Nan kèk segond ou we sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
+  step2_t:"Debloke master ou", step2_p:"Yon peman $9.99. Voye m track ou (ak yon reference opsyonèl — son w vle a) via WhatsApp oswa imel.",
+  step3_t:"Pare pou radyo nan 24è", step3_p:"Ou resevwa master ou: WAV 24-bit + MP3 320k, ak yon rapò mezire. Pik −0.01 dBFS, dinamik enteg.",
+  price_title:"YON TRACK. YON PRI.", price_per:"PA TRACK · SAN ABONMAN",
+  pl1:"Sample Peak −0.01 dBFS — egzakteman kote master komenalsyòt ye",
+  pl2:"Dinamik 100% konsève — pa gen kraze, pa gen distòsyon",
+  pl3:"Reference matching — m egzali ton nenpòt track ou voye",
+  pl4:"WAV 24-bit + MP3 320k + rapò mezire",
+  pl5:"Delivre nan 24è · revizyon konsa jiskaske ou kontan",
+  price_btn:"MASTERIZE — $9.99", price_note:"Peman sekirize via PayPal — kat ak balans PayPal aksepte",
+  cmp_t:"Poukisa $9.99 e pa $50?",
+  cmp_p:"— Vrè studio yo chaje $30–$100 pa chanson. Ekipman mastering mwen an otomatize 100% pa mwen: mezire presizyon, reference matching, zè devine. Ou peye rezilta a, pa estrikti a.",
+  co_title:"PEMAN — MASTERING PWOFESYONÈL",
+  co_email_label:"IMEL OU — KOTE MASTER OU AP DELIVRE",
+  co_note:"Apre peman an ou voye m track ou (WAV oswa MP3) + reference opsyonèl via WhatsApp oswa imel — enstriksyon konplè parèt la menm.",
+  co_done:"Peman resevwa — kòmand", co_done_p:"Dènye etap: voye m track ou (WAV oswa MP3) ak opsyonèlman yon reference (son w vle a) ak nimewo kòmand ou.",
+  co_send_wa:"VOYE TRACK MWEN VIA WHATSAPP", co_send_mail:"Voye pa imel",
+  co_done_note:"Master ou rive nan 24è — jeneralman pi vit. Revizyon konsa.",
+  faq_title:"KESYON",
+  q1:"Èske mastering repare yon move mix?", a1:"Mastering se dènye poze a — l pa ka rebati yon mix. Si track ou gen pwoblèm grav (clipping, labou, vocal malbalanse), map di ou san maske kisa pou repare an premye. M pi pito kenbe ou kòm kliyan long tèm pase vann ou yon master ki son move.",
+  q2:"Ki genre ou masterize?", a2:"Tout: trap, drill, afrobeat, konpa, reggaeton, dancehall, pop, R&B — enstrimantal, chanson konplè ak vocal, loop, podcast. Sib la (Sample Peak −0.01 dBFS, dinamik konsève) inivèsèl paske l swiv track la, pa yon preset.",
+  q3:"Kisa m voye ou apre peman an?", a3:"Track ou (WAV pi bon, MP3 aksepte) ak opsyonèlman yon reference — yon chanson komenalsyòt ki gen son w vle egzale. Voye via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com touswit apre kòmand ou.",
+  q4:"Kisa egzakteman m resevwa?", a4:"Yon WAV 24-bit masterize (pou distribisyon: DistroKid, TuneCore, BeatStars...) + MP3 320k (pou preview, rezo sosyo) + yon rapò ki montre chif avan/apre track ou.",
+  q5:"Èske mizik mwen an sekirite?", a5:"100%. Track ou rete prive — se sèlman mwen k koute l, l sèvi sèlman pou master ou, epi l pa janm distribye ni pataje. Analiz gratis paj sa a kouri antyèman nan navigatè ou; odyo a pa janm kite aparèy ou.",
+  footer_tag:"studio ou, règ ou", f_home:"Akèy", f_beats:"Beats", f_analysis:"Analiz Gratui",
+  toast_analyzing:"Ap analize", toast_badfile:"Pa ka dekode fichye sa a — eseye WAV oswa MP3.",
+  toast_email:"⚠️ Mete yon imel valid anpremye — se la master ou ap delivre.",
+  toast_paid:"✅ Peman konfime — kounya voye track ou!", toast_pp_err:"⚠️ Erè PayPal — eseye ankò oswa kòmande via WhatsApp.",
+  v_solid:"✅ Track solid!", v_solid_p:" Nivo ou pre plaj komenalsyòt. Yon master pwofesyonèl ap toujou ajiste ton an pou egzale pi gwo track nan genre ou — epi mete pik final nan egzakteman −0.01 dBFS pou distribisyon.",
+  v_headroom:"⚠️ Track ou", v_headroom_p1:"dB anba kote mizik komenalsyòt pik.", v_headroom_p2:"Sonorite ki manke se egzakteman sa w tande sou Spotify/YouTube. Yon master pwofesyonèl fèmen gap sa a san l kraze dinamik ou.",
+  v_loudness:"⚠️ Sonorite deyò plaj.", v_loudness_p1:"Mizik komenalsyòt ye ant −14 ak −8 LUFS. Ou ye nan", v_loudness_p2:"LUFS. Yon bon master mennen ou nan fenèt modèn nan kenbe chak kouto enteg.",
+  v_dyn:"⚠️ Dinamik kraze", v_dyn_p:"Track ou ka twò limite. Yon re-master ki fèt ak serye ak reference matching retabli kouto a — voye l.",
+  v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— delivre nan 24è: WAV 24-bit + MP3 320k + rapò.",
+  wa_msg:"Bonjou Frid! M fe analiz gratis la sou fridbeats.com e m vle masterize track mwen.",
+  wa_paid:"Bonjou Frid! M peye $9.99 pou mastering sou fridbeats.com", wa_paid_track:". Men track mwen",
+  mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an pice jwent (WAV/MP3).\nReference opsyonèl: "
+}
+};
+const LANG_LABEL = { en:'EN', es:'ES', pt:'PT', fr:'FR', ht:'HT' };
+function currentLang(){ let l = localStorage.getItem('fridBeats_lang') || 'en'; return I18N[l] ? l : 'en'; }
+function applyI18n(){
+  const lang = currentLang(), dict = I18N[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (dict[k] !== undefined) el.innerHTML = dict[k]; });
+  $('currentLangLabel').textContent = LANG_LABEL[lang];
+  $('waTop').href = 'https://wa.me/18296026502?text=' + encodeURIComponent(dict.wa_msg);
+}
+function toggleLangMenu(){ const m=$('langMenu'); m.style.display = m.style.display==='none' ? 'block' : 'none'; }
+document.addEventListener('click', e => { const b=$('langBtn'), m=$('langMenu'); if (b && m && !b.contains(e.target) && !m.contains(e.target)) m.style.display='none'; });
+function setLang(lang){ if(!I18N[lang]) lang='en'; localStorage.setItem('fridBeats_lang', lang); applyI18n(); }
+
+/* ================= TOAST ================= */
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+/* ================= CHECKOUT (PayPal LIVE + Supabase, same as main site) ================= */
 const SUPABASE_URL = 'https://myyfdrttulefdmjnybuk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15eWZkcnR0dWxlZmRtam55YnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMjk0MzAsImV4cCI6MjEwMzgwNTQzMH0.L5O_VW7wcVPo_3q5BHruymCR8F-Y5yiYw20fPwt2F4w';
 const PAYPAL_CLIENT_ID = 'BAA-8f-Z5HuGQLRSkcGmRFcwvnHlSbsYHBIpp_ig87h3op-TTeKtTiMlPqOsjPZUEaHs7uvKKmEGtD319c';
 const MASTER_PRICE = '9.99';
 let supabaseClient = null;
-try { if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.warn('supabase init failed', e); }
-
+try { if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
 function openCheckout(){
   const sec = $('checkout');
   sec.style.display='block';
@@ -285,7 +574,7 @@ async function renderCheckoutPayPal(){
       createOrder: function(data, actions){
         const email=($('coEmail').value||'').trim();
         if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-          toast('⚠️ Enter a valid email first — your master is delivered there.');
+          toast(I18N[currentLang()].toast_email);
           $('coEmail').focus();
           return Promise.reject(new Error('invalid email'));
         }
@@ -303,71 +592,61 @@ async function renderCheckoutPayPal(){
         if (supabaseClient) { try { await supabaseClient.from('orders').insert(orderRecord); } catch(e){ console.error('order save failed', e); } }
         showOrderDone(details.id, email);
       },
-      onError: function(err){ console.error(err); toast('⚠️ PayPal error — please try again or order via WhatsApp.'); }
+      onError: function(err){ console.error(err); toast(I18N[currentLang()].toast_pp_err); }
     }).render('#paypal-button-container');
     container.dataset.rendered='1';
   } catch(e){
-    container.innerHTML='<div style="color:var(--err);font-size:13px;text-align:center">Could not load PayPal — use the WhatsApp button below.</div>';
+    container.innerHTML='<div style="color:var(--err);font-size:13px;text-align:center">PayPal unavailable — use WhatsApp.</div>';
   } finally { ppLoading=false; }
 }
 function showOrderDone(orderId, email){
+  const dict = I18N[currentLang()];
   $('coForm').style.display='none';
   $('coDone').style.display='block';
   $('coOrderId').textContent = orderId ? '('+orderId.slice(-8).toUpperCase()+')' : '';
-  const msg = 'Hi Frid! I just paid $9.99 for mastering on fridbeats.com'+(orderId?' — Order '+orderId:'')+'. Here is my track' ;
+  const msg = dict.wa_paid + (orderId ? ' — Order '+orderId : '') + dict.wa_paid_track;
   $('coWaLink').href = 'https://wa.me/18296026502?text=' + encodeURIComponent(msg);
-  $('coMailLink').href = 'mailto:contact@fridbeats.com?subject=' + encodeURIComponent('Mastering Order '+(orderId||'')) + '&body=' + encodeURIComponent('Hi Frid,\n\nMy PayPal order ID: '+orderId+'\nMy track is attached (WAV/MP3).\nOptional reference: ');
-  toast('✅ Payment confirmed — now send your track!');
+  $('coMailLink').href = 'mailto:contact@fridbeats.com?subject=' + encodeURIComponent(dict.mail_sub + ' ' + (orderId||'')) + '&body=' + encodeURIComponent(dict.mail_body.replace('{OID}', orderId||''));
+  toast(dict.toast_paid);
   $('coDone').scrollIntoView({behavior:'smooth', block:'center'});
 }
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+
+/* ================= ANALYZER ================= */
 ['dragover','dragenter'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.add('over')}));
 ['dragleave','drop'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.remove('over')}));
 $('dz').addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) analyze(e.dataTransfer.files[0]); });
 $('fz').onchange=e=>{ if(e.target.files[0]) analyze(e.target.files[0]); };
 
-/* K-weighting approx via high-pass + high-shelf (BS.1770-style pre-filter) */
 function kWeightBuffer(ctx, buf){
-  const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=38; hp.Q.value=0.5;
-  const hs = ctx.createBiquadFilter(); hs.type='highshelf'; hs.frequency.value=1500; hs.gain.value=4;
-  const src = ctx.createBufferSource(); src.buffer=buf;
-  const dest = ctx.createBufferSource ? ctx.destination : null;
-  const tmp = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
-  const sp = ctx.createBufferSource(); sp.buffer=buf;
-  const st = ctx.createGain();
-  /* Offline graph: manual filter loop for compatibility */
   const out = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
   for(let c=0;c<buf.numberOfChannels;c++){
     const data = buf.getChannelData(c), o = out.getChannelData(c);
-    /* simple one-pole approx of K-filter: HP at ~38Hz + shelf tilt */
     let hpPrev=0, lpPrev=0;
     for(let i=0;i<data.length;i++){
       const x=data[i];
-      hpPrev = 0.9973*hpPrev + 0.9973*(x - hpPrev)*0.5;   /* ~38Hz HP */
-      lpPrev = lpPrev + 0.08*(hpPrev-lpPrev);              /* shelf tilt */
+      hpPrev = 0.9973*hpPrev + 0.9973*(x - hpPrev)*0.5;
+      lpPrev = lpPrev + 0.08*(hpPrev-lpPrev);
       o[i] = hpPrev*1.0 + (hpPrev-lpPrev)*3.5;
     }
   }
   return out;
 }
-function lufsMomentaryBlocks(filtered, sr){
-  /* 400ms blocks, 75% overlap, gated */
+function lufsIntegrated(filtered, sr){
   const block = Math.round(0.4*sr), hop = Math.round(0.1*sr);
   const powers=[];
   for(let st=0; st+block<filtered.length; st+=hop){
     let sum=0;
     for(let i=st;i<st+block;i+=4){ const v=filtered[i]; sum+=v*v; }
-    powers.push(sum/( (block)/4 ));
+    powers.push(sum/(block/4));
   }
   if(!powers.length) return null;
   const abs=powers.map(p=>10*Math.log10(p+1e-12)).sort((a,b)=>b-a);
-  /* absolute gate -70 */
   const g1=abs.filter(l=>l>-70);
   if(!g1.length) return null;
   const mean=l=>10*Math.log10(l.reduce((s,p)=>s+Math.pow(10,p/10),0)/l.length+1e-12);
   const rel = mean(g1)-10;
   const g2=g1.filter(l=>l>rel);
-  return { integrated: g2.length? mean(g2): mean(g1) };
+  return g2.length? mean(g2): mean(g1);
 }
 function lraEstimate(filtered, sr){
   const block = Math.round(3.0*sr), hop = Math.round(1.0*sr);
@@ -377,64 +656,63 @@ function lraEstimate(filtered, sr){
     for(let i=st;i<st+block;i+=8){ const v=filtered[i]; sum+=v*v; n++; }
     if(n) vals.push(10*Math.log10(sum/n+1e-12));
   }
-  if(vals.length<3) return '—';
+  if(vals.length<3) return null;
   vals.sort((a,b)=>a-b);
   const q=(p)=>vals[Math.floor(p*(vals.length-1))];
   return Math.max(0, q(0.95)-q(0.10)).toFixed(1);
 }
 async function analyze(file){
+  const dict = I18N[currentLang()];
   $('fzname').textContent='✓ '+file.name;
-  toast('Analyzing '+file.name+' ...');
+  toast(dict.toast_analyzing+' '+file.name+' ...');
   try{
     const buf=await file.arrayBuffer();
     const AC=window.AudioContext||window.webkitAudioContext;
     const ctx=new AC();
     const ab=await ctx.decodeAudioData(buf.slice(0));
-    /* --- measurements --- */
     const ch=ab.getChannelData(0), ch2=ab.numberOfChannels>1?ab.getChannelData(1):null;
     let peak=0;
     for(let i=0;i<ch.length;i++){ const v=Math.abs(ch[i]); if(v>peak)peak=v; if(ch2){const v2=Math.abs(ch2[i]); if(v2>peak)peak=v2;} }
     const tp = peak>0? (20*Math.log10(peak)).toFixed(2) : '-Inf';
     const fw = kWeightBuffer(ctx, ab);
-    let data=fw.getChannelData(0);
-    if(ch2){ const d2=fw.getChannelData(1); /* mono-combine sum of powers happens in block func via both chans */ }
-    const blocks=lufsMomentaryBlocks(data, ab.sampleRate);
-    const lufs = blocks? blocks.integrated.toFixed(1) : '—';
-    const lra = lraEstimate(data, ab.sampleRate);
-    /* --- verdict --- */
+    const data=fw.getChannelData(0);
+    const lufsI = lufsIntegrated(data, ab.sampleRate);
+    const lufs = lufsI!==null? lufsI.toFixed(1) : '—';
+    const lra = lraEstimate(data, ab.sampleRate) || '—';
     const lufsN=parseFloat(lufs), tpN=parseFloat(tp), lraN=parseFloat(lra);
-    const okLufs = lufsN>=-16 && lufsN<=-6;
-    const okTp = tpN>=-6 && tpN<0;
-    const okLra = lraN==='—' || lraN>=3;
-    $('r-lufs').textContent=(isNaN(lufsN)?'—':lufsN.toFixed(1));
-    $('g-lufs').textContent=isNaN(lufsN)?'—':(okLufs?'IN RANGE':'NEEDS WORK');
+    const okLufs = !isNaN(lufsN) && lufsN>=-16 && lufsN<=-6;
+    const okTp = !isNaN(tpN) && tpN>=-6 && tpN<0;
+    const okLra = isNaN(lraN) || lraN>=3;
+    $('r-lufs').textContent=isNaN(lufsN)?'—':lufsN.toFixed(1);
+    $('g-lufs').textContent=isNaN(lufsN)?'—':(okLufs?dict.g_in_range:dict.g_needs_work);
     $('g-lufs').className='g '+(okLufs?'good':'bad');
     $('r-tp').textContent=tp+' dBFS';
-    $('g-tp').textContent=okTp?'IN RANGE':'NEEDS HEADROOM';
+    $('g-tp').textContent=okTp?dict.g_in_range:dict.g_needs_headroom;
     $('g-tp').className='g '+(okTp?'good':'bad');
     $('r-lra').textContent=lra;
-    $('g-lra').textContent=okLra?'ALIVE':'SQUASHED';
+    $('g-lra').textContent=isNaN(lraN)?'—':(okLra?dict.g_alive:dict.g_squashed);
     $('g-lra').className='g '+(okLra?'good':'bad');
     const m=Math.floor(ab.duration/60), s=Math.floor(ab.duration%60);
     $('r-dur').textContent=m+':'+String(s).padStart(2,'0');
+    $('g-dur').textContent=dict.g_ready;
     let msg;
     if(okTp && okLufs && okLra){
-      msg='<b>✅ Solid track!</b> Your levels are close to commercial range. A professional master will still tighten the tone to match the sound of the biggest tracks in your genre — and place the final peak at exactly <b>−0.01 dBFS</b> for distribution.';
+      msg='<b>'+dict.v_solid+'</b>'+dict.v_solid_p;
     } else if(!okTp){
-      msg='<b>⚠️ Your track is '+Math.abs(tpN).toFixed(1)+' dB below where commercial tracks peak.</b> That missing loudness is exactly what you hear on Spotify/YouTube. A professional master closes that gap <i>without</i> crushing your dynamics.';
+      msg='<b>'+dict.v_headroom+' '+Math.abs(tpN).toFixed(1)+' '+dict.v_headroom_p1+'</b> '+dict.v_headroom_p2;
     } else if(!okLufs){
-      msg='<b>⚠️ Loudness off-range.</b> Commercial tracks sit between −14 and −8 LUFS. Yours is at <b>'+lufsN.toFixed(1)+' LUFS</b>. A proper master brings you into the modern window while keeping every punch intact.';
+      msg='<b>'+dict.v_loudness+'</b> '+dict.v_loudness_p1+' <b>'+lufsN.toFixed(1)+' '+dict.v_loudness_p2+'</b>';
     } else {
-      msg='<b>⚠️ Dynamics are squashed ('+lra+' LRA).</b> Your track may be over-limited. A careful re-master with reference matching restores the punch — send it over.';
+      msg='<b>'+dict.v_dyn+' ('+lra+' LRA).</b> '+dict.v_dyn_p;
     }
-    msg+='<br><br><b>Unlock your master for $9.99</b> — delivered in 24h: WAV 24-bit + MP3 320k + report.';
+    msg+='<br><br><b>'+dict.v_unlock+'</b>'+dict.v_unlock_p;
     $('verdict').innerHTML=msg;
     drawWave(ab);
     $('res').classList.add('show');
     $('res').scrollIntoView({behavior:'smooth', block:'center'});
     ctx.close();
   }catch(e){
-    toast('Could not decode this file — try WAV or MP3.');
+    toast(I18N[currentLang()].toast_badfile);
   }
 }
 function drawWave(ab){
@@ -452,6 +730,9 @@ function drawWave(ab){
     g.fillRect(i*(w/N), (h-bh)/2, Math.max(1,(w/N)*0.62), bh);
   }
 }
+
+/* init */
+applyI18n();
 </script>
 </body>
 </html>
