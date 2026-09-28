@@ -1802,7 +1802,7 @@ input[type="range"]::-moz-range-thumb {
             <a onclick="navigateTo('beats')" data-page="beats" data-i18n="nav_beats">Beats</a>
             <a onclick="navigateTo('templates')" data-page="templates" data-i18n="nav_templates">Templates</a>
             <a onclick="navigateTo('flp')" data-page="flp" data-i18n="nav_flp">FLP Remakes</a>
-            <a href="/mastering.html">Mastering</a>
+            <a href="/mastering.html" data-i18n="nav_mastering">Mastering</a>
             <a onclick="navigateTo('about')" data-page="about" data-i18n="nav_about">About</a>
             <a onclick="navigateTo('contact')" data-page="contact" data-i18n="nav_contact">Contact</a>
             <a onclick="navigateTo('admin')" data-page="admin" id="adminNavLink" style="display:none;">Admin</a>
@@ -1847,7 +1847,7 @@ input[type="range"]::-moz-range-thumb {
     <a onclick="navigateTo('beats'); toggleMobileMenu();" data-i18n="nav_beats">Beats</a>
     <a onclick="navigateTo('templates'); toggleMobileMenu();" data-i18n="nav_templates">Templates</a>
     <a onclick="navigateTo('flp'); toggleMobileMenu();" data-i18n="nav_flp">FLP Remakes</a>
-    <a href="/mastering.html" onclick="toggleMobileMenu();">Mastering</a>
+    <a href="/mastering.html" onclick="toggleMobileMenu();" data-i18n="nav_mastering">Mastering</a>
     <a onclick="navigateTo('about'); toggleMobileMenu();" data-i18n="nav_about">About</a>
     <a onclick="navigateTo('contact'); toggleMobileMenu();" data-i18n="nav_contact">Contact</a>
     <a onclick="navigateTo('admin'); toggleMobileMenu();" id="adminNavLinkMobile" style="display:none;">Admin</a>
@@ -2344,7 +2344,7 @@ input[type="range"]::-moz-range-thumb {
                         <a href="https://facebook.com/FridBeats" target="_blank" class="social-icon facebook" style="width:34px;height:34px;font-size:0.8rem;"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
-                <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a href="/mastering.html">Mastering</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
+                <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a href="/mastering.html" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('contact')" data-i18n="footer_mixing">Mixing & Vocal</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
@@ -3231,7 +3231,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
         // ============================================================
         const translations = {
             en: {
-                nav_home: "Home", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "FLP Remakes", nav_about: "About", nav_contact: "Contact",
+                nav_home: "Home", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "FLP Remakes", nav_mastering: "Mastering", nav_about: "About", nav_contact: "Contact",
                 hero_subtitle: "Music Producer • Beatmaker • Mixing Engineer",
                 hero_statement: "\"Original production, remakes and sound crafted for artists who want their music to stand out.\"",
                 hero_btn_explore: "Explore Beats", hero_btn_work: "Work With Me",
@@ -3262,7 +3262,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 ai_title: "AI Beat Finder", ai_placeholder: 'Try "rihanna type flp remake", "dark reggaeton beat"...', ai_find: "✨ Find", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again."
             },
             es: {
-                nav_home: "Inicio", nav_beats: "Beats", nav_templates: "Plantillas", nav_flp: "Remakes FLP", nav_about: "Sobre mí", nav_contact: "Contacto",
+                nav_home: "Inicio", nav_beats: "Beats", nav_templates: "Plantillas", nav_flp: "Remakes FLP", nav_mastering: "Masterización", nav_about: "Sobre mí", nav_contact: "Contacto",
                 hero_subtitle: "Productor Musical • Beatmaker • Ingeniero de Mezcla",
                 hero_statement: "\"Producción original, remakes y sonido creados para artistas que quieren que su música destaque.\"",
                 hero_btn_explore: "Explorar Beats", hero_btn_work: "Trabaja Conmigo",
@@ -3293,7 +3293,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 ai_title: "Buscador IA de Beats", ai_placeholder: 'Prueba "flp remake tipo rihanna", "beat reggaetón oscuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Mejores", ai_matches_suffix: "coincidencia(s):", ai_no_results: '😕 Nada coincidió con esa descripción — prueba otras palabras o', ai_browse_beats: "explora todos los beats", ai_unavailable: "⚠️ Búsqueda temporalmente no disponible — intenta de nuevo."
             },
             pt: {
-                nav_home: "Início", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "Remakes FLP", nav_about: "Sobre", nav_contact: "Contato",
+                nav_home: "Início", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "Remakes FLP", nav_mastering: "Masterização", nav_about: "Sobre", nav_contact: "Contato",
                 hero_subtitle: "Produtor Musical • Beatmaker • Engenheiro de Mixagem",
                 hero_statement: "\"Produção original, remakes e som feitos para artistas que querem que sua música se destaque.\"",
                 hero_btn_explore: "Explorar Beats", hero_btn_work: "Trabalhe Comigo",
@@ -3324,7 +3324,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 ai_title: "Buscador IA de Beats", ai_placeholder: 'Tente "flp remake tipo rihanna", "beat reggaetão escuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Melhores", ai_matches_suffix: "correspondência(s):", ai_no_results: '😕 Nada correspondeu a essa descrição — tente outras palavras ou', ai_browse_beats: "explorar todos os beats", ai_unavailable: "⚠️ Pesquisa temporariamente indisponível — tente novamente."
             },
             fr: {
-                nav_home: "Accueil", nav_beats: "Beats", nav_templates: "Modèles", nav_flp: "Remakes FLP", nav_about: "À propos", nav_contact: "Contact",
+                nav_home: "Accueil", nav_beats: "Beats", nav_templates: "Modèles", nav_flp: "Remakes FLP", nav_mastering: "Masterisation", nav_about: "À propos", nav_contact: "Contact",
                 hero_subtitle: "Producteur de Musique • Beatmaker • Ingénieur du Son",
                 hero_statement: "« Production originale, remakes et son conçus pour les artistes qui veulent que leur musique se démarque. »",
                 hero_btn_explore: "Explorer les Beats", hero_btn_work: "Travailler Avec Moi",
@@ -3355,7 +3355,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 ai_title: "Recherche IA de Beats", ai_placeholder: 'Essayez "flp remake type rihanna", "beat reggaeton sombre"...', ai_find: "✨ Chercher", ai_searching: "🔍 Recherche...", ai_top_matches: "Meilleures", ai_matches_suffix: "correspondance(s) :", ai_no_results: '😕 Rien ne correspond à cette description — essayez d\'autres mots ou', ai_browse_beats: "parcourir tous les beats", ai_unavailable: "⚠️ Recherche temporairement indisponible — réessayez."
             },
             ht: {
-                nav_home: "Akèy", nav_beats: "Beats", nav_templates: "Modèl", nav_flp: "Remakes FLP", nav_about: "Konsènan Mwen", nav_contact: "Kontak",
+                nav_home: "Akèy", nav_beats: "Beats", nav_templates: "Modèl", nav_flp: "Remakes FLP", nav_mastering: "Mastering", nav_about: "Konsènan Mwen", nav_contact: "Kontak",
                 hero_subtitle: "Pwodiktè Mizik • Beatmaker • Enjenyè Mixaj",
                 hero_statement: "« Pwodiksyon orijinal, remakes ak son ki fèt pou atis ki vle mizik yo demake. »",
                 hero_btn_explore: "Eksplore Beats", hero_btn_work: "Travay Avè M",
