@@ -1051,14 +1051,29 @@ function mgMeasureLufs(buf){
   finally{ try{ctx.close();}catch(e){} }
   return lufs;
 }
-function mgFineTrim(buf, targetLufs){
-  const l = mgMeasureLufs(buf);
-  if(l===null) return buf;
+function peakP95(buf){
+  // 95th percentile of 20ms window peaks (all channels) — where "typical loud peaks" sit
+  const sr=buf.sampleRate, w=Math.max(1, Math.round(0.02*sr));
+  const peaks=[];
+  for(let c=0;c<buf.numberOfChannels;c++){
+    const d=buf.getChannelData(c);
+    for(let st=0; st<d.length; st+=w){
+      let m=0; const end=Math.min(st+w,d.length);
+      for(let i=st;i<end;i++){ const v=Math.abs(d[i]); if(v>m)m=v; }
+      peaks.push(m);
+    }
+  }
+  if(!peaks.length) return 0;
+  peaks.sort((a,b)=>a-b);
+  return peaks[Math.floor(0.95*(peaks.length-1))];
+}
+function mgSafetyCeil(buf){
+  // hard safety: nothing above −0.01 dBFS, ever
+  const CEIL=0.9988;
   let peak=0;
   for(let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i++){ const v=Math.abs(d[i]); if(v>peak)peak=v; } }
-  let g = Math.pow(10,(targetLufs-l)/20);
-  if(g>1) g = Math.min(g, peak>0 ? 0.9988/peak : 1);   // trim up only to ceiling
-  if(Math.abs(g-1)>0.002){
+  if(peak>CEIL){
+    const g=CEIL/peak;
     for(let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i++) d[i]*=g; }
   }
   return buf;
@@ -1137,6 +1152,7 @@ async function magicStart(){
     mgStage(1,'done');
     mgStage(2,'on');
     const MAX_PUSH = Math.pow(10, 14/20);   // +14 dB cap
+    const CEIL = 0.9988;                     // −0.01 dBFS
     const l0 = mgMeasureLufs(mgState.track);
     let push = Math.min(Math.pow(10, ((-10.5 - (l0===null?-14:l0)) / 20)), MAX_PUSH);
     // render -> measure -> correct once (limiter eats some loudness; converge on the real output)
@@ -1149,9 +1165,16 @@ async function magicStart(){
         pass2 = await mgChainRender(mgState.track, gains, push, true);
       }
     }
+    // PEAK convergence: pin the loudest peaks right at the ceiling (brickwall feel,
+    // like Frid's studio chain) instead of letting peaks float up to 1 dB under the knee
+    const p95 = peakP95(pass2);
+    if(p95 > 0.05 && p95 < CEIL*0.94){
+      push = Math.min(MAX_PUSH, push * Math.min((CEIL*0.985)/p95, 2.0));
+      pass2 = await mgChainRender(mgState.track, gains, push, true);
+    }
     mgStage(2,'done');
     mgStage(3,'on');
-    mgState.master = mgFineTrim(pass2, -10.5);
+    mgState.master = mgSafetyCeil(pass2);
     mgStage(3,'done');
     const prevM = await mgPreviewSlice(mgState.master, mgState.track, MAGIC_LIMIT_SEC, true);
     const prevB = await mgPreviewSlice(mgState.track, mgState.track, MAGIC_LIMIT_SEC, false);
