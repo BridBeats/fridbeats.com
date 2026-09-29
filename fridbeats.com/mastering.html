@@ -813,15 +813,30 @@ $('dz').addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) analyze(e.dataT
 $('fz').onchange=e=>{ if(e.target.files[0]) analyze(e.target.files[0]); };
 
 function kWeightBuffer(ctx, buf){
+  // ITU-R BS.1770 K-weighting: stage1 high-shelf (+4 dB, 1681.97 Hz, Q=0.70717)
+  //                             + stage2 highpass (38.135 Hz, Q=0.5003) — RBJ biquads
+  const sr = buf.sampleRate;
+  const G=3.999843853973347, Q1=0.7071752369554196, f1=1681.974450955533;
+  const A=Math.pow(10,G/40), w1=2*Math.PI*f1/sr, cw=Math.cos(w1), sn=Math.sin(w1), al=sn/(2*Q1), sq=2*Math.sqrt(A)*al;
+  let s0=A*((A+1)+(A-1)*cw+sq), s1=-2*A*((A-1)+(A+1)*cw), s2=A*((A+1)+(A-1)*cw-sq),
+      sa0=(A+1)-(A-1)*cw+sq, sa1=2*((A-1)-(A+1)*cw), sa2=(A+1)-(A-1)*cw-sq;
+  s0/=sa0; s1/=sa0; s2/=sa0; sa1/=sa0; sa2/=sa0;
+  const f2=38.13547087602444, Q2=0.5003270373238773;
+  const w2=2*Math.PI*f2/sr, cw2=Math.cos(w2), sn2=Math.sin(w2), al2=sn2/(2*Q2);
+  // RBJ highpass: b0=(1+cos)/2, b1=−(1+cos), b2=(1+cos)/2 — normalisé pa a0
+  let h0=(1+cw2)/2, h1=-(1+cw2), h2=(1+cw2)/2, ha0=1+al2, ha1=-2*cw2, ha2=1-al2;
+  h0/=ha0; h1/=ha0; h2/=ha0; ha1/=ha0; ha2/=ha0;
   const out = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
   for(let c=0;c<buf.numberOfChannels;c++){
     const data = buf.getChannelData(c), o = out.getChannelData(c);
-    let hpPrev=0, lpPrev=0;
+    let x1=0,x2=0,y1=0,y2=0, u1=0,u2=0,v1=0,v2=0;
     for(let i=0;i<data.length;i++){
       const x=data[i];
-      hpPrev = 0.9973*hpPrev + 0.9973*(x - hpPrev)*0.5;
-      lpPrev = lpPrev + 0.08*(hpPrev-lpPrev);
-      o[i] = hpPrev*1.0 + (hpPrev-lpPrev)*3.5;
+      const y = s0*x + s1*x1 + s2*x2 - sa1*y1 - sa2*y2;   // high shelf
+      x2=x1; x1=x; y2=y1; y1=y;
+      const v = h0*y + h1*u1 + h2*u2 - ha1*v1 - ha2*v2;   // highpass
+      u2=u1; u1=y; v2=v1; v1=v;
+      o[i]=v;
     }
   }
   return out;
@@ -983,15 +998,15 @@ function matchTone(track, ref){
   return out;
 }
 function limiterCurve(){
-  // asymptotic soft clipper: linear below knee, tanh saturation above, ceiling −0.01 dBFS
-  const OV=4;                                   // curve covers inputs up to ±4 (12 dB over)
-  const n=4096, c=new Float32Array(n);
-  const ceil=0.9988, kneeAmp=0.5, span=ceil-kneeAmp;
+  // Domain: input scaled by 1/OV before curve (models drive up to +12 dB over).
+  // Curve restores unity (y=a*OV) below threshold T, then tanh-saturates to ceiling.
+  const OV=4, n=4096, c=new Float32Array(n);
+  const ceil=0.9988, T=0.891, span=ceil-T;    // T ≈ −1 dBFS
   for(let i=0;i<n;i++){
     const x=i/(n-1)*2-1, a=Math.abs(x)*OV;
     let y;
-    if(a<=kneeAmp) y=a;
-    else y=Math.min(ceil, kneeAmp+span*Math.tanh((a-kneeAmp)/span));
+    if(a<=T) y=a;
+    else y=Math.min(ceil, T+span*Math.tanh((a-T)/span));
     c[i]=Math.sign(x)*y;
   }
   return { curve:c, ov:OV };
@@ -1019,10 +1034,20 @@ function mgChainRender(ab, gains, makeup, useLimiter){
   return off.startRendering();
 }
 function mgMeasureLufs(buf){
+  // ITU BS.1770: sum of channel mean-squares + channel weights (L=R=1.0) − (−0.691)
   const AC=window.AudioContext||window.webkitAudioContext;
   const ctx=new AC();
   let lufs=null;
-  try{ const fw=kWeightBuffer(ctx, buf); lufs = lufsIntegrated(fw.getChannelData(0), buf.sampleRate); }catch(e){}
+  try{
+    const fw=kWeightBuffer(ctx, buf);
+    const per=[];
+    for(let c=0;c<fw.numberOfChannels;c++) per.push(lufsIntegrated(fw.getChannelData(c), buf.sampleRate));
+    const valid=per.filter(v=>v!==null);
+    if(valid.length){
+      const sumSq=valid.reduce((s,v)=>s+Math.pow(10,v/10),0);   // ITU: SUM of channel powers
+      lufs = 10*Math.log10(sumSq) + 0.691;
+    }
+  }catch(e){}
   finally{ try{ctx.close();}catch(e){} }
   return lufs;
 }
@@ -1111,12 +1136,21 @@ async function magicStart(){
     const gains = matchTone(mgState.track, mgState.ref);
     mgStage(1,'done');
     mgStage(2,'on');
-    const pass1 = await mgChainRender(mgState.track, gains, 1.19, false);   // EQ match + gentle glue (+1.9 dB)
+    const MAX_PUSH = Math.pow(10, 14/20);   // +14 dB cap
+    const l0 = mgMeasureLufs(mgState.track);
+    let push = Math.min(Math.pow(10, ((-10.5 - (l0===null?-14:l0)) / 20)), MAX_PUSH);
+    // render -> measure -> correct once (limiter eats some loudness; converge on the real output)
+    let pass2 = await mgChainRender(mgState.track, gains, push, true);
+    const l2 = mgMeasureLufs(pass2);
+    if(l2 !== null){
+      const err = -10.5 - l2;
+      if(Math.abs(err) > 0.3){
+        push = Math.max(0.25, Math.min(MAX_PUSH, push * Math.pow(10, err/20)));
+        pass2 = await mgChainRender(mgState.track, gains, push, true);
+      }
+    }
     mgStage(2,'done');
     mgStage(3,'on');
-    const l1 = mgMeasureLufs(pass1);
-    const push = Math.min(Math.pow(10,((-10.5-(l1===null?-14:l1))/20)), Math.pow(10,14/20));  // cap push at +14 dB
-    const pass2 = await mgChainRender(mgState.track, gains, push, true);    // push into asymptotic limiter
     mgState.master = mgFineTrim(pass2, -10.5);
     mgStage(3,'done');
     const prevM = await mgPreviewSlice(mgState.master, mgState.track, MAGIC_LIMIT_SEC, true);
