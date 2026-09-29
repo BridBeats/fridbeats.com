@@ -125,6 +125,47 @@ footer .links a{color:var(--text-tertiary);text-decoration:none}
 footer .links a:hover{color:#fff}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-full);padding:11px 20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:var(--tr);z-index:200;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* PROMO + MAGIC MASTER */
+.btn:disabled{opacity:.55;cursor:progress}
+audio{color-scheme:dark}
+.promo{margin:26px 0 0;background:linear-gradient(90deg,rgba(26,90,74,0.35),rgba(26,90,74,0.12));border:1px solid var(--accent-border);border-radius:var(--radius-full);padding:10px 18px;text-align:center;font-size:13px;font-weight:700;letter-spacing:0.5px}
+.promo s{color:var(--text-muted);margin:0 4px}
+.promo b{color:var(--ok);font-size:15px;margin-right:6px}
+section.magic{margin:30px 0 0}
+.mg-sub{color:var(--text-tertiary);font-size:13.5px;line-height:1.7;margin-top:12px}
+.mg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:700px){.mg-grid{grid-template-columns:1fr}}
+.mg-dz{margin-top:0;padding:22px 14px}
+.mg-dz .fname{min-height:16px}
+.mg-stages{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.stp{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:1.5px;font-weight:800;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 13px;background:var(--bg-card);transition:var(--tr)}
+.stp b{width:16px;height:16px;border-radius:50%;background:var(--bg-input);display:flex;align-items:center;justify-content:center;font-size:9px}
+.stp.on{color:#fff;border-color:var(--accent-light);background:rgba(26,90,74,0.18)}
+.stp.on b{background:var(--accent-primary)}
+.stp.done{color:var(--ok)}
+.abgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:700px){.abgrid{grid-template-columns:1fr}}
+.abcell{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
+.ablab{font-size:11px;letter-spacing:1.5px;font-weight:800;margin-bottom:9px}
+.ablab.before{color:var(--text-muted)}
+.ablab.after{color:var(--ok)}
+.abcell audio{width:100%;height:38px}
+.mg-plans{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:700px){.mg-plans{grid-template-columns:1fr}}
+.mplan{position:relative;background:var(--bg-secondary);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:var(--tr)}
+.mplan:hover{border-color:var(--accent-border)}
+.mplan.active{border-color:var(--accent-light);background:rgba(26,90,74,0.10)}
+.mplan .mp-n{font-weight:800;font-size:13.5px;letter-spacing:1px}
+.mplan .mp-p{font-size:26px;font-weight:900;margin-top:6px}
+.mplan .mp-p s{font-size:15px;color:var(--text-muted);font-weight:600;margin-right:6px}
+.mplan .mp-d{color:var(--text-tertiary);font-size:12px;line-height:1.65;margin-top:8px}
+.mplan .mp-badge{position:absolute;top:-9px;right:12px;background:var(--accent-primary);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:1px;border-radius:var(--radius-full);padding:4px 10px}
+.pricegrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+@media(max-width:760px){.pricegrid{grid-template-columns:1fr}}
+.pricegrid .price-card{margin:0}
+.price-card .pname{font-size:12px;letter-spacing:2.5px;font-weight:800;color:var(--accent-light)}
+.price-card .big{margin-top:8px}
+.price-card.sig{background:linear-gradient(180deg,rgba(26,90,74,0.20),rgba(26,90,74,0.05))}
 </style>
 </head>
 <body>
@@ -142,7 +183,7 @@ footer .links a:hover{color:#fff}
         <button onclick="setLang('ht')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇭🇹 Kreyòl</button>
       </div>
       <a class="nav-home" href="/">← <span data-i18n="back_home">Back to fridbeats.com</span></a>
-      <a class="nav-cta" href="#analyzer" data-i18n="nav_free_analysis">FREE ANALYSIS</a>
+      <a class="nav-cta" href="#magic" data-i18n="nav_free_analysis">⚡ MAGIC MASTER</a>
     </div>
   </div>
 </nav>
@@ -160,6 +201,83 @@ footer .links a:hover{color:#fff}
     <span class="spec" data-i18n="spec_universal">EVERY GENRE · EVERY BPM</span>
   </div>
 </header>
+
+<div class="promo" id="promo">🔥 <span data-i18n="mg_promo_badge_x">LAUNCH −60% — Frid Signature $24.99 → $9.99 until Oct 15</span></div>
+
+<section class="magic" id="magic">
+  <div class="an-card">
+    <h2>⚡ <span data-i18n="mg_title">MAGIC MASTER — HEAR IT BEFORE YOU PAY</span> <span class="free" data-i18n="magic_badge">NEW · INSTANT</span></h2>
+    <p class="mg-sub" data-i18n="mg_sub"></p>
+    <div class="mg-grid">
+      <div class="dz mg-dz" id="mgDzT" onclick="document.getElementById('mgFzT').click()">
+        <div class="ic">🎵</div>
+        <div class="t1" data-i18n="mg_track_t">YOUR TRACK</div>
+        <div class="t2" data-i18n="mg_track_h">WAV, MP3, FLAC, M4A — stays on your device</div>
+        <div class="fname" id="mgNameT"></div>
+      </div>
+      <div class="dz mg-dz" id="mgDzR" onclick="document.getElementById('mgFzR').click()">
+        <div class="ic">🎯</div>
+        <div class="t1" data-i18n="mg_ref_t">REFERENCE — OPTIONAL</div>
+        <div class="t2" data-i18n="mg_ref_h">The sound you want to match (recommended)</div>
+        <div class="fname" id="mgNameR"></div>
+      </div>
+    </div>
+    <input type="file" id="mgFzT" hidden accept=".wav,.mp3,.flac,.ogg,.m4a,.aac,.wma,audio/*">
+    <input type="file" id="mgFzR" hidden accept=".wav,.mp3,.flac,.ogg,.m4a,.aac,.wma,audio/*">
+    <div class="mg-stages">
+      <span class="stp" id="st0"><b>1</b> <span data-i18n="mg_s1">DECODE</span></span>
+      <span class="stp" id="st1"><b>2</b> <span data-i18n="mg_s2">ANALYZE</span></span>
+      <span class="stp" id="st2"><b>3</b> <span data-i18n="mg_s3">MATCH</span></span>
+      <span class="stp" id="st3"><b>4</b> <span data-i18n="mg_s4">FINISH</span></span>
+    </div>
+    <div class="unlock">
+      <button class="btn btn-main" id="mgGo" onclick="magicStart()">⚡ <span data-i18n="mg_go">MASTER MY TRACK</span></button>
+    </div>
+    <div class="mg-ab" id="mgAb" style="display:none">
+      <h3 class="sec" style="margin-top:22px" data-i18n="mg_ab_title">YOUR FREE PREVIEW — LOUDEST 20 SECONDS</h3>
+      <div class="abgrid">
+        <div class="abcell"><div class="ablab before" data-i18n="mg_before">BEFORE — your mix</div><audio id="abB" controls preload="none"></audio></div>
+        <div class="abcell"><div class="ablab after" data-i18n="mg_after">AFTER — mastered</div><audio id="abA" controls preload="none"></audio></div>
+      </div>
+      <div class="an-note" data-i18n="mg_pv_note"></div>
+    </div>
+    <div class="mg-unlock" id="mgUnlock" style="margin-top:24px">
+      <h3 class="sec" data-i18n="mg_unlock">LOVE IT? UNLOCK THE FULL DOWNLOAD</h3>
+      <div class="mg-plans">
+        <div class="mplan active" id="planMagic" onclick="mgSelect('magic')">
+          <div class="mp-n" data-i18n="mg_plan1">MAGIC MASTER — instant</div>
+          <div class="mp-p">$9.99</div>
+          <div class="mp-d" data-i18n="mg_plan1_d"></div>
+        </div>
+        <div class="mplan" id="planSig" onclick="mgSelect('signature')">
+          <div class="mp-badge" data-i18n="mg_promo_badge">LAUNCH −60%</div>
+          <div class="mp-n" data-i18n="mg_plan2">FRID SIGNATURE</div>
+          <div class="mp-p"><s id="sigStrikeM">$24.99</s><b id="sigNowM">$9.99</b></div>
+          <div class="mp-d" data-i18n="mg_plan2_d"></div>
+        </div>
+      </div>
+      <div id="mgPay" style="margin-top:18px">
+        <label class="co-label" for="mgEmail" data-i18n="mg_email">YOUR EMAIL — receipt &amp; support</label>
+        <input type="email" id="mgEmail" class="co-email" placeholder="you@example.com">
+        <div id="mgPp" style="margin-top:16px"></div>
+        <div class="an-note" style="margin-top:10px" data-i18n="mg_pay_note"></div>
+      </div>
+      <div id="mgDl" style="display:none;margin-top:16px">
+        <div class="donebox">
+          <h4 data-i18n="mg_dl_done"></h4>
+          <div class="unlock" style="margin-top:12px">
+            <button class="btn btn-main" id="mgDlWav" onclick="mgDownloadWav()" style="display:none">⬇ <span data-i18n="mg_dl_wav">DOWNLOAD WAV 24-BIT</span></button>
+            <button class="btn btn-ghost" id="mgDlMp3" onclick="mgDownloadMp3()" style="display:none">⬇ <span data-i18n="mg_dl_mp3">DOWNLOAD MP3 320k</span></button>
+          </div>
+          <p id="mgSigNote" style="display:none;color:var(--text-secondary);font-size:13.5px;line-height:1.8;margin-top:12px"></p>
+          <div class="unlock" id="mgSigLinks" style="display:none;margin-top:6px">
+            <a class="btn btn-main" id="mgSigWa" href="#" target="_blank" rel="noopener">💬 <span data-i18n="co_send_wa">SEND MY TRACK VIA WHATSAPP</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="analyzer" id="analyzer">
   <div class="an-card">
@@ -182,7 +300,7 @@ footer .links a:hover{color:#fff}
       <div class="wave"><canvas id="wv"></canvas></div>
       <div class="verdict" id="verdict"></div>
       <div class="unlock">
-        <button class="btn btn-main" onclick="openCheckout()">⚡ <span data-i18n="unlock_btn">UNLOCK MY MASTER — $9.99</span></button>
+        <button class="btn btn-main" onclick="goMagic()">⚡ <span data-i18n="unlock_btn">TRY MAGIC MASTER — FREE PREVIEW</span></button>
         <a class="btn btn-ghost" id="waTop" href="#" target="_blank" rel="noopener">💬 <span data-i18n="order_wa">Order via WhatsApp</span></a>
       </div>
       <div class="an-note" data-i18n="an_note_pay">Payment unlocks the full master (WAV 24-bit + MP3 320k) — delivered within 24h, typically much faster.</div>
@@ -201,45 +319,35 @@ footer .links a:hover{color:#fff}
 </section>
 
 <section class="pricing">
-  <h3 class="sec" data-i18n="price_title">ONE TRACK. ONE PRICE.</h3>
-  <div class="price-card">
-    <div class="big"><sup>$</sup>9.99</div>
-    <div class="per" data-i18n="price_per">PER TRACK · NO SUBSCRIPTION</div>
-    <ul class="plist">
-      <li data-i18n="pl1">Sample Peak −0.01 dBFS — exactly where commercial masters sit</li>
-      <li data-i18n="pl2">Dynamics 100% preserved — no limiting squash, no distortion</li>
-      <li data-i18n="pl3">Reference matching — I match the tone of any track you send</li>
-      <li data-i18n="pl4">WAV 24-bit + MP3 320k + measurement report</li>
-      <li data-i18n="pl5">Delivered in 24h · revisions included until you're happy</li>
-    </ul>
-    <button class="btn btn-main" onclick="openCheckout()">⚡ <span data-i18n="price_btn">GET MASTERED — $9.99</span></button>
-    <div class="uptime" data-i18n="price_note">Secure payment via PayPal — card &amp; PayPal balance accepted</div>
+  <h3 class="sec" data-i18n="price_title">CHOOSE YOUR MASTER</h3>
+  <div class="pricegrid">
+    <div class="price-card">
+      <div class="pname" data-i18n="pm1_name">MAGIC MASTER</div>
+      <div class="big"><sup>$</sup>9.99</div>
+      <div class="per" data-i18n="pm1_per">INSTANT · IN YOUR BROWSER</div>
+      <ul class="plist">
+        <li data-i18n="pm1_1">Instant master rendered in your browser — no waiting, no email</li>
+        <li data-i18n="pm1_2">EQ matched to your reference track</li>
+        <li data-i18n="pm1_3">Commercial loudness, peak exactly −0.01 dBFS</li>
+        <li data-i18n="pm1_4">WAV 24-bit + MP3 320k download right after payment</li>
+      </ul>
+      <button class="btn btn-ghost" onclick="goMagic()">⚡ <span data-i18n="pm1_btn">START FREE PREVIEW</span></button>
+    </div>
+    <div class="price-card sig">
+      <div class="pname" data-i18n="pm2_name">FRID SIGNATURE</div>
+      <div class="big"><sup>$</sup><span id="sigPriceBig">24.99</span></div>
+      <div class="per" data-i18n="pm2_per">EVERYTHING IN MAGIC MASTER + FRID HIMSELF</div>
+      <ul class="plist">
+        <li data-i18n="pm2_1">Your instant browser master — download immediately</li>
+        <li data-i18n="pm2_2">Frid personally re-checks &amp; polishes with his studio rig</li>
+        <li data-i18n="pm2_3">Reference matching tuned by ear, revisions until you're happy</li>
+        <li data-i18n="pm2_4">Delivered in 24h · direct WhatsApp support</li>
+      </ul>
+      <button class="btn btn-main" onclick="openMagicCheckout('signature')">⭐ <span data-i18n="pm2_btn">GO SIGNATURE</span></button>
+      <div class="uptime" data-i18n="mg_promo_ends">Launch price until Oct 15</div>
+    </div>
   </div>
   <div class="compare"><b data-i18n="cmp_t">Why is this $9.99 and not $50?</b> <span data-i18n="cmp_p">— Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.</span></div>
-</section>
-
-<section class="checkout-sec" id="checkout" style="display:none">
-  <div class="an-card" id="checkoutCard">
-    <h2>💳 <span data-i18n="co_title">CHECKOUT — PROFESSIONAL MASTERING</span> <span class="free" style="background:rgba(26,90,74,0.15);color:var(--accent-light)">$9.99</span></h2>
-    <div id="coForm" style="margin-top:18px">
-      <label class="co-label" for="coEmail" data-i18n="co_email_label">YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED</label>
-      <input type="email" id="coEmail" class="co-email" placeholder="you@example.com">
-      <div id="paypal-button-container" style="margin-top:18px"></div>
-      <div class="an-note" style="margin-top:12px" data-i18n="co_note">After payment you'll send me your track (WAV or MP3) + optional reference via WhatsApp or email — full instructions appear right here.</div>
-    </div>
-    <div id="coDone" style="display:none;margin-top:18px">
-      <div class="donebox">
-        <div style="font-size:30px">✅</div>
-        <h4><span data-i18n="co_done">Payment received — order</span> <span id="coOrderId" style="color:var(--accent-light)"></span></h4>
-        <p data-i18n="co_done_p">Last step: send me your track (WAV or MP3) and optionally a reference (the sound you're chasing) with your order ID.</p>
-        <div class="unlock" style="margin-top:14px">
-          <a class="btn btn-main" id="coWaLink" href="#" target="_blank" rel="noopener">💬 <span data-i18n="co_send_wa">SEND MY TRACK VIA WHATSAPP</span></a>
-          <a class="btn btn-ghost" id="coMailLink" href="#">📧 <span data-i18n="co_send_mail">Send by email</span></a>
-        </div>
-        <div class="an-note" style="margin-top:12px" data-i18n="co_done_note">Your master arrives within 24h — usually much faster. Revisions included.</div>
-      </div>
-    </div>
-  </div>
 </section>
 
 <section class="faq">
@@ -270,23 +378,51 @@ const $=id=>document.getElementById(id);
 /* ================= I18N — 5 languages ================= */
 const I18N = {
 en: {
-  brand_mastering:"MASTERING", back_home:"Back to fridbeats.com", nav_free_analysis:"FREE ANALYSIS",
+  brand_mastering:"MASTERING", back_home:"Back to fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
   hero_kicker:"PRO MASTERING · ALL GENRES · DELIVERED IN 24H",
   hero_title_1:"Radio-Ready Mastering,", hero_title_2:"Mixed by Frid Beats",
-  hero_sub:"Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.",
+  mg_promo_badge_x:"LAUNCH −60% — Frid Signature $24.99 → $9.99 until Oct 15",
+  hero_sub:"Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, hear the difference for free, unlock your master.",
+  mg_promo_badge:"LAUNCH −60%", mg_promo_ends:"until Oct 15 · launch price",
+  mg_promo_badge_x:"LAUNCH −60% — Frid Signature $24.99 → $9.99 until Oct 15",
+  mg_title:"MAGIC MASTER — HEAR IT BEFORE YOU PAY", magic_badge:"NEW · INSTANT",
+  mg_sub:"Drop your track + (optional) a reference song you want to sound like. Frid's engine masters it right here in your browser — your audio never leaves your device. Hear 20 seconds of the result free, pay only when you love it.",
+  mg_track_t:"YOUR TRACK", mg_track_h:"WAV, MP3, FLAC, M4A — stays on your device",
+  mg_ref_t:"REFERENCE — OPTIONAL", mg_ref_h:"The sound you want to match (recommended)",
+  mg_s1:"DECODE", mg_s2:"ANALYZE", mg_s3:"MATCH", mg_s4:"FINISH",
+  mg_go:"MASTER MY TRACK",
+  mg_need_track:"⚠️ Drop your track first.", mg_need_track_noref:"Drop a track or a reference first.",
+  mg_need_unlock:"🔒 Unlock it first — the download opens right after payment.",
+  mg_ab_title:"YOUR FREE PREVIEW — LOUDEST 20 SECONDS",
+  mg_before:"BEFORE — your mix", mg_after:"AFTER — mastered",
+  mg_pv_note:"Free preview is limited to 20 seconds with a soft tone every few seconds. Payment unlocks the full clean master.",
+  mg_unlock:"LOVE IT? UNLOCK THE FULL DOWNLOAD",
+  mg_plan1:"MAGIC MASTER — instant",
+  mg_plan1_d:"Instant download of the full mastered WAV 24-bit + MP3 320k — rendered in your browser right after payment. No waiting.",
+  mg_plan2:"FRID SIGNATURE",
+  mg_plan2_d:"Download the instant master now + Frid personally re-checks and polishes it with his studio rig. Delivered in 24h, revisions included.",
+  mg_email:"YOUR EMAIL — receipt &amp; support",
+  mg_pay_note:"Payment unlocks the full master instantly. Signature adds Frid's personal pass within 24h.",
+  mg_dl_done:"✅ Unlocked — your master is ready",
+  mg_dl_wav:"DOWNLOAD WAV 24-BIT", mg_dl_mp3:"DOWNLOAD MP3 320k",
+  mg_sig_note:"Your instant master is downloaded above. Now send Frid the same files with your order ID — he will deliver his personal Signature master (polished with his studio rig) within 24h.",
+  mg_pp_busy:"⚠️ Master is still rendering — one second…",
+  mg_render_done:"✅ Master ready — listen above!",
+  mg_render_fail:"⚠️ Rendering failed on this file — try a WAV or MP3, or order via WhatsApp.",
+  mg_sig_wa:"Hi Frid! I paid $9.99 for FRID SIGNATURE mastering on fridbeats.com — Order {OID}. My track:",
   spec_dynamics:"DYNAMICS PRESERVED", spec_universal:"EVERY GENRE · EVERY BPM",
   an_title:"TEST YOUR TRACK — INSTANT ANALYSIS", an_free:"100% FREE",
   dz_t1:"Drop your track here", dz_t2:"WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere",
   k_lufs:"LOUDNESS (LUFS)", k_tp:"TRUE PEAK", k_lra:"DYNAMIC RANGE (LRA)", k_dur:"DURATION",
   g_ready:"READY", g_in_range:"IN RANGE", g_needs_work:"NEEDS WORK", g_needs_headroom:"NEEDS HEADROOM", g_alive:"ALIVE", g_squashed:"SQUASHED",
   unlock_btn:"UNLOCK MY MASTER — $9.99", order_wa:"Order via WhatsApp",
-  an_note_pay:"Payment unlocks the full master (WAV 24-bit + MP3 320k) — delivered within 24h, typically much faster.",
+  an_note_pay:"⚡ Magic Master renders your full master (WAV 24-bit + MP3 320k) instantly in your browser — or go Frid Signature for his personal pass.",
   priv_note:"🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.",
   steps_title:"HOW IT WORKS",
   step1_t:"Free analysis", step1_p:"Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.",
-  step2_t:"Unlock your master", step2_p:"One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.",
-  step3_t:"Radio-ready in 24h", step3_p:"You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.",
-  price_title:"ONE TRACK. ONE PRICE.", price_per:"PER TRACK · NO SUBSCRIPTION",
+  step2_t:"Hear it free — then unlock", step2_p:"Magic Master renders your master right in your browser: hear 20 free seconds of the loudest part. Love it? Unlock the full WAV + MP3 download for $9.99.",
+  step3_t:"Radio-ready, instantly", step3_p:"The full clean master downloads immediately after payment — WAV 24-bit + MP3 320k, peak −0.01 dBFS. Want Frid's ear on it? Add Frid Signature.",
+  price_title:"CHOOSE YOUR MASTER", price_per:"PER TRACK · NO SUBSCRIPTION",
   pl1:"Sample Peak −0.01 dBFS — exactly where commercial masters sit",
   pl2:"Dynamics 100% preserved — no limiting squash, no distortion",
   pl3:"Reference matching — I match the tone of any track you send",
@@ -304,7 +440,7 @@ en: {
   faq_title:"QUESTIONS",
   q1:"Will mastering fix a bad mix?", a1:"Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.",
   q2:"What genres do you master?", a2:"Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.",
-  q3:"What do I send you after paying?", a3:"Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.",
+  q3:"Do I have to send you my track?", a3:"No — Magic Master renders everything in your browser and the download unlocks right here after payment. Choose Frid Signature and you'll send the same files with your order ID via WhatsApp (+1 829 602 6502) or contact@fridbeats.com for the personal pass.",
   q4:"What exactly do I receive?", a4:"A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.",
   q5:"Is my music safe?", a5:"100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.",
   footer_tag:"your studio, your rules", f_home:"Home", f_beats:"Beats", f_analysis:"Free Analysis",
@@ -321,7 +457,7 @@ en: {
   mail_sub:"Mastering Order", mail_body:"Hi Frid,\n\nMy PayPal order ID: {OID}\nMy track is attached (WAV/MP3).\nOptional reference: "
 },
 es: {
-  brand_mastering:"MASTERIZACIÓN", back_home:"Volver a fridbeats.com", nav_free_analysis:"ANÁLISIS GRATIS",
+  brand_mastering:"MASTERIZACIÓN", back_home:"Volver a fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
   hero_kicker:"MASTERING PRO · TODOS LOS GÉNEROS · ENTREGA EN 24H",
   hero_title_1:"Mastering Listo para Radio,", hero_title_2:"por Frid Beats",
   hero_sub:"Tu beat, tu canción, tu loop — masterizados al nivel exacto de las canciones comerciales: nítidos, fuertes donde importa, con la dinámica totalmente preservada. Sube, descubre la verdad sobre tu track gratis, desbloquea tu master.",
@@ -331,13 +467,13 @@ es: {
   k_lufs:"SONORIDAD (LUFS)", k_tp:"PICO REAL", k_lra:"RANGO DINÁMICO (LRA)", k_dur:"DURACIÓN",
   g_ready:"LISTO", g_in_range:"EN RANGO", g_needs_work:"NECESITA TRABAJO", g_needs_headroom:"NECESITA ESPACIO", g_alive:"VIVO", g_squashed:"APLASTADO",
   unlock_btn:"DESBLOQUEAR MI MASTER — $9.99", order_wa:"Pedir por WhatsApp",
-  an_note_pay:"El pago desbloquea el master completo (WAV 24-bit + MP3 320k) — entrega en 24h, normalmente mucho más rápido.",
+  an_note_pay:"⚡ Magic Master renderiza tu master completo (WAV 24-bit + MP3 320k) al instante en tu navegador — o elige Frid Signature para el pase personal de Frid.",
   priv_note:"🔒 Tu audio se analiza localmente en tu navegador — nada se sube hasta que pidas.",
   steps_title:"CÓMO FUNCIONA",
   step1_t:"Análisis gratis", step1_p:"Suelta tu track. En segundos ves su sonoridad, picos y dinámica — los mismos números que revisan primero los estudios de mastering.",
-  step2_t:"Desbloquea tu master", step2_p:"Un pago de $9.99. Envíame tu track (y una referencia opcional — el sonido que buscas) por WhatsApp o email.",
-  step3_t:"Listo para radio en 24h", step3_p:"Recibes tu master: WAV 24-bit + MP3 320k, con un reporte de mediciones. Pico −0.01 dBFS, dinámica intacta.",
-  price_title:"UN TRACK. UN PRECIO.", price_per:"POR TRACK · SIN SUSCRIPCIÓN",
+  step2_t:"Escúchalo gratis — luego desbloquea", step2_p:"Magic Master renderiza tu master en tu navegador: escucha 20 segundos gratis de la parte más fuerte. ¿Te encanta? Desbloquea la descarga completa WAV + MP3 por $9.99.",
+  step3_t:"Listo para radio, al instante", step3_p:"El master completo y limpio se descarga inmediatamente tras el pago — WAV 24-bit + MP3 320k, pico −0.01 dBFS. ¿Quieres el oído de Frid? Añade Frid Signature.",
+  price_title:"ELIGE TU MASTER", price_per:"POR TRACK · SIN SUSCRIPCIÓN",
   pl1:"Sample Peak −0.01 dBFS — exactamente donde están los masters comerciales",
   pl2:"Dinámica 100% preservada — sin aplastamiento, sin distorsión",
   pl3:"Reference matching — igualo el tono de cualquier track que envíes",
@@ -355,7 +491,7 @@ es: {
   faq_title:"PREGUNTAS",
   q1:"¿El mastering arregla una mala mezcla?", a1:"El mastering es el pulido final — no puede reconstruir una mezcla. Si tu track tiene problemas serios (clipping, lodo, voces desbalanceadas), te diré honestamente qué arreglar primero. Prefiero tenerte como cliente a largo plazo que venderte un master que suena mal.",
   q2:"¿Qué géneros masterizas?", a2:"Todos: trap, drill, afrobeat, kompa, reggaetón, dancehall, pop, R&B — instrumentales, canciones completas con voz, loops, podcasts. El objetivo (Sample Peak −0.01 dBFS, dinámica preservada) es universal porque sigue al track, no a un preset.",
-  q3:"¿Qué te envío después de pagar?", a3:"Tu track (mejor WAV, MP3 aceptado) y opcionalmente una referencia — una canción comercial cuyo sonido quieres igualar. Envía por WhatsApp (+1 829 602 6502) o contact@fridbeats.com justo después de tu pedido.",
+  q3:"¿Tengo que enviarte mi track?", a3:"No — Magic Master lo renderiza todo en tu navegador y la descarga se desbloquea aquí mismo tras el pago. Elige Frid Signature y enviarás los mismos archivos con tu ID de orden por WhatsApp (+1 829 602 6502) o contact@fridbeats.com para el pase personal.",
   q4:"¿Qué recibo exactamente?", a4:"Un WAV 24-bit masterizado (para distribución: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes) + un reporte con los números antes/después de tu track.",
   q5:"¿Mi música está segura?", a5:"100%. Tu track queda privado — solo lo escucho yo, se usa únicamente para tu master y nunca se distribuye ni comparte. El análisis gratis de esta página corre completamente en tu navegador; el audio nunca sale de tu dispositivo.",
   footer_tag:"tu estudio, tus reglas", f_home:"Inicio", f_beats:"Beats", f_analysis:"Análisis Gratis",
@@ -369,10 +505,37 @@ es: {
   v_unlock:"Desbloquea tu master por $9.99", v_unlock_p:"— entrega en 24h: WAV 24-bit + MP3 320k + reporte.",
   wa_msg:"¡Hola Frid! Acabo de hacer el análisis gratis en fridbeats.com y quiero masterizar mi track.",
   wa_paid:"¡Hola Frid! Acabo de pagar $9.99 por mastering en fridbeats.com", wa_paid_track:". Aquí está mi track",
-  mail_sub:"Pedido de Mastering", mail_body:"Hola Frid,\n\nMi ID de orden PayPal: {OID}\nMi track va adjunto (WAV/MP3).\nReferencia opcional: "
+  mail_sub:"Pedido de Mastering", mail_body:"Hola Frid,\n\nMi ID de orden PayPal: {OID}\nMi track va adjunto (WAV/MP3).\nReferencia opcional: ",
+  mg_promo_badge:"LANZAMIENTO −60%", mg_promo_ends:"hasta el 15 de oct · precio de lanzamiento",
+  mg_promo_badge_x:"LANZAMIENTO −60% — Frid Signature $24.99 → $9.99 hasta el 15 de oct",
+  mg_title:"MAGIC MASTER — ESCÚCHALO ANTES DE PAGAR", magic_badge:"NUEVO · INSTANTÁNEO",
+  mg_sub:"Sube tu track + (opcional) una referencia del sonido que buscas. El motor de Frid lo masteriza aquí mismo en tu navegador — tu audio nunca sale de tu dispositivo. Escucha 20 segundos del resultado gratis, paga solo si te encanta.",
+  mg_track_t:"TU TRACK", mg_track_h:"WAV, MP3, FLAC, M4A — se queda en tu dispositivo",
+  mg_ref_t:"REFERENCIA — OPCIONAL", mg_ref_h:"El sonido que quieres igualar (recomendado)",
+  mg_s1:"DECODIFICAR", mg_s2:"ANALIZAR", mg_s3:"IGUALAR", mg_s4:"FINALIZAR",
+  mg_go:"MASTERIZAR MI TRACK",
+  mg_need_track:"⚠️ Primero sube tu track.", mg_need_track_noref:"Sube un track o una referencia primero.",
+  mg_need_unlock:"🔒 Desbloquéalo primero — la descarga se abre justo después del pago.",
+  mg_ab_title:"TU PREVIEW GRATIS — LOS 20 SEGUNDOS MÁS FUERTES",
+  mg_before:"ANTES — tu mezcla", mg_after:"DESPUÉS — masterizado",
+  mg_pv_note:"El preview gratis está limitado a 20 segundos con un tono suave cada pocos segundos. El pago desbloquea el master completo y limpio.",
+  mg_unlock:"¿TE GUSTA? DESBLOQUEA LA DESCARGA COMPLETA",
+  mg_plan1:"MAGIC MASTER — instantáneo",
+  mg_plan1_d:"Descarga instantánea del WAV 24-bit completo + MP3 320k — renderizado en tu navegador justo después del pago. Sin esperas.",
+  mg_plan2:"FRID SIGNATURE",
+  mg_plan2_d:"Descarga el master instantáneo ahora + Frid personalmente lo revisa y pule con su rig de estudio. Entrega en 24h, revisiones incluidas.",
+  mg_email:"TU EMAIL — recibo y soporte",
+  mg_pay_note:"El pago desbloquea el master completo al instante. Signature añade el pase personal de Frid en 24h.",
+  mg_dl_done:"✅ Desbloqueado — tu master está listo",
+  mg_dl_wav:"DESCARGAR WAV 24-BIT", mg_dl_mp3:"DESCARGAR MP3 320k",
+  mg_sig_note:"Tu master instantáneo ya está descargado arriba. Ahora envía a Frid los mismos archivos con tu ID de orden — entregará su master Signature personal (pulido con su rig) en 24h.",
+  mg_pp_busy:"⚠️ El master aún se está renderizando — un segundo…",
+  mg_render_done:"✅ ¡Master listo — escúchalo arriba!",
+  mg_render_fail:"⚠️ Falló el renderizado con este archivo — prueba WAV o MP3, o pide por WhatsApp.",
+  mg_sig_wa:"¡Hola Frid! Pagué $9.99 por FRID SIGNATURE en fridbeats.com — Orden {OID}. Mi track:"
 },
 pt: {
-  brand_mastering:"MASTERIZAÇÃO", back_home:"Voltar a fridbeats.com", nav_free_analysis:"ANÁLISE GRÁTIS",
+  brand_mastering:"MASTERIZAÇÃO", back_home:"Voltar a fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
   hero_kicker:"MASTERING PRO · TODOS OS GÊNEROS · ENTREGA EM 24H",
   hero_title_1:"Mastering Pronto para Rádio,", hero_title_2:"por Frid Beats",
   hero_sub:"Seu beat, sua música, seu loop — masterizados no nível exato das faixas comerciais: nítidos, altos onde importa, dinâmica totalmente preservada. Envie, veja a verdade sobre sua faixa grátis, desbloqueie seu master.",
@@ -382,13 +545,13 @@ pt: {
   k_lufs:"SONORIDADE (LUFS)", k_tp:"PICO REAL", k_lra:"GAMA DINÂMICA (LRA)", k_dur:"DURAÇÃO",
   g_ready:"PRONTO", g_in_range:"NA FAIXA", g_needs_work:"PRECISA DE TRABALHO", g_needs_headroom:"PRECISA DE ESPAÇO", g_alive:"VIVO", g_squashed:"ESMAGADO",
   unlock_btn:"DESBLOQUEAR MEU MASTER — $9.99", order_wa:"Pedir via WhatsApp",
-  an_note_pay:"O pagamento desbloqueia o master completo (WAV 24-bit + MP3 320k) — entrega em 24h, geralmente bem mais rápido.",
+  an_note_pay:"⚡ Magic Master renderiza seu master completo (WAV 24-bit + MP3 320k) instantaneamente no seu navegador — ou escolha Frid Signature para o passe pessoal do Frid.",
   priv_note:"🔒 Seu áudio é analisado localmente no seu navegador — nada é enviado até você pedir.",
   steps_title:"COMO FUNCIONA",
   step1_t:"Análise grátis", step1_p:"Solte sua faixa. Em segundos você vê sua sonoridade, picos e dinâmica — os mesmos números que os estúdios de mastering verificam primeiro.",
-  step2_t:"Desbloqueie seu master", step2_p:"Um pagamento de $9.99. Envie sua faixa (e uma referência opcional — o som que você busca) via WhatsApp ou email.",
-  step3_t:"Pronto para rádio em 24h", step3_p:"Você recebe seu master: WAV 24-bit + MP3 320k, com relatório de medições. Pico −0.01 dBFS, dinâmica intacta.",
-  price_title:"UMA FAIXA. UM PREÇO.", price_per:"POR FAIXA · SEM ASSINATURA",
+  step2_t:"Ouça grátis — depois desbloqueie", step2_p:"O Magic Master renderiza seu master no seu navegador: ouça 20 segundos grátis da parte mais forte. Amou? Desbloqueie o download completo WAV + MP3 por $9.99.",
+  step3_t:"Pronto para rádio, na hora", step3_p:"O master completo e limpo é baixado imediatamente após o pagamento — WAV 24-bit + MP3 320k, pico −0.01 dBFS. Quer o ouvido do Frid? Adicione o Frid Signature.",
+  price_title:"ESCOLHA SEU MASTER", price_per:"POR FAIXA · SEM ASSINATURA",
   pl1:"Sample Peak −0.01 dBFS — exatamente onde os masters comerciais ficam",
   pl2:"Dinâmica 100% preservada — sem esmagamento, sem distorção",
   pl3:"Reference matching — igualo o tom de qualquer faixa que enviar",
@@ -406,7 +569,7 @@ pt: {
   faq_title:"PERGUNTAS",
   q1:"O mastering conserta uma mixagem ruim?", a1:"Mastering é o polimento final — não reconstrói uma mixagem. Se sua faixa tem problemas sérios (clipping, lama, vocais desbalanceados), dirão honestamente o que consertar primeiro. Prefiro tê-lo como cliente de longo prazo do que vender um master que soa errado.",
   q2:"Quais gêneros você masteriza?", a2:"Todos: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentais, músicas completas com voz, loops, podcasts. O alvo (Sample Peak −0.01 dBFS, dinâmica preservada) é universal porque segue a faixa, não um preset.",
-  q3:"O que envio depois de pagar?", a3:"Sua faixa (WAV preferível, MP3 aceito) e opcionalmente uma referência — uma música comercial cujo som você quer igualar. Envie via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com logo após o pedido.",
+  q3:"Preciso te enviar minha faixa?", a3:"Não — o Magic Master renderiza tudo no seu navegador e o download é desbloqueado aqui mesmo após o pagamento. Escolha Frid Signature e você enviará os mesmos arquivos com seu ID de pedido via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com para o passe pessoal.",
   q4:"O que exatamente recebo?", a4:"Um WAV 24-bit masterizado (para distribuição: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes sociais) + um relatório com os números antes/depois da sua faixa.",
   q5:"Minha música está segura?", a5:"100%. Sua faixa fica privada — só eu escuto, uso exclusivamente para seu master e nunca distribuo ou compartilho. A análise grátis desta página roda inteiramente no seu navegador; o áudio nunca sai do seu dispositivo.",
   footer_tag:"seu estúdio, suas regras", f_home:"Início", f_beats:"Beats", f_analysis:"Análise Grátis",
@@ -420,10 +583,37 @@ pt: {
   v_unlock:"Desbloqueie seu master por $9.99", v_unlock_p:"— entrega em 24h: WAV 24-bit + MP3 320k + relatório.",
   wa_msg:"Oi Frid! Acabei de fazer a análise grátis no fridbeats.com e quero masterizar minha faixa.",
   wa_paid:"Oi Frid! Acabei de pagar $9.99 por mastering no fridbeats.com", wa_paid_track:". Aqui está minha faixa",
-  mail_sub:"Pedido de Mastering", mail_body:"Oi Frid,\n\nMeu ID de pedido PayPal: {OID}\nMinha faixa está anexada (WAV/MP3).\nReferência opcional: "
+  mail_sub:"Pedido de Mastering", mail_body:"Oi Frid,\n\nMeu ID de pedido PayPal: {OID}\nMinha faixa está anexada (WAV/MP3).\nReferência opcional: ",
+  mg_promo_badge:"LANÇAMENTO −60%", mg_promo_ends:"até 15 de out · preço de lançamento",
+  mg_promo_badge_x:"LANÇAMENTO −60% — Frid Signature $24.99 → $9.99 até 15 de out",
+  mg_title:"MAGIC MASTER — OUÇA ANTES DE PAGAR", magic_badge:"NOVO · INSTANTÂNEO",
+  mg_sub:"Envie sua faixa + (opcional) uma referência do som que você busca. O motor do Frid masteriza aqui mesmo no seu navegador — seu áudio nunca sai do seu dispositivo. Ouça 20 segundos do resultado grátis, pague só se amar.",
+  mg_track_t:"SUA FAIXA", mg_track_h:"WAV, MP3, FLAC, M4A — fica no seu dispositivo",
+  mg_ref_t:"REFERÊNCIA — OPCIONAL", mg_ref_h:"O som que você quer igualar (recomendado)",
+  mg_s1:"DECODIFICAR", mg_s2:"ANALISAR", mg_s3:"IGUALAR", mg_s4:"FINALIZAR",
+  mg_go:"MASTERIZAR MINHA FAIXA",
+  mg_need_track:"⚠️ Envie sua faixa primeiro.", mg_need_track_noref:"Envie uma faixa ou referência primeiro.",
+  mg_need_unlock:"🔒 Desbloqueie primeiro — o download abre logo após o pagamento.",
+  mg_ab_title:"SEU PREVIEW GRÁTIS — OS 20 SEGUNDOS MAIS FORTES",
+  mg_before:"ANTES — sua mixagem", mg_after:"DEPOIS — masterizada",
+  mg_pv_note:"O preview grátis é limitado a 20 segundos com um tom suave a cada poucos segundos. O pagamento desbloqueia o master completo e limpo.",
+  mg_unlock:"GOSTOU? DESBLOQUEIE O DOWNLOAD COMPLETO",
+  mg_plan1:"MAGIC MASTER — instantâneo",
+  mg_plan1_d:"Download instantâneo do WAV 24-bit completo + MP3 320k — renderizado no seu navegador logo após o pagamento. Sem esperas.",
+  mg_plan2:"FRID SIGNATURE",
+  mg_plan2_d:"Baixe o master instantâneo agora + Frid pessoalmente revisa e polimenta com seu rig de estúdio. Entrega em 24h, revisões incluídas.",
+  mg_email:"SEU EMAIL — recibo e suporte",
+  mg_pay_note:"O pagamento desbloqueia o master completo instantaneamente. Signature adiciona o passe pessoal do Frid em 24h.",
+  mg_dl_done:"✅ Desbloqueado — seu master está pronto",
+  mg_dl_wav:"BAIXAR WAV 24-BIT", mg_dl_mp3:"BAIXAR MP3 320k",
+  mg_sig_note:"Seu master instantâneo já foi baixado acima. Agora envie ao Frid os mesmos arquivos com seu ID de pedido — ele entregará seu master Signature pessoal (polido com o rig dele) em 24h.",
+  mg_pp_busy:"⚠️ O master ainda está sendo renderizado — um segundo…",
+  mg_render_done:"✅ Master pronto — ouça acima!",
+  mg_render_fail:"⚠️ Falha ao renderizar este arquivo — tente WAV ou MP3, ou peça via WhatsApp.",
+  mg_sig_wa:"Oi Frid! Paguei $9.99 pelo FRID SIGNATURE no fridbeats.com — Pedido {OID}. Minha faixa:"
 },
 fr: {
-  brand_mastering:"MASTERISATION", back_home:"Retour à fridbeats.com", nav_free_analysis:"ANALYSE GRATUITE",
+  brand_mastering:"MASTERISATION", back_home:"Retour à fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
   hero_kicker:"MASTERING PRO · TOUS GENRES · LIVRÉ EN 24H",
   hero_title_1:"Mastering Prêt pour la Radio,", hero_title_2:"par Frid Beats",
   hero_sub:"Ton beat, ta chanson, ton loop — masterisés au niveau exact des titres commerciaux : nets, forts là où il faut, dynamique entièrement préservée. Envoie, découvre la vérité sur ton morceau gratuitement, débloque ton master.",
@@ -433,13 +623,13 @@ fr: {
   k_lufs:"SONORITÉ (LUFS)", k_tp:"PICS RÉELS", k_lra:"PLAGE DYNAMIQUE (LRA)", k_dur:"DURÉE",
   g_ready:"PRÊT", g_in_range:"DANS LA PLAGE", g_needs_work:"À TRAVAILLER", g_needs_headroom:"MANQUE DE MARGE", g_alive:"VIVANT", g_squashed:"ÉCRASÉ",
   unlock_btn:"DÉBLOQUER MON MASTER — $9.99", order_wa:"Commander via WhatsApp",
-  an_note_pay:"Le paiement débloque le master complet (WAV 24-bit + MP3 320k) — livré en 24h, généralement bien plus vite.",
+  an_note_pay:"⚡ Magic Master rend ton master complet (WAV 24-bit + MP3 320k) instantanément dans ton navigateur — ou passe à Frid Signature pour la touche personnelle de Frid.",
   priv_note:"🔒 Ton audio est analysé localement dans ton navigateur — rien n'est envoyé avant ta commande.",
   steps_title:"COMMENT ÇA MARCHE",
   step1_t:"Analyse gratuite", step1_p:"Dépose ton morceau. En quelques secondes tu vois sa sonorité, ses pics et sa dynamique — les mêmes chiffres que les studios de mastering vérifient en premier.",
-  step2_t:"Débloque ton master", step2_p:"Un paiement de $9.99. Envoie-moi ton morceau (et une référence optionnelle — le son que tu vises) via WhatsApp ou email.",
-  step3_t:"Prêt pour la radio en 24h", step3_p:"Tu reçois ton master : WAV 24-bit + MP3 320k, avec un rapport de mesures. Pics −0.01 dBFS, dynamique intacte.",
-  price_title:"UN MORCEAU. UN PRIX.", price_per:"PAR MORCEAU · SANS ABONNEMENT",
+  step2_t:"Écoute gratis — puis débloque", step2_p:"Magic Master rend ton master dans ton navigateur : écoute 20 secondes gratuites du passage le plus fort. Tu adores ? Débloque le téléchargement complet WAV + MP3 pour $9.99.",
+  step3_t:"Prêt pour la radio, instantanément", step3_p:"Le master complet et propre se télécharge immédiatement après le paiement — WAV 24-bit + MP3 320k, pic à −0.01 dBFS. Tu veux l'oreille de Frid ? Ajoute Frid Signature.",
+  price_title:"CHOISIS TON MASTER", price_per:"PAR MORCEAU · SANS ABONNEMENT",
   pl1:"Sample Peak −0.01 dBFS — exactement là où sont les masters commerciaux",
   pl2:"Dynamique 100% préservée — aucun écrasement, aucune distorsion",
   pl3:"Reference matching — j'égale le son de n'importe quel morceau envoyé",
@@ -457,7 +647,7 @@ fr: {
   faq_title:"QUESTIONS",
   q1:"Le mastering répare-t-il un mauvais mix ?", a1:"Le mastering est la touche finale — il ne peut pas reconstruire un mix. Si ton morceau a de vrais problèmes (clipping, boue, voix déséquilibrées), je te dirai honnêtement quoi corriger d'abord. Je préfère te garder comme client fidèle plutôt que de te vendre un master qui sonne mal.",
   q2:"Quels genres masterises-tu ?", a2:"Tous : trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentaux, chansons complètes avec voix, loops, podcasts. La cible (Sample Peak −0.01 dBFS, dynamique préservée) est universelle car elle suit le morceau, pas un preset.",
-  q3:"Que t'envoie-je après le paiement ?", a3:"Ton morceau (WAV de préférence, MP3 accepté) et éventuellement une référence — une chanson commerciale dont tu veux égaler le son. Envoie via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com juste après ta commande.",
+  q3:"Dois-je t'envoyer mon morceau ?", a3:"Non — Magic Master rend tout dans ton navigateur et le téléchargement se débloque ici même après le paiement. Choisis Frid Signature et tu enverras les mêmes fichiers avec ton ID de commande via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com pour le passage personnel.",
   q4:"Que reçois-je exactement ?", a4:"Un WAV 24-bit masterisé (pour la distribution : DistroKid, TuneCore, BeatStars...) + MP3 320k (pour les previews, les réseaux) + un rapport montrant les chiffres avant/après de ton morceau.",
   q5:"Ma musique est-elle en sécurité ?", a5:"100%. Ton morceau reste privé — je suis le seul à l'écouter, il sert uniquement à ton master et n'est jamais distribué ni partagé. L'analyse gratuite de cette page tourne entièrement dans ton navigateur ; l'audio ne quitte jamais ton appareil.",
   footer_tag:"ton studio, tes règles", f_home:"Accueil", f_beats:"Beats", f_analysis:"Analyse Gratuite",
@@ -471,10 +661,37 @@ fr: {
   v_unlock:"Débloque ton master pour $9.99", v_unlock_p:"— livré en 24h : WAV 24-bit + MP3 320k + rapport.",
   wa_msg:"Salut Frid ! Je viens de faire l'analyse gratuite sur fridbeats.com et je veux masteriser mon morceau.",
   wa_paid:"Salut Frid ! Je viens de payer $9.99 pour le mastering sur fridbeats.com", wa_paid_track:". Voici mon morceau",
-  mail_sub:"Commande de Mastering", mail_body:"Salut Frid,\n\nMon ID de commande PayPal : {OID}\nMon morceau est en pièce jointe (WAV/MP3).\nRéférence optionnelle : "
+  mail_sub:"Commande de Mastering", mail_body:"Salut Frid,\n\nMon ID de commande PayPal : {OID}\nMon morceau est en pièce jointe (WAV/MP3).\nRéférence optionnelle : ",
+  mg_promo_badge:"LANCEMENT −60%", mg_promo_ends:"jusqu'au 15 oct · prix de lancement",
+  mg_promo_badge_x:"LANCEMENT −60% — Frid Signature $24.99 → $9.99 jusqu'au 15 oct",
+  mg_title:"MAGIC MASTER — ÉCOUTE AVANT DE PAYER", magic_badge:"NOUVEAU · INSTANTANÉ",
+  mg_sub:"Dépose ton morceau + (optionnel) une référence du son que tu vises. Le moteur de Frid masterise ici même dans ton navigateur — ton audio ne quitte jamais ton appareil. Écoute 20 secondes du résultat gratuitement, paie seulement si tu adores.",
+  mg_track_t:"TON MORCEAU", mg_track_h:"WAV, MP3, FLAC, M4A — reste sur ton appareil",
+  mg_ref_t:"RÉFÉRENCE — OPTIONNELLE", mg_ref_h:"Le son que tu veux égaler (recommandé)",
+  mg_s1:"DÉCODER", mg_s2:"ANALYSER", mg_s3:"ÉGALER", mg_s4:"TERMINER",
+  mg_go:"MASTERISER MON MORCEAU",
+  mg_need_track:"⚠️ Dépose d'abord ton morceau.", mg_need_track_noref:"Dépose d'abord un morceau ou une référence.",
+  mg_need_unlock:"🔒 Débloque d'abord — le téléchargement s'ouvre juste après le paiement.",
+  mg_ab_title:"TON PREVIEW GRATUIT — LES 20 SECONDES LES PLUS FORTES",
+  mg_before:"AVANT — ton mix", mg_after:"APRÈS — masterisé",
+  mg_pv_note:"Le preview gratuit est limité à 20 secondes avec un ton doux toutes les quelques secondes. Le paiement débloque le master complet et propre.",
+  mg_unlock:"TU ADORES ? DÉBLOQUE LE TÉLÉCHARGEMENT COMPLET",
+  mg_plan1:"MAGIC MASTER — instantané",
+  mg_plan1_d:"Téléchargement instantané du WAV 24-bit complet + MP3 320k — rendu dans ton navigateur juste après le paiement. Sans attente.",
+  mg_plan2:"FRID SIGNATURE",
+  mg_plan2_d:"Télécharge le master instantané maintenant + Frid le re-vérifie et le peaufine personnellement avec son rig de studio. Livré en 24h, révisions incluses.",
+  mg_email:"TON EMAIL — reçu et support",
+  mg_pay_note:"Le paiement débloque le master complet instantanément. Signature ajoute le passage personnel de Frid en 24h.",
+  mg_dl_done:"✅ Débloqué — ton master est prêt",
+  mg_dl_wav:"TÉLÉCHARGER WAV 24-BIT", mg_dl_mp3:"TÉLÉCHARGER MP3 320k",
+  mg_sig_note:"Ton master instantané est déjà téléchargé ci-dessus. Envoie maintenant à Frid les mêmes fichiers avec ton ID de commande — il livrera son master Signature personnel (peaufiné avec son rig) en 24h.",
+  mg_pp_busy:"⚠️ Le master est encore en cours de rendu — une seconde…",
+  mg_render_done:"✅ Master prêt — écoute ci-dessus !",
+  mg_render_fail:"⚠️ Échec du rendu sur ce fichier — essaie WAV ou MP3, ou commande via WhatsApp.",
+  mg_sig_wa:"Salut Frid ! J'ai payé $9.99 pour FRID SIGNATURE sur fridbeats.com — Commande {OID}. Mon morceau:"
 },
 ht: {
-  brand_mastering:"MASTERING", back_home:"Retounen fridbeats.com", nav_free_analysis:"ANALIZ GRATUI",
+  brand_mastering:"MASTERING", back_home:"Retounen fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
   hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · LIVRE NAN 24È",
   hero_title_1:"Mastering Pare pou Radyo,", hero_title_2:"Fèt pa Frid Beats",
   hero_sub:"Beat ou, mizik ou, loop ou — masterize nivo egzak mizik komenalsyòt rive: klè, fò kote l fò, dinamik 100% konsève. Upload, we verite sou track ou gratis, debloke master ou.",
@@ -484,13 +701,13 @@ ht: {
   k_lufs:"SONORITE (LUFS)", k_tp:"PIK VRE", k_lra:"PLAJ DINAMIK (LRA)", k_dur:"LONGÈ",
   g_ready:"PARE", g_in_range:"NAN PLAJ", g_needs_work:"BESE TRAVAY", g_needs_headroom:"BESE ESPAS", g_alive:"VIVAN", g_squashed:"KRAZE",
   unlock_btn:"DEBLOKE MASTER MWEN — $9.99", order_wa:"Kòmande via WhatsApp",
-  an_note_pay:"Peman an debloke master konplè a (WAV 24-bit + MP3 320k) — delivre nan 24è, jeneralman pi vit.",
+  an_note_pay:"⚡ Magic Master rann master konplè ou (WAV 24-bit + MP3 320k) imedyatman nan navigatè ou — oswa pran Frid Signature pou pas pèsonèl Frid a.",
   priv_note:"🔒 Odyo ou analize lokalman nan navigatè ou — anyen pa upload jiskaske ou kòmande.",
   steps_title:"KÒMAN L FONKSYONE",
   step1_t:"Analiz gratis", step1_p:"Trase track ou. Nan kèk segond ou we sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
-  step2_t:"Debloke master ou", step2_p:"Yon peman $9.99. Voye m track ou (ak yon reference opsyonèl — son w vle a) via WhatsApp oswa imel.",
-  step3_t:"Pare pou radyo nan 24è", step3_p:"Ou resevwa master ou: WAV 24-bit + MP3 320k, ak yon rapò mezire. Pik −0.01 dBFS, dinamik enteg.",
-  price_title:"YON TRACK. YON PRI.", price_per:"PA TRACK · SAN ABONMAN",
+  step2_t:"Koute gratis — apre debloke", step2_p:"Magic Master rann master ou nan navigatè ou: koute 20 segond gratis pati ki pi fò a. Renmen l? Debloke telechajman konplè WAV + MP3 pou $9.99.",
+  step3_t:"Pare pou radyo, imedyatman", step3_p:"Master konplè a telechaje touswit apre peman an — WAV 24-bit + MP3 320k, pik −0.01 dBFS. Ou vle zòrèy Frid a? Ajoute Frid Signature.",
+  price_title:"CHWAZI MASTER OU", price_per:"PA TRACK · SAN ABONMAN",
   pl1:"Sample Peak −0.01 dBFS — egzakteman kote master komenalsyòt ye",
   pl2:"Dinamik 100% konsève — pa gen kraze, pa gen distòsyon",
   pl3:"Reference matching — m egzali ton nenpòt track ou voye",
@@ -508,7 +725,7 @@ ht: {
   faq_title:"KESYON",
   q1:"Èske mastering repare yon move mix?", a1:"Mastering se dènye poze a — l pa ka rebati yon mix. Si track ou gen pwoblèm grav (clipping, labou, vocal malbalanse), map di ou san maske kisa pou repare an premye. M pi pito kenbe ou kòm kliyan long tèm pase vann ou yon master ki son move.",
   q2:"Ki genre ou masterize?", a2:"Tout: trap, drill, afrobeat, konpa, reggaeton, dancehall, pop, R&B — enstrimantal, chanson konplè ak vocal, loop, podcast. Sib la (Sample Peak −0.01 dBFS, dinamik konsève) inivèsèl paske l swiv track la, pa yon preset.",
-  q3:"Kisa m voye ou apre peman an?", a3:"Track ou (WAV pi bon, MP3 aksepte) ak opsyonèlman yon reference — yon chanson komenalsyòt ki gen son w vle egzale. Voye via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com touswit apre kòmand ou.",
+  q3:"Èske m dwe voye w track mwen?", a3:"Non — Magic Master rann tout nan navigatè ou epi telechajman an debloke la menm apre peman an. Chwazi Frid Signature epi w ap voye menm fichye yo ak ID kòmand ou via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com pou pas pèsonèl la.",
   q4:"Kisa egzakteman m resevwa?", a4:"Yon WAV 24-bit masterize (pou distribisyon: DistroKid, TuneCore, BeatStars...) + MP3 320k (pou preview, rezo sosyo) + yon rapò ki montre chif avan/apre track ou.",
   q5:"Èske mizik mwen an sekirite?", a5:"100%. Track ou rete prive — se sèlman mwen k koute l, l sèvi sèlman pou master ou, epi l pa janm distribye ni pataje. Analiz gratis paj sa a kouri antyèman nan navigatè ou; odyo a pa janm kite aparèy ou.",
   footer_tag:"studio ou, règ ou", f_home:"Akèy", f_beats:"Beats", f_analysis:"Analiz Gratui",
@@ -522,7 +739,34 @@ ht: {
   v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— delivre nan 24è: WAV 24-bit + MP3 320k + rapò.",
   wa_msg:"Bonjou Frid! M fe analiz gratis la sou fridbeats.com e m vle masterize track mwen.",
   wa_paid:"Bonjou Frid! M peye $9.99 pou mastering sou fridbeats.com", wa_paid_track:". Men track mwen",
-  mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an pice jwent (WAV/MP3).\nReference opsyonèl: "
+  mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an pice jwent (WAV/MP3).\nReference opsyonèl: ",
+  mg_promo_badge:"LANSMAN −60%", mg_promo_ends:"jiska 15 okt · pri lansman",
+  mg_promo_badge_x:"LANSMAN −60% — Frid Signature $24.99 → $9.99 jiska 15 okt",
+  mg_title:"MAGIC MASTER — KOUTE ANVAN W PEYE", magic_badge:"NOUVO · IMEDYA",
+  mg_sub:"Trase track ou + (opsyonèl) yon reference son w vle a. Motè Frid a masterize l la menm nan navigatè ou — odyo ou pa janm kite aparèy ou. Koute 20 segond rezilta a gratis, peye sèlman si ou renmen l.",
+  mg_track_t:"TRACK OU", mg_track_h:"WAV, MP3, FLAC, M4A — rete sou aparèy ou",
+  mg_ref_t:"REFERENCE — OPSYONÈL", mg_ref_h:"Son w vle egzale a (rekòmande)",
+  mg_s1:"DEKODE", mg_s2:"ANALIZE", mg_s3:"EGZALE", mg_s4:"FINI",
+  mg_go:"MASTERIZE TRACK MWEN",
+  mg_need_track:"⚠️ Trase track ou anpremye.", mg_need_track_noref:"Trase yon track oswa yon reference anpremye.",
+  mg_need_unlock:"🔒 Debloke l anpremye — telechajman an louvri touswit apre peman an.",
+  mg_ab_title:"PREVIEW GRATIS OU — 20 SEGOND KI PI FÒ YO",
+  mg_before:"AVAN — mix ou", mg_after:"APRE — masterize",
+  mg_pv_note:"Preview gratis la limite a 20 segond ak yon ti ton dou chak kèk segond. Peman an debloke master konplè a san ton.",
+  mg_unlock:"RENMEN L? DEBLOKE TELECHAJMAN KONPLÈ A",
+  mg_plan1:"MAGIC MASTER — imedya",
+  mg_plan1_d:"Telechajman imedya WAV 24-bit konplè + MP3 320k — rann nan navigatè ou touswit apre peman an. San tann.",
+  mg_plan2:"FRID SIGNATURE",
+  mg_plan2_d:"Telechaje master imedya a kounya + Frid pèsonèlman tcheke l epi pole l ak ekipman studio li. Delivre nan 24è, revizyon konsa.",
+  mg_email:"IMEL OU — resi ak sipò",
+  mg_pay_note:"Peman an debloke master konplè a imedyatman. Signature ajoute pas pèsonèl Frid a nan 24è.",
+  mg_dl_done:"✅ Debloke — master ou pare",
+  mg_dl_wav:"TELECHAJE WAV 24-BIT", mg_dl_mp3:"TELECHAJE MP3 320k",
+  mg_sig_note:"Master imedya ou deja telechaje anwo. Kounya voye Frid menm fichye yo ak ID kòmand ou — l ap delivre master Signature pèsonèl li (pole ak ekipman li) nan 24è.",
+  mg_pp_busy:"⚠️ Master la ap rann ankò — yon segond…",
+  mg_render_done:"✅ Master pare — koute anwo!",
+  mg_render_fail:"⚠️ Rann echwe sou fichye sa a — eseye WAV oswa MP3, oswa kòmande via WhatsApp.",
+  mg_sig_wa:"Bonjou Frid! M peye $9.99 pou FRID SIGNATURE sou fridbeats.com — Kòmand {OID}. Track mwen:"
 }
 };
 const LANG_LABEL = { en:'EN', es:'ES', pt:'PT', fr:'FR', ht:'HT' };
@@ -545,71 +789,22 @@ function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('sho
 const SUPABASE_URL = 'https://myyfdrttulefdmjnybuk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15eWZkcnR0dWxlZmRtam55YnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMjk0MzAsImV4cCI6MjEwMzgwNTQzMH0.L5O_VW7wcVPo_3q5BHruymCR8F-Y5yiYw20fPwt2F4w';
 const PAYPAL_CLIENT_ID = 'BAA-8f-Z5HuGQLRSkcGmRFcwvnHlSbsYHBIpp_ig87h3op-TTeKtTiMlPqOsjPZUEaHs7uvKKmEGtD319c';
-const MASTER_PRICE = '9.99';
+const MAGIC_LIMIT_SEC = 20;              // seconds of preview before payment
+const MAGIC_PROMO_END = new Date('2026-10-15T23:59:59Z');
+let mgPlan = 'magic';                    // 'magic' | 'signature'
+let mgCtx=null, mgTBuf=null, mgRBuf=null, mgMaster=null, mgLimitSec=MAGIC_LIMIT_SEC;
+function mgPrices(){
+  const promo = Date.now() < MAGIC_PROMO_END.getTime();
+  return { magic: promo ? 9.99 : 9.99, signature: promo ? 9.99 : 24.99, sigFull: 24.99 };
+}
+function checkoutTotal(){ return mgPlan==='signature' ? mgPrices().signature : 9.99; }
+function mgSelect(plan){
+  mgPlan = plan;
+  $('planMagic').classList.toggle('active', plan==='magic');
+  $('planSig').classList.toggle('active', plan==='signature');
+}
 let supabaseClient = null;
 try { if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
-function openCheckout(){
-  const sec = $('checkout');
-  sec.style.display='block';
-  sec.scrollIntoView({behavior:'smooth', block:'center'});
-  renderCheckoutPayPal();
-}
-let ppLoading=false;
-async function renderCheckoutPayPal(){
-  const container=$('paypal-button-container');
-  if (container.dataset.rendered === '1') return;
-  if (ppLoading) return; ppLoading=true;
-  try {
-    if (!window.paypal) {
-      await new Promise((resolve, reject) => {
-        const s=document.createElement('script');
-        s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(PAYPAL_CLIENT_ID)+'&currency=USD';
-        s.onload=resolve; s.onerror=()=>reject(new Error('PayPal SDK failed'));
-        document.head.appendChild(s);
-      });
-    }
-    container.innerHTML='';
-    window.paypal.Buttons({
-      style:{layout:'vertical', color:'gold', shape:'pill', label:'paypal'},
-      createOrder: function(data, actions){
-        const email=($('coEmail').value||'').trim();
-        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-          toast(I18N[currentLang()].toast_email);
-          $('coEmail').focus();
-          return Promise.reject(new Error('invalid email'));
-        }
-        return actions.order.create({ purchase_units:[{ amount:{ value: MASTER_PRICE }, description:'Professional Mastering — Frid Beats (1 track)' }] });
-      },
-      onApprove: async function(data, actions){
-        const details = await actions.order.capture();
-        const email=($('coEmail').value||'').trim() || (details.payer && details.payer.email_address) || '';
-        const orderRecord={
-          email: email,
-          items:[{ id:'mastering-single', title:'Professional Mastering (1 track)', type:'mastering', price:9.99, quantity:1, license:null, files:null }],
-          total: 9.99,
-          paypal_order_id: details.id
-        };
-        if (supabaseClient) { try { await supabaseClient.from('orders').insert(orderRecord); } catch(e){ console.error('order save failed', e); } }
-        showOrderDone(details.id, email);
-      },
-      onError: function(err){ console.error(err); toast(I18N[currentLang()].toast_pp_err); }
-    }).render('#paypal-button-container');
-    container.dataset.rendered='1';
-  } catch(e){
-    container.innerHTML='<div style="color:var(--err);font-size:13px;text-align:center">PayPal unavailable — use WhatsApp.</div>';
-  } finally { ppLoading=false; }
-}
-function showOrderDone(orderId, email){
-  const dict = I18N[currentLang()];
-  $('coForm').style.display='none';
-  $('coDone').style.display='block';
-  $('coOrderId').textContent = orderId ? '('+orderId.slice(-8).toUpperCase()+')' : '';
-  const msg = dict.wa_paid + (orderId ? ' — Order '+orderId : '') + dict.wa_paid_track;
-  $('coWaLink').href = 'https://wa.me/18296026502?text=' + encodeURIComponent(msg);
-  $('coMailLink').href = 'mailto:contact@fridbeats.com?subject=' + encodeURIComponent(dict.mail_sub + ' ' + (orderId||'')) + '&body=' + encodeURIComponent(dict.mail_body.replace('{OID}', orderId||''));
-  toast(dict.toast_paid);
-  $('coDone').scrollIntoView({behavior:'smooth', block:'center'});
-}
 
 /* ================= ANALYZER ================= */
 ['dragover','dragenter'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.add('over')}));
@@ -731,8 +926,291 @@ function drawWave(ab){
   }
 }
 
+/* ================= MAGIC MASTER ENGINE ================= */
+function mgStage(i,state){ const el=document.getElementById('st'+i); if(!el) return; el.classList.remove('on','done'); if(state) el.classList.add(state); }
+function goMagic(){ document.getElementById('magic').scrollIntoView({behavior:'smooth',block:'start'}); }
+function openMagicCheckout(plan){ mgSelect(plan); $('mgUnlock').style.display='block'; goMagic(); mgStartPp(); }
+
+async function mgDecode(file){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  const ctx=new AC();
+  try{ const ab=await ctx.decodeAudioData(await file.arrayBuffer()); return ab; }
+  finally{ try{ctx.close();}catch(e){} }
+}
+function loudestWindowStart(ab, sec){
+  const ch=ab.getChannelData(0), sr=ab.sampleRate, w=Math.round(sec*sr), step=Math.round(0.5*sr);
+  let best=0, bestE=-1;
+  for(let st=0; st+w<ch.length; st+=step){
+    let s=0; for(let i=st;i<st+w;i+=32){ const v=ch[i]; s+=v*v; }
+    if(s>bestE){ bestE=s; best=st; }
+  }
+  return Math.max(0, Math.min(best, Math.max(0,ab.length-w)));
+}
+function bandRMS(data, sr, lo, hi){
+  // RBJ biquad cascade: highpass(lo) -> lowpass(hi), full rate, RMS accumulated in-place
+  const Q=0.707;
+  const wL=2*Math.PI*lo/sr, wH=2*Math.PI*hi/sr;
+  const cL=Math.cos(wL), sL=Math.sin(wL), cH=Math.cos(wH), sH=Math.sin(wH);
+  const aL=sL/(2*Q), aH=sH/(2*Q);
+  let hb0=(1+cL)/2, hb1=-(1+cL), hb2=(1+cL)/2, ha0=1+aL, ha1=-2*cL, ha2=1-aL;
+  hb0/=ha0; hb1/=ha0; hb2/=ha0; ha1/=ha0; ha2/=ha0;
+  let lb0=(1-cH)/2, lb1=1-cH, lb2=(1-cH)/2, la0=1+aH, la1=-2*cH, la2=1-aH;
+  lb0/=la0; lb1/=la0; lb2/=la0; la1/=la0; la2/=la0;
+  let hx1=0,hx2=0,hy1=0,hy2=0, lx1=0,lx2=0,lz1=0,lz2=0, sum=0;
+  for(let i=0;i<data.length;i++){
+    const x=data[i];
+    const y = hb0*x + hb1*hx1 + hb2*hx2 - ha1*hy1 - ha2*hy2;
+    hx2=hx1; hx1=x; hy2=hy1; hy1=y;
+    const z = lb0*y + lb1*lx1 + lb2*lx2 - la1*lz1 - la2*lz2;
+    lx2=lx1; lx1=y; lz2=lz1; lz1=z;
+    sum += z*z;
+  }
+  return Math.sqrt(sum/Math.max(1,data.length));
+}
+function matchTone(track, ref){
+  if(!ref) return [0,0,0];
+  const sr=track.sampleRate, bands=[[20,150],[150,2000],[2000,12000]];
+  const out=[];
+  for(let b=0;b<3;b++){
+    const t = Math.max(bandRMS(track.getChannelData(0),sr,bands[b][0],bands[b][1]),
+              track.numberOfChannels>1? bandRMS(track.getChannelData(1),sr,bands[b][0],bands[b][1]):0);
+    const r = Math.max(bandRMS(ref.getChannelData(0),sr,bands[b][0],bands[b][1]),
+              ref.numberOfChannels>1? bandRMS(ref.getChannelData(1),sr,bands[b][0],bands[b][1]):0);
+    let db = (t>1e-6 && r>1e-6) ? 20*Math.log10(r/t) : 0;
+    db = Math.max(-5.5, Math.min(5.5, db));
+    out.push(Math.round(db*10)/10);
+  }
+  return out;
+}
+function limiterCurve(){
+  // asymptotic soft clipper: linear below knee, tanh saturation above, ceiling −0.01 dBFS
+  const OV=4;                                   // curve covers inputs up to ±4 (12 dB over)
+  const n=4096, c=new Float32Array(n);
+  const ceil=0.9988, kneeAmp=0.5, span=ceil-kneeAmp;
+  for(let i=0;i<n;i++){
+    const x=i/(n-1)*2-1, a=Math.abs(x)*OV;
+    let y;
+    if(a<=kneeAmp) y=a;
+    else y=Math.min(ceil, kneeAmp+span*Math.tanh((a-kneeAmp)/span));
+    c[i]=Math.sign(x)*y;
+  }
+  return { curve:c, ov:OV };
+}
+function mgChainRender(ab, gains, makeup, useLimiter){
+  const sr=ab.sampleRate;
+  const off=new OfflineAudioContext(ab.numberOfChannels, ab.length, sr);
+  const src=off.createBufferSource(); src.buffer=ab;
+  const lo=off.createBiquadFilter(); lo.type='lowshelf'; lo.frequency.value=150; lo.gain.value=gains[0];
+  const mid=off.createBiquadFilter(); mid.type='peaking'; mid.frequency.value=800; mid.Q.value=0.9; mid.gain.value=gains[1];
+  const hi=off.createBiquadFilter(); hi.type='highshelf'; hi.frequency.value=2500; hi.gain.value=gains[2];
+  const comp=off.createDynamicsCompressor();
+  comp.threshold.value=-26; comp.knee.value=25; comp.ratio.value=1.8; comp.attack.value=0.05; comp.release.value=0.4;
+  const mk=off.createGain(); mk.gain.value=makeup;
+  src.connect(lo); lo.connect(mid); mid.connect(hi); hi.connect(comp); comp.connect(mk);
+  if(useLimiter){
+    const {curve, ov}=limiterCurve();
+    const pre=off.createGain(); pre.gain.value=1/ov;      // widen headroom: |x| up to ov maps into curve domain
+    const lim=off.createWaveShaper(); lim.curve=curve; lim.oversample='4x';
+    mk.connect(pre); pre.connect(lim); lim.connect(off.destination);   // curve output IS the limited sample (ceiling −0.01 dBFS)
+  } else {
+    mk.connect(off.destination);
+  }
+  src.start(0);
+  return off.startRendering();
+}
+function mgMeasureLufs(buf){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  const ctx=new AC();
+  let lufs=null;
+  try{ const fw=kWeightBuffer(ctx, buf); lufs = lufsIntegrated(fw.getChannelData(0), buf.sampleRate); }catch(e){}
+  finally{ try{ctx.close();}catch(e){} }
+  return lufs;
+}
+function mgFineTrim(buf, targetLufs){
+  const l = mgMeasureLufs(buf);
+  if(l===null) return buf;
+  let peak=0;
+  for(let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i++){ const v=Math.abs(d[i]); if(v>peak)peak=v; } }
+  let g = Math.pow(10,(targetLufs-l)/20);
+  if(g>1) g = Math.min(g, peak>0 ? 0.9988/peak : 1);   // trim up only to ceiling
+  if(Math.abs(g-1)>0.002){
+    for(let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i++) d[i]*=g; }
+  }
+  return buf;
+}
+function mgPreviewSlice(masterAB, srcAB, sec, wm){
+  const sr=masterAB.sampleRate, n=Math.min(Math.round(sec*sr), masterAB.length);
+  const start=loudestWindowStart(srcAB, sec);
+  const off=new OfflineAudioContext(2, n, sr);
+  const s=off.createBufferSource(); s.buffer=masterAB;
+  const g=off.createGain(); g.gain.value=1;
+  s.connect(g); g.connect(off.destination);
+  s.start(0, start/sr, n/sr);
+  // watermark: soft 1kHz blip every 5s (mastered preview only)
+  if(wm!==false){
+    for(let t=0; t+0.12<sec; t+=5){
+      const o=off.createOscillator(); o.type='sine'; o.frequency.value=1000;
+      const og=off.createGain(); og.gain.setValueAtTime(0.012, t); og.gain.setValueAtTime(0.012, t+0.10); og.gain.linearRampToValueAtTime(0, t+0.12);
+      o.connect(og); og.connect(off.destination); o.start(t); o.stop(t+0.13);
+    }
+  }
+  return off.startRendering();
+}
+function encodeWav(ab, bits){
+  const nch=ab.numberOfChannels, sr=ab.sampleRate, len=ab.length;
+  const bytes=bits/8, dataLen=len*nch*bytes, buf=new ArrayBuffer(44+dataLen), v=new DataView(buf);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF'); v.setUint32(4,36+dataLen,true); ws(8,'WAVE'); ws(12,'fmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,nch,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*nch*bytes,true); v.setUint16(32,nch*bytes,true); v.setUint16(34,bits,true);
+  ws(36,'data'); v.setUint32(40,dataLen,true);
+  const chans=[]; for(let c=0;c<nch;c++)chans.push(ab.getChannelData(c));
+  let o=44;
+  for(let i=0;i<len;i++) for(let c=0;c<nch;c++){
+    let s=Math.max(-1,Math.min(1,chans[c][i]));
+    if(bits===24){ const n=Math.round(s*8388607); v.setUint8(o,n&255); v.setUint8(o+1,(n>>8)&255); v.setUint8(o+2,(n>>16)&255); o+=3; }
+    else { v.setInt16(o, Math.round(s*32767), true); o+=2; }
+  }
+  return new Blob([buf],{type:'audio/wav'});
+}
+function mgSave(blob, name){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},4000);
+}
+function to16(f){ const o=new Int16Array(f.length); for(let i=0;i<f.length;i++){ let s=Math.max(-1,Math.min(1,f[i])); o[i]= s<0 ? s*32768 : s*32767; } return o; }
+async function encodeMp3(ab, kbps){
+  if(!window.lamejs){
+    await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js'; s.onload=res; s.onerror=()=>rej(new Error('lamejs failed')); document.head.appendChild(s); });
+  }
+  const nch=Math.min(2, ab.numberOfChannels), sr=ab.sampleRate;
+  const enc=new lamejs.Mp3Encoder(nch, sr, kbps||320);
+  const L=to16(ab.getChannelData(0)), R=nch>1? to16(ab.getChannelData(1)) : null;
+  const block=1152, chunks=[];
+  for(let i=0;i<L.length;i+=block){
+    const l=L.subarray(i,Math.min(i+block,L.length));
+    const buf = nch>1 ? enc.encodeBuffer(l, R.subarray(i,Math.min(i+block,R.length))) : enc.encodeBuffer(l);
+    if(buf.length) chunks.push(new Int8Array(buf));
+  }
+  const end=enc.flush(); if(end.length) chunks.push(new Int8Array(end));
+  return new Blob(chunks,{type:'audio/mpeg'});
+}
+let mgPaid=false, mgRendering=false;
+async function magicStart(){
+  const dict=I18N[currentLang()];
+  if(mgRendering) return;
+  if(!mgState.fileT){ toast(dict.mg_need_track); return; }
+  mgRendering=true;
+  const btn=$('mgGo'); btn.disabled=true;
+  $('mgAb').style.display='none'; $('mgUnlock').style.display='none';
+  try{
+    mgStage(0,'on');
+    mgState.track = await mgDecode(mgState.fileT);
+    if(mgState.fileR){ try{ mgState.ref = await mgDecode(mgState.fileR); }catch(e){ mgState.ref=null; } }
+    mgStage(0,'done');
+    mgStage(1,'on');
+    const gains = matchTone(mgState.track, mgState.ref);
+    mgStage(1,'done');
+    mgStage(2,'on');
+    const pass1 = await mgChainRender(mgState.track, gains, 1.19, false);   // EQ match + gentle glue (+1.9 dB)
+    mgStage(2,'done');
+    mgStage(3,'on');
+    const l1 = mgMeasureLufs(pass1);
+    const push = Math.min(Math.pow(10,((-10.5-(l1===null?-14:l1))/20)), Math.pow(10,14/20));  // cap push at +14 dB
+    const pass2 = await mgChainRender(mgState.track, gains, push, true);    // push into asymptotic limiter
+    mgState.master = mgFineTrim(pass2, -10.5);
+    mgStage(3,'done');
+    const prevM = await mgPreviewSlice(mgState.master, mgState.track, MAGIC_LIMIT_SEC, true);
+    const prevB = await mgPreviewSlice(mgState.track, mgState.track, MAGIC_LIMIT_SEC, false);
+    const bB=$('abB'), bA=$('abA');
+    bB.src=URL.createObjectURL(encodeWav(prevB,16)); bA.src=URL.createObjectURL(encodeWav(prevM,16));
+    $('mgAb').style.display='block';
+    $('mgUnlock').style.display='block';
+    $('mgAb').scrollIntoView({behavior:'smooth',block:'center'});
+    toast(dict.mg_render_done);
+    mgStartPp();
+    $('mgDlWav').disabled=false; $('mgDlMp3').disabled=false;
+  }catch(e){
+    console.error('magic render failed', e);
+    toast(I18N[currentLang()].mg_render_fail);
+  }finally{ mgRendering=false; btn.disabled=false; }
+}
+function mgStartPp(){
+  const container=$('mgPp');
+  if(container.dataset.rendered==='1') return;
+  const boot=async()=>{
+    try{
+      if(!window.paypal){
+        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(PAYPAL_CLIENT_ID)+'&currency=USD'; s.onload=res; s.onerror=()=>rej(new Error('pp')); document.head.appendChild(s); });
+      }
+      container.innerHTML='';
+      window.paypal.Buttons({
+        style:{layout:'vertical', color:'gold', shape:'pill', label:'paypal'},
+        createOrder: function(data, actions){
+          if(mgRendering){ toast(I18N[currentLang()].mg_pp_busy); return Promise.reject(new Error('busy')); }
+          const email=($('mgEmail').value||'').trim();
+          if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast(I18N[currentLang()].toast_email); $('mgEmail').focus(); return Promise.reject(new Error('invalid email')); }
+          const sig = mgPlan==='signature';
+          return actions.order.create({ purchase_units:[{ amount:{ value: checkoutTotal().toFixed(2) }, description: sig ? 'Frid Signature Mastering (1 track) — Frid Beats' : 'Magic Master — instant mastering — Frid Beats' }] });
+        },
+        onApprove: async function(data, actions){
+          const details = await actions.order.capture();
+          const email=($('mgEmail').value||'').trim() || (details.payer && details.payer.email_address) || '';
+          const sig = mgPlan==='signature';
+          if (supabaseClient){ try{ await supabaseClient.from('orders').insert({ email, items:[{ id: sig?'mastering-signature':'mastering-magic', title: sig?'Frid Signature Mastering (1 track)':'Magic Master — instant (1 track)', type:'mastering', price: checkoutTotal(), quantity:1, license:null, files:null }], total: checkoutTotal(), paypal_order_id: details.id }); }catch(e){ console.error('order save failed', e); } }
+          mgPaid=true;
+          $('mgPay').style.display='none'; $('mgDl').style.display='block';
+          if(sig){ $('mgSigNote').style.display='block'; $('mgSigLinks').style.display='flex';
+            const msg=(I18N[currentLang()].mg_sig_wa||'').replace('{OID}', details.id||'');
+            $('mgSigWa').href='https://wa.me/18296026502?text='+encodeURIComponent(msg);
+          }
+          $('mgDl').scrollIntoView({behavior:'smooth',block:'center'});
+          toast(I18N[currentLang()].toast_paid);
+        },
+        onError: function(err){ console.error(err); toast(I18N[currentLang()].toast_pp_err); }
+      }).render('#mgPp');
+      container.dataset.rendered='1';
+    }catch(e){ container.innerHTML='<div style="color:var(--err);font-size:13px;text-align:center">PayPal unavailable — use WhatsApp.</div>'; }
+  };
+  boot();
+}
+async function mgDownloadWav(){
+  if(!mgPaid){ toast(I18N[currentLang()].mg_need_unlock); return; }
+  if(!mgState.master || mgRendering){ toast(I18N[currentLang()].mg_pp_busy); return; }
+  mgSave(encodeWav(mgState.master,24), (mgState.fileT?mgState.fileT.name.replace(/\.[^.]+$/,''):'master')+' (FridBeats Master 24bit).wav');
+}
+async function mgDownloadMp3(){
+  if(!mgPaid){ toast(I18N[currentLang()].mg_need_unlock); return; }
+  if(!mgState.master || mgRendering){ toast(I18N[currentLang()].mg_pp_busy); return; }
+  try{
+    const blob=await encodeMp3(mgState.master,320);
+    mgSave(blob, (mgState.fileT?mgState.fileT.name.replace(/\.[^.]+$/,''):'master')+' (FridBeats Master 320k).mp3');
+  }catch(e){ console.error('mp3 encode failed', e); toast(I18N[currentLang()].mg_render_fail); }
+}
+function applyPromo(){
+  const promo = Date.now() < MAGIC_PROMO_END.getTime();
+  const p = mgPrices();
+  if(!promo){ $('promo').style.display='none'; }
+  $('sigStrikeM').textContent='$'+p.sigFull.toFixed(2);
+  $('sigNowM').textContent='$'+p.signature.toFixed(2);
+  $('sigPriceBig').textContent=p.signature.toFixed(2);
+  if(promo){ $('planSig').querySelector('.mp-badge').style.display='block'; }
+  else { const b=$('planSig').querySelector('.mp-badge'); if(b) b.style.display='none'; }
+}
+
+/* magic file inputs */
+['dragover','dragenter'].forEach(ev=>{ $('mgDzT').addEventListener(ev,e=>{e.preventDefault();$('mgDzT').classList.add('over')}); $('mgDzR').addEventListener(ev,e=>{e.preventDefault();$('mgDzR').classList.add('over')}); });
+['dragleave','drop'].forEach(ev=>{ $('mgDzT').addEventListener(ev,e=>{e.preventDefault();$('mgDzT').classList.remove('over')}); $('mgDzR').addEventListener(ev,e=>{e.preventDefault();$('mgDzR').classList.remove('over')}); });
+$('mgDzT').addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) mgSetTrack(e.dataTransfer.files[0]); });
+$('mgDzR').addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) mgSetRef(e.dataTransfer.files[0]); });
+$('mgFzT').onchange=e=>{ if(e.target.files[0]) mgSetTrack(e.target.files[0]); };
+$('mgFzR').onchange=e=>{ if(e.target.files[0]) mgSetRef(e.target.files[0]); };
+function mgSetTrack(f){ mgState.fileT=f; mgState.track=null; mgState.master=null; mgPaid=false; $('mgNameT').textContent='✓ '+f.name; $('mgAb').style.display='none'; $('mgUnlock').style.display='none'; $('mgDl').style.display='none'; }
+function mgSetRef(f){ mgState.fileR=f; mgState.ref=null; $('mgNameR').textContent='✓ '+f.name; }
+const mgState={ fileT:null, fileR:null, track:null, ref:null, master:null };
+
 /* init */
 applyI18n();
+applyPromo();
 </script>
 </body>
 </html>
