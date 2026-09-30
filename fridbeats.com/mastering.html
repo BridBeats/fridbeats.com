@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <style>
 :root{
   --bg-primary:#0a0e1a; --bg-secondary:#0d1222; --bg-tertiary:#11182a;
@@ -37,6 +39,9 @@ nav.top .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-c
 .nav-home:hover{color:#fff}
 .lang-btn{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-full);padding:8px 14px;color:var(--text-primary);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:var(--font)}
 .lang-btn:hover{border-color:var(--accent-border)}
+.lang-wrap{position:relative;display:flex;align-items:center}
+.lang-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:6px;z-index:300;min-width:170px;box-shadow:0 12px 32px rgba(0,0,0,0.55)}
+@media (max-width:700px){.lang-menu{left:auto;right:0;transform:none}}
 /* HERO */
 header.hero{text-align:center;padding:64px 0 40px}
 .hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;font-weight:700;color:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-full);padding:7px 16px;background:var(--bg-card)}
@@ -174,13 +179,15 @@ section.magic{margin:30px 0 0}
   <div class="inner">
     <a class="brand" href="/">FRID<em>BEATS</em> <small>· <span data-i18n="brand_mastering">MASTERING</span></small></a>
     <div class="right">
-      <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn"><i class="fas fa-globe"></i> <span id="currentLangLabel">EN</span></button>
-      <div id="langMenu" style="display:none;position:absolute;top:56px;right:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:6px;z-index:300;min-width:170px">
+      <div class="lang-wrap">
+        <button class="lang-btn" onclick="toggleLangMenu()" id="langBtn"><i class="fas fa-globe"></i> <span id="currentLangLabel">EN</span></button>
+        <div id="langMenu" class="lang-menu" style="display:none">
         <button onclick="setLang('en')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇬🇧 English</button>
         <button onclick="setLang('es')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇪🇸 Español</button>
         <button onclick="setLang('pt')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇵🇹 Português</button>
         <button onclick="setLang('fr')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇫🇷 Français</button>
         <button onclick="setLang('ht')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇭🇹 Kreyòl</button>
+        </div>
       </div>
       <a class="nav-cta" href="#magic" data-i18n="nav_free_analysis">⚡ MAGIC MASTER</a>
     </div>
@@ -214,7 +221,7 @@ section.magic{margin:30px 0 0}
         <div class="fname" id="mgNameT"></div>
       </div>
       <div class="dz mg-dz" id="mgDzR" onclick="document.getElementById('mgFzR').click()">
-        <div class="t1" data-i18n="mg_ref_t">REFERENCE — OPTIONAL</div>
+        <div class="t1" data-i18n="mg_ref_t">REFERENCE TRACK</div>
         <div class="t2" data-i18n="mg_ref_h">The sound you want to match (recommended)</div>
         <div class="fname" id="mgNameR"></div>
       </div>
@@ -384,7 +391,7 @@ en: {
   mg_title:"MAGIC MASTER — HEAR IT BEFORE YOU PAY", magic_badge:"NEW · INSTANT",
   mg_sub:"Drop your track + (optional) a reference song you want to sound like. Frid's engine masters it right here in your browser — your audio never leaves your device. Hear 20 seconds of the result free, pay only when you love it.",
   mg_track_t:"YOUR TRACK", mg_track_h:"WAV, MP3, FLAC, M4A — stays on your device",
-  mg_ref_t:"REFERENCE — OPTIONAL", mg_ref_h:"The sound you want to match (recommended)",
+  mg_ref_t:"REFERENCE TRACK", mg_ref_h:"The sound you want to match (optional — recommended)",
   mg_s1:"DECODE", mg_s2:"ANALYZE", mg_s3:"MATCH", mg_s4:"FINISH",
   mg_go:"MASTER MY TRACK",
   mg_need_track:"⚠️ Drop your track first.", mg_need_track_noref:"Drop a track or a reference first.",
@@ -507,7 +514,7 @@ es: {
   mg_title:"MAGIC MASTER — ESCÚCHALO ANTES DE PAGAR", magic_badge:"NUEVO · INSTANTÁNEO",
   mg_sub:"Sube tu track + (opcional) una referencia del sonido que buscas. El motor de Frid lo masteriza aquí mismo en tu navegador — tu audio nunca sale de tu dispositivo. Escucha 20 segundos del resultado gratis, paga solo si te encanta.",
   mg_track_t:"TU TRACK", mg_track_h:"WAV, MP3, FLAC, M4A — se queda en tu dispositivo",
-  mg_ref_t:"REFERENCIA — OPCIONAL", mg_ref_h:"El sonido que quieres igualar (recomendado)",
+  mg_ref_t:"PISTA DE REFERENCIA", mg_ref_h:"El sonido que quieres igualar (opcional — recomendado)",
   mg_s1:"DECODIFICAR", mg_s2:"ANALIZAR", mg_s3:"IGUALAR", mg_s4:"FINALIZAR",
   mg_go:"MASTERIZAR MI TRACK",
   mg_need_track:"⚠️ Primero sube tu track.", mg_need_track_noref:"Sube un track o una referencia primero.",
@@ -585,7 +592,7 @@ pt: {
   mg_title:"MAGIC MASTER — OUÇA ANTES DE PAGAR", magic_badge:"NOVO · INSTANTÂNEO",
   mg_sub:"Envie sua faixa + (opcional) uma referência do som que você busca. O motor do Frid masteriza aqui mesmo no seu navegador — seu áudio nunca sai do seu dispositivo. Ouça 20 segundos do resultado grátis, pague só se amar.",
   mg_track_t:"SUA FAIXA", mg_track_h:"WAV, MP3, FLAC, M4A — fica no seu dispositivo",
-  mg_ref_t:"REFERÊNCIA — OPCIONAL", mg_ref_h:"O som que você quer igualar (recomendado)",
+  mg_ref_t:"FAIXA DE REFERÊNCIA", mg_ref_h:"O som que você quer igualar (opcional — recomendado)",
   mg_s1:"DECODIFICAR", mg_s2:"ANALISAR", mg_s3:"IGUALAR", mg_s4:"FINALIZAR",
   mg_go:"MASTERIZAR MINHA FAIXA",
   mg_need_track:"⚠️ Envie sua faixa primeiro.", mg_need_track_noref:"Envie uma faixa ou referência primeiro.",
@@ -663,7 +670,7 @@ fr: {
   mg_title:"MAGIC MASTER — ÉCOUTE AVANT DE PAYER", magic_badge:"NOUVEAU · INSTANTANÉ",
   mg_sub:"Dépose ton morceau + (optionnel) une référence du son que tu vises. Le moteur de Frid masterise ici même dans ton navigateur — ton audio ne quitte jamais ton appareil. Écoute 20 secondes du résultat gratuitement, paie seulement si tu adores.",
   mg_track_t:"TON MORCEAU", mg_track_h:"WAV, MP3, FLAC, M4A — reste sur ton appareil",
-  mg_ref_t:"RÉFÉRENCE — OPTIONNELLE", mg_ref_h:"Le son que tu veux égaler (recommandé)",
+  mg_ref_t:"MORCEAU DE RÉFÉRENCE", mg_ref_h:"Le son que tu veux égaler (optionnel — recommandé)",
   mg_s1:"DÉCODER", mg_s2:"ANALYSER", mg_s3:"ÉGALER", mg_s4:"TERMINER",
   mg_go:"MASTERISER MON MORCEAU",
   mg_need_track:"⚠️ Dépose d'abord ton morceau.", mg_need_track_noref:"Dépose d'abord un morceau ou une référence.",
@@ -688,77 +695,77 @@ fr: {
 },
 ht: {
   brand_mastering:"MASTERING", back_home:"Retounen fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · IMEDYA NAN NAVIGATÈ OU",
+  hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · LELMAN NAN NAVIGATÈ OU",
   hero_title_1:"Mastering Pare pou Radyo,", hero_title_2:"Fèt pa Frid Beats",
-  hero_sub:"Beat ou, mizik ou, loop ou — masterize nivo egzak mizik komenalsyòt rive: klè, fò kote l fò, dinamik 100% konsève. Upload, we verite sou track ou gratis, debloke master ou.",
+  hero_sub:"Beat ou, mizik ou, loop ou — masterize nan nivo egzak mizik komèsyal yo rive: klè, fò kote ki fò, dinamik 100% konsève. Upload, wè verite sou track ou gratis, debloke master ou.",
   spec_dynamics:"DINAMIK KONSÈVE", spec_universal:"TOUT GENRE · TOUT BPM",
-  an_title:"TESTE TRACK OU — ANALIZ IMEDYA", an_free:"100% GRATUI",
+  an_title:"TESTE TRACK OU — ANALIZ LELMAN", an_free:"100% GRATIS",
   dz_t1:"Trase track ou la", dz_t2:"WAV, MP3, FLAC, M4A — analize nan navigatè ou, pa janm upload nenpòt kote",
-  k_lufs:"SONORITE (LUFS)", k_tp:"PIK VRE", k_lra:"PLAJ DINAMIK (LRA)", k_dur:"LONGÈ",
-  g_ready:"PARE", g_in_range:"NAN PLAJ", g_needs_work:"BESE TRAVAY", g_needs_headroom:"BESE ESPAS", g_alive:"VIVAN", g_squashed:"KRAZE",
+  k_lufs:"SONORITE (LUFS)", k_tp:"PIK VRÈ", k_lra:"PLAJ DINAMIK (LRA)", k_dur:"LONGÈ",
+  g_ready:"PARE", g_in_range:"NAN PLAJ", g_needs_work:"BEZWEN TRAVAY", g_needs_headroom:"MANKE ESPAS", g_alive:"VIVAN", g_squashed:"KRAZE",
   unlock_btn:"DEBLOKE MASTER MWEN — $9.99", order_wa:"Kòmande via WhatsApp",
-  an_note_pay:"⚡ Magic Master rann master konplè ou (WAV 24-bit + MP3 320k) imedyatman nan navigatè ou — oswa pran Frid Signature pou pas pèsonèl Frid a.",
+  an_note_pay:"⚡ Magic Master rann master konplè ou (WAV 24-bit + MP3 320k) imedyatman nan navigatè ou — oswa pran Frid Signature pou siyati pèsonèl Frid a.",
   priv_note:"🔒 Odyo ou analize lokalman nan navigatè ou — anyen pa upload jiskaske ou kòmande.",
   steps_title:"KÒMAN L FONKSYONE",
-  step1_t:"Analiz gratis", step1_p:"Trase track ou. Nan kèk segond ou we sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
+  step1_t:"Analiz gratis", step1_p:"Trase track ou. Nan kèk segond ou wè sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
   step2_t:"Koute gratis — apre debloke", step2_p:"Magic Master rann master ou nan navigatè ou: koute 20 segond gratis pati ki pi fò a. Renmen l? Debloke telechajman konplè WAV + MP3 pou $9.99.",
   step3_t:"Pare pou radyo, imedyatman", step3_p:"Master konplè a telechaje touswit apre peman an — WAV 24-bit + MP3 320k, pik −0.03 dBFS. Ou vle zòrèy Frid a? Ajoute Frid Signature.",
   price_title:"CHWAZI MASTER OU", price_per:"PA TRACK · SAN ABONMAN",
-  pl1:"Sample Peak −0.03 dBFS — egzakteman kote master komenalsyòt ye",
+  pl1:"Sample Peak −0.03 dBFS — egzakteman kote master komèsyal ye",
   pl2:"Dinamik 100% konsève — pa gen kraze, pa gen distòsyon",
-  pl3:"Reference matching — m egzali ton nenpòt track ou voye",
+  pl3:"Reference matching — m egzale ton nenpòt track ou voye",
   pl4:"WAV 24-bit + MP3 320k + rapò mezire",
   pl5:"Delivre nan 24è · revizyon konsa jiskaske ou kontan",
   price_btn:"MASTERIZE — $9.99", price_note:"Peman sekirize via PayPal — kat ak balans PayPal aksepte",
   cmp_t:"Poukisa $9.99 e pa $50?",
-  cmp_p:"— Vrè studio yo chaje $30–$100 pa chanson. Ekipman mastering mwen an otomatize 100% pa mwen: mezire presizyon, reference matching, zè devine. Ou peye rezilta a, pa estrikti a.",
+  cmp_p:"— Vrè studio yo chaje $30–$100 pa chante. Ekipman mastering mwen an otomatize 100% pa mwen: meziman presizyon, reference matching, san devin. Ou peye rezilta a, pa estrikti a.",
   co_title:"PEMAN — MASTERING PWOFESYONÈL",
   co_email_label:"IMEL OU — KOTE MASTER OU AP DELIVRE",
-  co_note:"Apre peman an ou voye m track ou (WAV oswa MP3) + reference opsyonèl via WhatsApp oswa imel — enstriksyon konplè parèt la menm.",
-  co_done:"Peman resevwa — kòmand", co_done_p:"Dènye etap: voye m track ou (WAV oswa MP3) ak opsyonèlman yon reference (son w vle a) ak nimewo kòmand ou.",
+  co_note:"Apre peman an ou voye m track ou (WAV oswa MP3) + referans opsyonèl via WhatsApp oswa imel — enstriksyon konplè parèt la menm.",
+  co_done:"Peman resevwa — kòmand", co_done_p:"Dènye etap: voye m track ou (WAV oswa MP3) ak opsyonèlman yon referans (son w vle a) ak nimewo kòmand ou.",
   co_send_wa:"VOYE TRACK MWEN VIA WHATSAPP", co_send_mail:"Voye pa imel",
   co_done_note:"Master ou rive nan 24è — jeneralman pi vit. Revizyon konsa.",
   faq_title:"KESYON",
   q1:"Èske mastering repare yon move mix?", a1:"Mastering se dènye poze a — l pa ka rebati yon mix. Si track ou gen pwoblèm grav (clipping, labou, vocal malbalanse), map di ou san maske kisa pou repare an premye. M pi pito kenbe ou kòm kliyan long tèm pase vann ou yon master ki son move.",
   q2:"Ki genre ou masterize?", a2:"Tout: trap, drill, afrobeat, konpa, reggaeton, dancehall, pop, R&B — enstrimantal, chanson konplè ak vocal, loop, podcast. Sib la (Sample Peak −0.03 dBFS, dinamik konsève) inivèsèl paske l swiv track la, pa yon preset.",
-  q3:"Èske m dwe voye w track mwen?", a3:"Non — Magic Master rann tout nan navigatè ou epi telechajman an debloke la menm apre peman an. Chwazi Frid Signature epi w ap voye menm fichye yo ak ID kòmand ou via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com pou pas pèsonèl la.",
+  q3:"Èske m dwe voye w track mwen?", a3:"Non — Magic Master rann tout nan navigatè ou epi telechajman an debloke la menm apre peman an. Chwazi Frid Signature epi w ap voye menm fichye yo ak ID kòmand ou via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com pou siyati pèsonèl la.",
   q4:"Kisa egzakteman m resevwa?", a4:"Yon WAV 24-bit masterize (pou distribisyon: DistroKid, TuneCore, BeatStars...) + MP3 320k (pou preview, rezo sosyo) + yon rapò ki montre chif avan/apre track ou.",
   q5:"Èske mizik mwen an sekirite?", a5:"100%. Track ou rete prive — se sèlman mwen k koute l, l sèvi sèlman pou master ou, epi l pa janm distribye ni pataje. Analiz gratis paj sa a kouri antyèman nan navigatè ou; odyo a pa janm kite aparèy ou.",
-  footer_tag:"studio ou, règ ou", f_home:"Akèy", f_beats:"Beats", f_analysis:"Analiz Gratui",
+  footer_tag:"studio ou, règ ou", f_home:"Akèy", f_beats:"Beats", f_analysis:"Analiz Gratis",
   toast_analyzing:"Ap analize", toast_badfile:"Pa ka dekode fichye sa a — eseye WAV oswa MP3.",
   toast_email:"⚠️ Mete yon imel valid anpremye — se la master ou ap delivre.",
   toast_paid:"✅ Peman konfime — telechajman ou yo debloke anba a!", toast_pp_err:"⚠️ Erè PayPal — eseye ankò oswa kòmande via WhatsApp.",
-  v_solid:"✅ Track solid!", v_solid_p:" Nivo ou pre plaj komenalsyòt. Yon master pwofesyonèl ap toujou ajiste ton an pou egzale pi gwo track nan genre ou — epi mete pik final nan egzakteman −0.03 dBFS pou distribisyon.",
-  v_headroom:"⚠️ Track ou", v_headroom_p1:"dB anba kote mizik komenalsyòt pik.", v_headroom_p2:"Sonorite ki manke se egzakteman sa w tande sou Spotify/YouTube. Yon master pwofesyonèl fèmen gap sa a san l kraze dinamik ou.",
-  v_loudness:"⚠️ Sonorite deyò plaj.", v_loudness_p1:"Mizik komenalsyòt ye ant −14 ak −8 LUFS. Ou ye nan", v_loudness_p2:"LUFS. Yon bon master mennen ou nan fenèt modèn nan kenbe chak kouto enteg.",
+  v_solid:"✅ Track solid!", v_solid_p:" Nivo ou pre plaj komèsyal. Yon master pwofesyonèl ap toujou ajiste ton an pou egzale pi gwo track nan genre ou — epi mete pik final nan egzakteman −0.03 dBFS pou distribisyon.",
+  v_headroom:"⚠️ Track ou", v_headroom_p1:"dB anba kote mizik komèsyal ye.", v_headroom_p2:"Sonorite ki manke se egzakteman sa w tande sou Spotify/YouTube. Yon master pwofesyonèl fèmen gap sa a san l kraze dinamik ou.",
+  v_loudness:"⚠️ Sonorite deyò plaj.", v_loudness_p1:"Mizik komèsyal ye ant −14 ak −8 LUFS. Ou ye nan", v_loudness_p2:"LUFS. Yon bon master mennen ou nan fenèt modèn nan kenbe chak kouto enteg.",
   v_dyn:"⚠️ Dinamik kraze", v_dyn_p:"Track ou ka twò limite. Yon re-master ki fèt ak serye ak reference matching retabli kouto a — voye l.",
-  v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + rapò imedya.",
+  v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + rapò lelman.",
   wa_msg:"Bonjou Frid! M fe analiz gratis la sou fridbeats.com e m vle masterize track mwen.",
   wa_paid:"Bonjou Frid! M peye $9.99 pou mastering sou fridbeats.com", wa_paid_track:". Men track mwen",
-  mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an pice jwent (WAV/MP3).\nReference opsyonèl: ",
+  mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an nan atachman (WAV/MP3).\nReferans opsyonèl: ",
   mg_promo_badge:"LANSMAN −60%", mg_promo_ends:"jiska 15 okt · pri lansman",
   mg_promo_badge_x:"LANSMAN −60% — Frid Signature $24.99 → $9.99 jiska 15 okt",
-  mg_title:"MAGIC MASTER — KOUTE ANVAN W PEYE", magic_badge:"NOUVO · IMEDYA",
-  mg_sub:"Trase track ou + (opsyonèl) yon reference son w vle a. Motè Frid a masterize l la menm nan navigatè ou — odyo ou pa janm kite aparèy ou. Koute 20 segond rezilta a gratis, peye sèlman si ou renmen l.",
+  mg_title:"MAGIC MASTER — KOUTE ANVAN W PEYE", magic_badge:"NOUVO · LELMAN",
+  mg_sub:"Trase track ou + (opsyonèl) yon track referans — son w vle a. Motè Frid a masterize l menm nan navigatè ou — odyo ou pa janm kite aparèy ou. Koute 20 segond rezilta a gratis, peye sèlman si ou renmen l.",
   mg_track_t:"TRACK OU", mg_track_h:"WAV, MP3, FLAC, M4A — rete sou aparèy ou",
-  mg_ref_t:"REFERENCE — OPSYONÈL", mg_ref_h:"Son w vle egzale a (rekòmande)",
+  mg_ref_t:"TRACK REFERANS", mg_ref_h:"Son w vle egzale a (opsyonèl — rekòmande)",
   mg_s1:"DEKODE", mg_s2:"ANALIZE", mg_s3:"EGZALE", mg_s4:"FINI",
   mg_go:"MASTERIZE TRACK MWEN",
-  mg_need_track:"⚠️ Trase track ou anpremye.", mg_need_track_noref:"Trase yon track oswa yon reference anpremye.",
+  mg_need_track:"⚠️ Trase track ou an premye.", mg_need_track_noref:"Trase yon track oswa yon referans an premye.",
   mg_need_unlock:"🔒 Debloke l anpremye — telechajman an louvri touswit apre peman an.",
   mg_ab_title:"PREVIEW GRATIS OU — 20 SEGOND KI PI FÒ YO",
   mg_before:"AVAN — mix ou", mg_after:"APRE — masterize",
   mg_pv_note:"Preview gratis la limite a 20 segond ak yon ti ton dou chak kèk segond. Peman an debloke master konplè a san ton.",
   mg_unlock:"RENMEN L? DEBLOKE TELECHAJMAN KONPLÈ A",
-  mg_plan1:"MAGIC MASTER — imedya",
-  mg_plan1_d:"Telechajman imedya WAV 24-bit konplè + MP3 320k — rann nan navigatè ou touswit apre peman an. San tann.",
+  mg_plan1:"MAGIC MASTER — lelman",
+  mg_plan1_d:"Telechajman lelman WAV 24-bit konplè + MP3 320k — rann nan navigatè ou touswit apre peman an. San tann.",
   mg_plan2:"FRID SIGNATURE",
-  mg_plan2_d:"Telechaje master imedya a kounya + Frid pèsonèlman tcheke l epi pole l ak ekipman studio li. Delivre nan 24è, revizyon konsa.",
+  mg_plan2_d:"Telechaje master lelman a kounya + Frid pèsonèlman tcheke l epi pole l ak ekipman studio li. Delivre nan 24è, revizyon konsa.",
   mg_email:"IMEL OU — resi ak sipò",
   mg_pay_note:"Peman an debloke master konplè a imedyatman. Signature ajoute pas pèsonèl Frid a nan 24è.",
   mg_dl_done:"✅ Debloke — master ou pare",
   mg_dl_wav:"TELECHAJE WAV 24-BIT", mg_dl_mp3:"TELECHAJE MP3 320k",
-  mg_sig_note:"Master imedya ou deja telechaje anwo. Kounya voye Frid menm fichye yo ak ID kòmand ou — l ap delivre master Signature pèsonèl li (pole ak ekipman li) nan 24è.",
+  mg_sig_note:"Master lelman ou deja telechaje anwo. Kounya voye Frid menm fichye yo ak ID kòmand ou — l ap delivre master Signature pèsonèl li (pole ak ekipman li) nan 24è.",
   mg_pp_busy:"⚠️ Master la ap rann ankò — yon segond…",
   mg_render_done:"✅ Master pare — koute anwo!",
   mg_render_fail:"⚠️ Rann echwe sou fichye sa a — eseye WAV oswa MP3, oswa kòmande via WhatsApp.",
@@ -777,7 +784,7 @@ function applyI18n(){
 }
 function toggleLangMenu(){ const m=$('langMenu'); m.style.display = m.style.display==='none' ? 'block' : 'none'; }
 document.addEventListener('click', e => { const b=$('langBtn'), m=$('langMenu'); if (b && m && !b.contains(e.target) && !m.contains(e.target)) m.style.display='none'; });
-function setLang(lang){ if(!I18N[lang]) lang='en'; localStorage.setItem('fridBeats_lang', lang); applyI18n(); }
+function setLang(lang){ if(!I18N[lang]) lang='en'; localStorage.setItem('fridBeats_lang', lang); applyI18n(); const m=$('langMenu'); if(m) m.style.display='none'; }
 
 /* ================= TOAST ================= */
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
