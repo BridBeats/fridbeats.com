@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Professional Mastering — Frid Beats | Radio-Ready in 24h</title>
-<meta name="description" content="Professional online mastering by Frid Beats. Free instant analysis of your track — unlock your radio-ready master for $9.99. Sample Peak -0.01 dBFS, dynamics preserved, all genres.">
+<title>Professional Mastering — Frid Beats | Instant Mastering in Your Browser</title>
+<meta name="description" content="Professional online mastering by Frid Beats. Free instant analysis of your track — unlock your radio-ready master for $9.99. Sample Peak -0.03 dBFS, dynamics preserved, all genres.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -182,7 +182,6 @@ section.magic{margin:30px 0 0}
         <button onclick="setLang('fr')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇫🇷 Français</button>
         <button onclick="setLang('ht')" style="display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font);font-size:13px;border-radius:8px">🇭🇹 Kreyòl</button>
       </div>
-      <a class="nav-home" href="/">← <span data-i18n="back_home">Back to fridbeats.com</span></a>
       <a class="nav-cta" href="#magic" data-i18n="nav_free_analysis">⚡ MAGIC MASTER</a>
     </div>
   </div>
@@ -191,11 +190,11 @@ section.magic{margin:30px 0 0}
 <div class="wrap">
 
 <header class="hero">
-  <div class="kicker"><span class="dot"></span> <span data-i18n="hero_kicker">PRO MASTERING · ALL GENRES · DELIVERED IN 24H</span></div>
+  <div class="kicker"><span class="dot"></span> <span data-i18n="hero_kicker">PRO MASTERING · ALL GENRES · INSTANT IN YOUR BROWSER</span></div>
   <h1><span data-i18n="hero_title_1">Radio-Ready Mastering,</span><br><span data-i18n="hero_title_2">Mixed by Frid Beats</span></h1>
   <p class="sub" data-i18n="hero_sub">Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, see the truth about your track for free, unlock your master.</p>
   <div class="specrow">
-    <span class="spec">SAMPLE PEAK −0.01 dBFS</span>
+    <span class="spec">SAMPLE PEAK −0.03 dBFS</span>
     <span class="spec" data-i18n="spec_dynamics">DYNAMICS PRESERVED</span>
     <span class="spec">WAV 24-BIT + MP3 320k</span>
     <span class="spec" data-i18n="spec_universal">EVERY GENRE · EVERY BPM</span>
@@ -210,13 +209,11 @@ section.magic{margin:30px 0 0}
     <p class="mg-sub" data-i18n="mg_sub"></p>
     <div class="mg-grid">
       <div class="dz mg-dz" id="mgDzT" onclick="document.getElementById('mgFzT').click()">
-        <div class="ic">🎵</div>
         <div class="t1" data-i18n="mg_track_t">YOUR TRACK</div>
         <div class="t2" data-i18n="mg_track_h">WAV, MP3, FLAC, M4A — stays on your device</div>
         <div class="fname" id="mgNameT"></div>
       </div>
       <div class="dz mg-dz" id="mgDzR" onclick="document.getElementById('mgFzR').click()">
-        <div class="ic">🎯</div>
         <div class="t1" data-i18n="mg_ref_t">REFERENCE — OPTIONAL</div>
         <div class="t2" data-i18n="mg_ref_h">The sound you want to match (recommended)</div>
         <div class="fname" id="mgNameR"></div>
@@ -281,9 +278,8 @@ section.magic{margin:30px 0 0}
 
 <section class="analyzer" id="analyzer">
   <div class="an-card">
-    <h2>🎯 <span data-i18n="an_title">TEST YOUR TRACK — INSTANT ANALYSIS</span> <span class="free" data-i18n="an_free">100% FREE</span></h2>
+    <h2><span data-i18n="an_title">TEST YOUR TRACK — INSTANT ANALYSIS</span> <span class="free" data-i18n="an_free">100% FREE</span></h2>
     <div class="dz" id="dz" onclick="document.getElementById('fz').click()">
-      <div class="ic">🎵</div>
       <div class="t1" data-i18n="dz_t1">Drop your track here</div>
       <div class="t2" data-i18n="dz_t2">WAV, MP3, FLAC, M4A — analyzed in your browser, never uploaded anywhere</div>
     </div>
@@ -303,7 +299,7 @@ section.magic{margin:30px 0 0}
         <button class="btn btn-main" onclick="goMagic()">⚡ <span data-i18n="unlock_btn">TRY MAGIC MASTER — FREE PREVIEW</span></button>
         <a class="btn btn-ghost" id="waTop" href="#" target="_blank" rel="noopener">💬 <span data-i18n="order_wa">Order via WhatsApp</span></a>
       </div>
-      <div class="an-note" data-i18n="an_note_pay">Payment unlocks the full master (WAV 24-bit + MP3 320k) — delivered within 24h, typically much faster.</div>
+      <div class="an-note" data-i18n="an_note_pay">⚡ Magic Master renders your full master (WAV 24-bit + MP3 320k) instantly in your browser — or go Frid Signature for his personal pass.</div>
     </div>
     <div class="an-note" id="privnote" style="margin-top:14px" data-i18n="priv_note">🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.</div>
   </div>
@@ -313,8 +309,8 @@ section.magic{margin:30px 0 0}
   <h3 class="sec" data-i18n="steps_title">HOW IT WORKS</h3>
   <div class="stepgrid">
     <div class="step"><div class="n">1</div><h4 data-i18n="step1_t">Free analysis</h4><p data-i18n="step1_p">Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.</p></div>
-    <div class="step"><div class="n">2</div><h4 data-i18n="step2_t">Unlock your master</h4><p data-i18n="step2_p">One payment of $9.99. Send me your track (and an optional reference — the sound you're chasing) via WhatsApp or email.</p></div>
-    <div class="step"><div class="n">3</div><h4 data-i18n="step3_t">Radio-ready in 24h</h4><p data-i18n="step3_p">You receive your master: WAV 24-bit + MP3 320k, with a measurement report. Peak −0.01 dBFS, dynamics intact.</p></div>
+    <div class="step"><div class="n">2</div><h4 data-i18n="step2_t">Hear it free — then unlock</h4><p data-i18n="step2_p">Magic Master renders your master right in your browser: hear 20 free seconds of the loudest part. Love it? Unlock the full WAV + MP3 download for $9.99.</p></div>
+    <div class="step"><div class="n">3</div><h4 data-i18n="step3_t">Radio-ready, instantly</h4><p data-i18n="step3_p">The full clean master downloads immediately after payment — WAV 24-bit + MP3 320k, peak −0.03 dBFS. Want Frid's ear on it? Add Frid Signature.</p></div>
   </div>
 </section>
 
@@ -328,7 +324,7 @@ section.magic{margin:30px 0 0}
       <ul class="plist">
         <li data-i18n="pm1_1">Instant master rendered in your browser — no waiting, no email</li>
         <li data-i18n="pm1_2">EQ matched to your reference track</li>
-        <li data-i18n="pm1_3">Commercial loudness, peak exactly −0.01 dBFS</li>
+        <li data-i18n="pm1_3">Commercial loudness, peak exactly −0.03 dBFS</li>
         <li data-i18n="pm1_4">WAV 24-bit + MP3 320k download right after payment</li>
       </ul>
       <button class="btn btn-ghost" onclick="goMagic()">⚡ <span data-i18n="pm1_btn">START FREE PREVIEW</span></button>
@@ -353,7 +349,7 @@ section.magic{margin:30px 0 0}
 <section class="faq">
   <h3 class="sec" data-i18n="faq_title">QUESTIONS</h3>
   <details class="qa"><summary data-i18n="q1">Will mastering fix a bad mix?</summary><div class="a" data-i18n="a1">Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.</div></details>
-  <details class="qa"><summary data-i18n="q2">What genres do you master?</summary><div class="a" data-i18n="a2">Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.</div></details>
+  <details class="qa"><summary data-i18n="q2">What genres do you master?</summary><div class="a" data-i18n="a2">Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.03 dBFS, dynamics preserved) is universal because it follows the track, not a preset.</div></details>
   <details class="qa"><summary data-i18n="q3">What do I send you after paying?</summary><div class="a" data-i18n="a3">Your track (WAV preferred, MP3 accepted) and optionally a reference — a commercial song whose sound you want matched. Send via WhatsApp (+1 829 602 6502) or contact@fridbeats.com right after your order.</div></details>
   <details class="qa"><summary data-i18n="q4">What exactly do I receive?</summary><div class="a" data-i18n="a4">A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.</div></details>
   <details class="qa"><summary data-i18n="q5">Is my music safe?</summary><div class="a" data-i18n="a5">100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.</div></details>
@@ -379,7 +375,7 @@ const $=id=>document.getElementById(id);
 const I18N = {
 en: {
   brand_mastering:"MASTERING", back_home:"Back to fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"PRO MASTERING · ALL GENRES · DELIVERED IN 24H",
+  hero_kicker:"PRO MASTERING · ALL GENRES · INSTANT IN YOUR BROWSER",
   hero_title_1:"Radio-Ready Mastering,", hero_title_2:"Mixed by Frid Beats",
   mg_promo_badge_x:"LAUNCH −60% — Frid Signature $24.99 → $9.99 until Oct 15",
   hero_sub:"Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, hear the difference for free, unlock your master.",
@@ -421,9 +417,9 @@ en: {
   steps_title:"HOW IT WORKS",
   step1_t:"Free analysis", step1_p:"Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.",
   step2_t:"Hear it free — then unlock", step2_p:"Magic Master renders your master right in your browser: hear 20 free seconds of the loudest part. Love it? Unlock the full WAV + MP3 download for $9.99.",
-  step3_t:"Radio-ready, instantly", step3_p:"The full clean master downloads immediately after payment — WAV 24-bit + MP3 320k, peak −0.01 dBFS. Want Frid's ear on it? Add Frid Signature.",
+  step3_t:"Radio-ready, instantly", step3_p:"The full clean master downloads immediately after payment — WAV 24-bit + MP3 320k, peak −0.03 dBFS. Want Frid's ear on it? Add Frid Signature.",
   price_title:"CHOOSE YOUR MASTER", price_per:"PER TRACK · NO SUBSCRIPTION",
-  pl1:"Sample Peak −0.01 dBFS — exactly where commercial masters sit",
+  pl1:"Sample Peak −0.03 dBFS — exactly where commercial masters sit",
   pl2:"Dynamics 100% preserved — no limiting squash, no distortion",
   pl3:"Reference matching — I match the tone of any track you send",
   pl4:"WAV 24-bit + MP3 320k + measurement report",
@@ -439,26 +435,26 @@ en: {
   co_done_note:"Your master arrives within 24h — usually much faster. Revisions included.",
   faq_title:"QUESTIONS",
   q1:"Will mastering fix a bad mix?", a1:"Mastering is the final polish — it can't rebuild a mix. If your track has serious issues (clipping, mud, unbalanced vocals), I'll tell you honestly what to fix first. I'd rather keep you as a long-term client than sell you a master that sounds wrong.",
-  q2:"What genres do you master?", a2:"Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.01 dBFS, dynamics preserved) is universal because it follows the track, not a preset.",
+  q2:"What genres do you master?", a2:"Everything: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentals, full songs with vocals, loops, podcasts. The target (Sample Peak −0.03 dBFS, dynamics preserved) is universal because it follows the track, not a preset.",
   q3:"Do I have to send you my track?", a3:"No — Magic Master renders everything in your browser and the download unlocks right here after payment. Choose Frid Signature and you'll send the same files with your order ID via WhatsApp (+1 829 602 6502) or contact@fridbeats.com for the personal pass.",
   q4:"What exactly do I receive?", a4:"A mastered WAV 24-bit (for distribution: DistroKid, TuneCore, BeatStars...) + MP3 320k (for previews, socials) + a measurement report showing your track's before/after numbers.",
   q5:"Is my music safe?", a5:"100%. Your track stays private — it's only heard by me, used solely for your master, and never distributed or shared. The free analysis on this page runs entirely in your browser; the audio never leaves your device.",
   footer_tag:"your studio, your rules", f_home:"Home", f_beats:"Beats", f_analysis:"Free Analysis",
   toast_analyzing:"Analyzing", toast_badfile:"Could not decode this file — try WAV or MP3.",
   toast_email:"⚠️ Enter a valid email first — your master is delivered there.",
-  toast_paid:"✅ Payment confirmed — now send your track!", toast_pp_err:"⚠️ PayPal error — please try again or order via WhatsApp.",
-  v_solid:"✅ Solid track!", v_solid_p:" Your levels are close to commercial range. A professional master will still tighten the tone to match the sound of the biggest tracks in your genre — and place the final peak at exactly −0.01 dBFS for distribution.",
+  toast_paid:"✅ Payment confirmed — your downloads are unlocked below!", toast_pp_err:"⚠️ PayPal error — please try again or order via WhatsApp.",
+  v_solid:"✅ Solid track!", v_solid_p:" Your levels are close to commercial range. A professional master will still tighten the tone to match the sound of the biggest tracks in your genre — and place the final peak at exactly −0.03 dBFS for distribution.",
   v_headroom:"⚠️ Your track is", v_headroom_p1:"dB below where commercial tracks peak.", v_headroom_p2:"That missing loudness is exactly what you hear on Spotify/YouTube. A professional master closes that gap without crushing your dynamics.",
   v_loudness:"⚠️ Loudness off-range.", v_loudness_p1:"Commercial tracks sit between −14 and −8 LUFS. Yours is at", v_loudness_p2:"LUFS. A proper master brings you into the modern window while keeping every punch intact.",
   v_dyn:"⚠️ Dynamics are squashed", v_dyn_p:"Your track may be over-limited. A careful re-master with reference matching restores the punch — send it over.",
-  v_unlock:"Unlock your master for $9.99", v_unlock_p:"— delivered in 24h: WAV 24-bit + MP3 320k + report.",
+  v_unlock:"Unlock your master for $9.99", v_unlock_p:"— instant WAV 24-bit + MP3 320k + report.",
   wa_msg:"Hi Frid! I just ran the free analysis on fridbeats.com and I want my track mastered.",
   wa_paid:"Hi Frid! I just paid $9.99 for mastering on fridbeats.com", wa_paid_track:". Here is my track",
   mail_sub:"Mastering Order", mail_body:"Hi Frid,\n\nMy PayPal order ID: {OID}\nMy track is attached (WAV/MP3).\nOptional reference: "
 },
 es: {
   brand_mastering:"MASTERIZACIÓN", back_home:"Volver a fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"MASTERING PRO · TODOS LOS GÉNEROS · ENTREGA EN 24H",
+  hero_kicker:"MASTERING PRO · TODOS LOS GÉNEROS · INSTANTÁNEO EN TU NAVEGADOR",
   hero_title_1:"Mastering Listo para Radio,", hero_title_2:"por Frid Beats",
   hero_sub:"Tu beat, tu canción, tu loop — masterizados al nivel exacto de las canciones comerciales: nítidos, fuertes donde importa, con la dinámica totalmente preservada. Sube, descubre la verdad sobre tu track gratis, desbloquea tu master.",
   spec_dynamics:"DINÁMICA PRESERVADA", spec_universal:"TODOS LOS GÉNEROS · TODOS LOS BPM",
@@ -472,9 +468,9 @@ es: {
   steps_title:"CÓMO FUNCIONA",
   step1_t:"Análisis gratis", step1_p:"Suelta tu track. En segundos ves su sonoridad, picos y dinámica — los mismos números que revisan primero los estudios de mastering.",
   step2_t:"Escúchalo gratis — luego desbloquea", step2_p:"Magic Master renderiza tu master en tu navegador: escucha 20 segundos gratis de la parte más fuerte. ¿Te encanta? Desbloquea la descarga completa WAV + MP3 por $9.99.",
-  step3_t:"Listo para radio, al instante", step3_p:"El master completo y limpio se descarga inmediatamente tras el pago — WAV 24-bit + MP3 320k, pico −0.01 dBFS. ¿Quieres el oído de Frid? Añade Frid Signature.",
+  step3_t:"Listo para radio, al instante", step3_p:"El master completo y limpio se descarga inmediatamente tras el pago — WAV 24-bit + MP3 320k, pico −0.03 dBFS. ¿Quieres el oído de Frid? Añade Frid Signature.",
   price_title:"ELIGE TU MASTER", price_per:"POR TRACK · SIN SUSCRIPCIÓN",
-  pl1:"Sample Peak −0.01 dBFS — exactamente donde están los masters comerciales",
+  pl1:"Sample Peak −0.03 dBFS — exactamente donde están los masters comerciales",
   pl2:"Dinámica 100% preservada — sin aplastamiento, sin distorsión",
   pl3:"Reference matching — igualo el tono de cualquier track que envíes",
   pl4:"WAV 24-bit + MP3 320k + reporte de mediciones",
@@ -490,19 +486,19 @@ es: {
   co_done_note:"Tu master llega en 24h — normalmente mucho más rápido. Revisiones incluidas.",
   faq_title:"PREGUNTAS",
   q1:"¿El mastering arregla una mala mezcla?", a1:"El mastering es el pulido final — no puede reconstruir una mezcla. Si tu track tiene problemas serios (clipping, lodo, voces desbalanceadas), te diré honestamente qué arreglar primero. Prefiero tenerte como cliente a largo plazo que venderte un master que suena mal.",
-  q2:"¿Qué géneros masterizas?", a2:"Todos: trap, drill, afrobeat, kompa, reggaetón, dancehall, pop, R&B — instrumentales, canciones completas con voz, loops, podcasts. El objetivo (Sample Peak −0.01 dBFS, dinámica preservada) es universal porque sigue al track, no a un preset.",
+  q2:"¿Qué géneros masterizas?", a2:"Todos: trap, drill, afrobeat, kompa, reggaetón, dancehall, pop, R&B — instrumentales, canciones completas con voz, loops, podcasts. El objetivo (Sample Peak −0.03 dBFS, dinámica preservada) es universal porque sigue al track, no a un preset.",
   q3:"¿Tengo que enviarte mi track?", a3:"No — Magic Master lo renderiza todo en tu navegador y la descarga se desbloquea aquí mismo tras el pago. Elige Frid Signature y enviarás los mismos archivos con tu ID de orden por WhatsApp (+1 829 602 6502) o contact@fridbeats.com para el pase personal.",
   q4:"¿Qué recibo exactamente?", a4:"Un WAV 24-bit masterizado (para distribución: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes) + un reporte con los números antes/después de tu track.",
   q5:"¿Mi música está segura?", a5:"100%. Tu track queda privado — solo lo escucho yo, se usa únicamente para tu master y nunca se distribuye ni comparte. El análisis gratis de esta página corre completamente en tu navegador; el audio nunca sale de tu dispositivo.",
   footer_tag:"tu estudio, tus reglas", f_home:"Inicio", f_beats:"Beats", f_analysis:"Análisis Gratis",
   toast_analyzing:"Analizando", toast_badfile:"No se pudo decodificar este archivo — prueba WAV o MP3.",
   toast_email:"⚠️ Primero pon un email válido — ahí se entrega tu master.",
-  toast_paid:"✅ Pago confirmado — ¡ahora envía tu track!", toast_pp_err:"⚠️ Error de PayPal — intenta de nuevo o pide por WhatsApp.",
-  v_solid:"✅ ¡Track sólido!", v_solid_p:" Tus niveles están cerca del rango comercial. Un master profesional aún afinará el tono para igualar el sonido de los más grandes de tu género — y colocará el pico final exactamente en −0.01 dBFS para distribución.",
+  toast_paid:"✅ Pago confirmado — ¡tus descargas están desbloqueadas abajo!", toast_pp_err:"⚠️ Error de PayPal — intenta de nuevo o pide por WhatsApp.",
+  v_solid:"✅ ¡Track sólido!", v_solid_p:" Tus niveles están cerca del rango comercial. Un master profesional aún afinará el tono para igualar el sonido de los más grandes de tu género — y colocará el pico final exactamente en −0.03 dBFS para distribución.",
   v_headroom:"⚠️ Tu track está", v_headroom_p1:"dB por debajo del pico de las canciones comerciales.", v_headroom_p2:"Esa sonoridad que falta es exactamente lo que escuchas en Spotify/YouTube. Un master profesional cierra esa brecha sin aplastar tu dinámica.",
   v_loudness:"⚠️ Sonoridad fuera de rango.", v_loudness_p1:"Las canciones comerciales están entre −14 y −8 LUFS. La tuya está en", v_loudness_p2:"LUFS. Un master adecuado te trae a la ventana moderna manteniendo cada golpe intacto.",
   v_dyn:"⚠️ Dinámica aplastada", v_dyn_p:"Tu track puede estar sobre-limitado. Un re-master cuidadoso con reference matching restaura el golpe — envíalo.",
-  v_unlock:"Desbloquea tu master por $9.99", v_unlock_p:"— entrega en 24h: WAV 24-bit + MP3 320k + reporte.",
+  v_unlock:"Desbloquea tu master por $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + reporte al instante.",
   wa_msg:"¡Hola Frid! Acabo de hacer el análisis gratis en fridbeats.com y quiero masterizar mi track.",
   wa_paid:"¡Hola Frid! Acabo de pagar $9.99 por mastering en fridbeats.com", wa_paid_track:". Aquí está mi track",
   mail_sub:"Pedido de Mastering", mail_body:"Hola Frid,\n\nMi ID de orden PayPal: {OID}\nMi track va adjunto (WAV/MP3).\nReferencia opcional: ",
@@ -536,7 +532,7 @@ es: {
 },
 pt: {
   brand_mastering:"MASTERIZAÇÃO", back_home:"Voltar a fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"MASTERING PRO · TODOS OS GÊNEROS · ENTREGA EM 24H",
+  hero_kicker:"MASTERING PRO · TODOS OS GÊNEROS · INSTANTÂNEO NO SEU NAVEGADOR",
   hero_title_1:"Mastering Pronto para Rádio,", hero_title_2:"por Frid Beats",
   hero_sub:"Seu beat, sua música, seu loop — masterizados no nível exato das faixas comerciais: nítidos, altos onde importa, dinâmica totalmente preservada. Envie, veja a verdade sobre sua faixa grátis, desbloqueie seu master.",
   spec_dynamics:"DINÂMICA PRESERVADA", spec_universal:"TODOS OS GÊNEROS · TODOS OS BPM",
@@ -550,9 +546,9 @@ pt: {
   steps_title:"COMO FUNCIONA",
   step1_t:"Análise grátis", step1_p:"Solte sua faixa. Em segundos você vê sua sonoridade, picos e dinâmica — os mesmos números que os estúdios de mastering verificam primeiro.",
   step2_t:"Ouça grátis — depois desbloqueie", step2_p:"O Magic Master renderiza seu master no seu navegador: ouça 20 segundos grátis da parte mais forte. Amou? Desbloqueie o download completo WAV + MP3 por $9.99.",
-  step3_t:"Pronto para rádio, na hora", step3_p:"O master completo e limpo é baixado imediatamente após o pagamento — WAV 24-bit + MP3 320k, pico −0.01 dBFS. Quer o ouvido do Frid? Adicione o Frid Signature.",
+  step3_t:"Pronto para rádio, na hora", step3_p:"O master completo e limpo é baixado imediatamente após o pagamento — WAV 24-bit + MP3 320k, pico −0.03 dBFS. Quer o ouvido do Frid? Adicione o Frid Signature.",
   price_title:"ESCOLHA SEU MASTER", price_per:"POR FAIXA · SEM ASSINATURA",
-  pl1:"Sample Peak −0.01 dBFS — exatamente onde os masters comerciais ficam",
+  pl1:"Sample Peak −0.03 dBFS — exatamente onde os masters comerciais ficam",
   pl2:"Dinâmica 100% preservada — sem esmagamento, sem distorção",
   pl3:"Reference matching — igualo o tom de qualquer faixa que enviar",
   pl4:"WAV 24-bit + MP3 320k + relatório de medições",
@@ -568,19 +564,19 @@ pt: {
   co_done_note:"Seu master chega em 24h — geralmente bem mais rápido. Revisões incluídas.",
   faq_title:"PERGUNTAS",
   q1:"O mastering conserta uma mixagem ruim?", a1:"Mastering é o polimento final — não reconstrói uma mixagem. Se sua faixa tem problemas sérios (clipping, lama, vocais desbalanceados), dirão honestamente o que consertar primeiro. Prefiro tê-lo como cliente de longo prazo do que vender um master que soa errado.",
-  q2:"Quais gêneros você masteriza?", a2:"Todos: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentais, músicas completas com voz, loops, podcasts. O alvo (Sample Peak −0.01 dBFS, dinâmica preservada) é universal porque segue a faixa, não um preset.",
+  q2:"Quais gêneros você masteriza?", a2:"Todos: trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentais, músicas completas com voz, loops, podcasts. O alvo (Sample Peak −0.03 dBFS, dinâmica preservada) é universal porque segue a faixa, não um preset.",
   q3:"Preciso te enviar minha faixa?", a3:"Não — o Magic Master renderiza tudo no seu navegador e o download é desbloqueado aqui mesmo após o pagamento. Escolha Frid Signature e você enviará os mesmos arquivos com seu ID de pedido via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com para o passe pessoal.",
   q4:"O que exatamente recebo?", a4:"Um WAV 24-bit masterizado (para distribuição: DistroKid, TuneCore, BeatStars...) + MP3 320k (para previews, redes sociais) + um relatório com os números antes/depois da sua faixa.",
   q5:"Minha música está segura?", a5:"100%. Sua faixa fica privada — só eu escuto, uso exclusivamente para seu master e nunca distribuo ou compartilho. A análise grátis desta página roda inteiramente no seu navegador; o áudio nunca sai do seu dispositivo.",
   footer_tag:"seu estúdio, suas regras", f_home:"Início", f_beats:"Beats", f_analysis:"Análise Grátis",
   toast_analyzing:"Analisando", toast_badfile:"Não foi possível decodificar este arquivo — tente WAV ou MP3.",
   toast_email:"⚠️ Primeiro coloque um email válido — seu master será entregue nele.",
-  toast_paid:"✅ Pagamento confirmado — agora envie sua faixa!", toast_pp_err:"⚠️ Erro do PayPal — tente novamente ou peça via WhatsApp.",
-  v_solid:"✅ Faixa sólida!", v_solid_p:" Seus níveis estão próximos da faixa comercial. Um master profissional ainda vai afinar o tom para igualar o som dos maiores do seu gênero — e colocar o pico final exatamente em −0.01 dBFS para distribuição.",
+  toast_paid:"✅ Pagamento confirmado — seus downloads estão desbloqueados abaixo!", toast_pp_err:"⚠️ Erro do PayPal — tente novamente ou peça via WhatsApp.",
+  v_solid:"✅ Faixa sólida!", v_solid_p:" Seus níveis estão próximos da faixa comercial. Um master profissional ainda vai afinar o tom para igualar o som dos maiores do seu gênero — e colocar o pico final exatamente em −0.03 dBFS para distribuição.",
   v_headroom:"⚠️ Sua faixa está", v_headroom_p1:"dB abaixo do pico das faixas comerciais.", v_headroom_p2:"Essa sonoridade que falta é exatamente o que você ouve no Spotify/YouTube. Um master profissional fecha essa lacuna sem esmagar sua dinâmica.",
   v_loudness:"⚠️ Sonoridade fora da faixa.", v_loudness_p1:"Faixas comerciais ficam entre −14 e −8 LUFS. A sua está em", v_loudness_p2:"LUFS. Um master adequado te traz à janela moderna mantendo cada batida intacta.",
   v_dyn:"⚠️ Dinâmica esmagada", v_dyn_p:"Sua faixa pode estar super-limitada. Um re-master cuidadoso com reference matching restaura o impacto — envie.",
-  v_unlock:"Desbloqueie seu master por $9.99", v_unlock_p:"— entrega em 24h: WAV 24-bit + MP3 320k + relatório.",
+  v_unlock:"Desbloqueie seu master por $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + relatório instantâneos.",
   wa_msg:"Oi Frid! Acabei de fazer a análise grátis no fridbeats.com e quero masterizar minha faixa.",
   wa_paid:"Oi Frid! Acabei de pagar $9.99 por mastering no fridbeats.com", wa_paid_track:". Aqui está minha faixa",
   mail_sub:"Pedido de Mastering", mail_body:"Oi Frid,\n\nMeu ID de pedido PayPal: {OID}\nMinha faixa está anexada (WAV/MP3).\nReferência opcional: ",
@@ -614,7 +610,7 @@ pt: {
 },
 fr: {
   brand_mastering:"MASTERISATION", back_home:"Retour à fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"MASTERING PRO · TOUS GENRES · LIVRÉ EN 24H",
+  hero_kicker:"MASTERING PRO · TOUS GENRES · INSTANTANÉ DANS TON NAVIGATEUR",
   hero_title_1:"Mastering Prêt pour la Radio,", hero_title_2:"par Frid Beats",
   hero_sub:"Ton beat, ta chanson, ton loop — masterisés au niveau exact des titres commerciaux : nets, forts là où il faut, dynamique entièrement préservée. Envoie, découvre la vérité sur ton morceau gratuitement, débloque ton master.",
   spec_dynamics:"DYNAMIQUE PRÉSERVÉE", spec_universal:"TOUS GENRES · TOUS BPM",
@@ -628,9 +624,9 @@ fr: {
   steps_title:"COMMENT ÇA MARCHE",
   step1_t:"Analyse gratuite", step1_p:"Dépose ton morceau. En quelques secondes tu vois sa sonorité, ses pics et sa dynamique — les mêmes chiffres que les studios de mastering vérifient en premier.",
   step2_t:"Écoute gratis — puis débloque", step2_p:"Magic Master rend ton master dans ton navigateur : écoute 20 secondes gratuites du passage le plus fort. Tu adores ? Débloque le téléchargement complet WAV + MP3 pour $9.99.",
-  step3_t:"Prêt pour la radio, instantanément", step3_p:"Le master complet et propre se télécharge immédiatement après le paiement — WAV 24-bit + MP3 320k, pic à −0.01 dBFS. Tu veux l'oreille de Frid ? Ajoute Frid Signature.",
+  step3_t:"Prêt pour la radio, instantanément", step3_p:"Le master complet et propre se télécharge immédiatement après le paiement — WAV 24-bit + MP3 320k, pic à −0.03 dBFS. Tu veux l'oreille de Frid ? Ajoute Frid Signature.",
   price_title:"CHOISIS TON MASTER", price_per:"PAR MORCEAU · SANS ABONNEMENT",
-  pl1:"Sample Peak −0.01 dBFS — exactement là où sont les masters commerciaux",
+  pl1:"Sample Peak −0.03 dBFS — exactement là où sont les masters commerciaux",
   pl2:"Dynamique 100% préservée — aucun écrasement, aucune distorsion",
   pl3:"Reference matching — j'égale le son de n'importe quel morceau envoyé",
   pl4:"WAV 24-bit + MP3 320k + rapport de mesures",
@@ -646,19 +642,19 @@ fr: {
   co_done_note:"Ton master arrive en 24h — généralement bien plus vite. Révisions incluses.",
   faq_title:"QUESTIONS",
   q1:"Le mastering répare-t-il un mauvais mix ?", a1:"Le mastering est la touche finale — il ne peut pas reconstruire un mix. Si ton morceau a de vrais problèmes (clipping, boue, voix déséquilibrées), je te dirai honnêtement quoi corriger d'abord. Je préfère te garder comme client fidèle plutôt que de te vendre un master qui sonne mal.",
-  q2:"Quels genres masterises-tu ?", a2:"Tous : trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentaux, chansons complètes avec voix, loops, podcasts. La cible (Sample Peak −0.01 dBFS, dynamique préservée) est universelle car elle suit le morceau, pas un preset.",
+  q2:"Quels genres masterises-tu ?", a2:"Tous : trap, drill, afrobeat, kompa, reggaeton, dancehall, pop, R&B — instrumentaux, chansons complètes avec voix, loops, podcasts. La cible (Sample Peak −0.03 dBFS, dynamique préservée) est universelle car elle suit le morceau, pas un preset.",
   q3:"Dois-je t'envoyer mon morceau ?", a3:"Non — Magic Master rend tout dans ton navigateur et le téléchargement se débloque ici même après le paiement. Choisis Frid Signature et tu enverras les mêmes fichiers avec ton ID de commande via WhatsApp (+1 829 602 6502) ou contact@fridbeats.com pour le passage personnel.",
   q4:"Que reçois-je exactement ?", a4:"Un WAV 24-bit masterisé (pour la distribution : DistroKid, TuneCore, BeatStars...) + MP3 320k (pour les previews, les réseaux) + un rapport montrant les chiffres avant/après de ton morceau.",
   q5:"Ma musique est-elle en sécurité ?", a5:"100%. Ton morceau reste privé — je suis le seul à l'écouter, il sert uniquement à ton master et n'est jamais distribué ni partagé. L'analyse gratuite de cette page tourne entièrement dans ton navigateur ; l'audio ne quitte jamais ton appareil.",
   footer_tag:"ton studio, tes règles", f_home:"Accueil", f_beats:"Beats", f_analysis:"Analyse Gratuite",
   toast_analyzing:"Analyse de", toast_badfile:"Impossible de décoder ce fichier — essaie WAV ou MP3.",
   toast_email:"⚠️ Mets d'abord un email valide — ton master y sera livré.",
-  toast_paid:"✅ Paiement confirmé — envoie ton morceau maintenant !", toast_pp_err:"⚠️ Erreur PayPal — réessaie ou commande via WhatsApp.",
-  v_solid:"✅ Morceau solide !", v_solid_p:" Tes niveaux sont proches de la plage commerciale. Un master professionnel affinera quand même le son pour égaler les plus gros titres de ton genre — et placera le pic final exactement à −0.01 dBFS pour la distribution.",
+  toast_paid:"✅ Paiement confirmé — tes téléchargements sont débloqués ci-dessous !", toast_pp_err:"⚠️ Erreur PayPal — réessaie ou commande via WhatsApp.",
+  v_solid:"✅ Morceau solide !", v_solid_p:" Tes niveaux sont proches de la plage commerciale. Un master professionnel affinera quand même le son pour égaler les plus gros titres de ton genre — et placera le pic final exactement à −0.03 dBFS pour la distribution.",
   v_headroom:"⚠️ Ton morceau est", v_headroom_p1:"dB en dessous du pic des titres commerciaux.", v_headroom_p2:"Cette sonorité manquante est exactement ce que tu entends sur Spotify/YouTube. Un master professionnel comble cet écart sans écraser ta dynamique.",
   v_loudness:"⚠️ Sonorité hors plage.", v_loudness_p1:"Les titres commerciaux sont entre −14 et −8 LUFS. Le tien est à", v_loudness_p2:"LUFS. Un bon master te ramène dans la fenêtre moderne en gardant chaque punch intact.",
   v_dyn:"⚠️ Dynamique écrasée", v_dyn_p:"Ton morceau est peut-être sur-limité. Un re-master soigné avec reference matching restaure le punch — envoie-le.",
-  v_unlock:"Débloque ton master pour $9.99", v_unlock_p:"— livré en 24h : WAV 24-bit + MP3 320k + rapport.",
+  v_unlock:"Débloque ton master pour $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + rapport instantanés.",
   wa_msg:"Salut Frid ! Je viens de faire l'analyse gratuite sur fridbeats.com et je veux masteriser mon morceau.",
   wa_paid:"Salut Frid ! Je viens de payer $9.99 pour le mastering sur fridbeats.com", wa_paid_track:". Voici mon morceau",
   mail_sub:"Commande de Mastering", mail_body:"Salut Frid,\n\nMon ID de commande PayPal : {OID}\nMon morceau est en pièce jointe (WAV/MP3).\nRéférence optionnelle : ",
@@ -692,7 +688,7 @@ fr: {
 },
 ht: {
   brand_mastering:"MASTERING", back_home:"Retounen fridbeats.com", nav_free_analysis:"⚡ MAGIC MASTER",
-  hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · LIVRE NAN 24È",
+  hero_kicker:"MASTERING PWOFESYONÈL · TOUT GENRE · IMEDYA NAN NAVIGATÈ OU",
   hero_title_1:"Mastering Pare pou Radyo,", hero_title_2:"Fèt pa Frid Beats",
   hero_sub:"Beat ou, mizik ou, loop ou — masterize nivo egzak mizik komenalsyòt rive: klè, fò kote l fò, dinamik 100% konsève. Upload, we verite sou track ou gratis, debloke master ou.",
   spec_dynamics:"DINAMIK KONSÈVE", spec_universal:"TOUT GENRE · TOUT BPM",
@@ -706,9 +702,9 @@ ht: {
   steps_title:"KÒMAN L FONKSYONE",
   step1_t:"Analiz gratis", step1_p:"Trase track ou. Nan kèk segond ou we sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
   step2_t:"Koute gratis — apre debloke", step2_p:"Magic Master rann master ou nan navigatè ou: koute 20 segond gratis pati ki pi fò a. Renmen l? Debloke telechajman konplè WAV + MP3 pou $9.99.",
-  step3_t:"Pare pou radyo, imedyatman", step3_p:"Master konplè a telechaje touswit apre peman an — WAV 24-bit + MP3 320k, pik −0.01 dBFS. Ou vle zòrèy Frid a? Ajoute Frid Signature.",
+  step3_t:"Pare pou radyo, imedyatman", step3_p:"Master konplè a telechaje touswit apre peman an — WAV 24-bit + MP3 320k, pik −0.03 dBFS. Ou vle zòrèy Frid a? Ajoute Frid Signature.",
   price_title:"CHWAZI MASTER OU", price_per:"PA TRACK · SAN ABONMAN",
-  pl1:"Sample Peak −0.01 dBFS — egzakteman kote master komenalsyòt ye",
+  pl1:"Sample Peak −0.03 dBFS — egzakteman kote master komenalsyòt ye",
   pl2:"Dinamik 100% konsève — pa gen kraze, pa gen distòsyon",
   pl3:"Reference matching — m egzali ton nenpòt track ou voye",
   pl4:"WAV 24-bit + MP3 320k + rapò mezire",
@@ -724,19 +720,19 @@ ht: {
   co_done_note:"Master ou rive nan 24è — jeneralman pi vit. Revizyon konsa.",
   faq_title:"KESYON",
   q1:"Èske mastering repare yon move mix?", a1:"Mastering se dènye poze a — l pa ka rebati yon mix. Si track ou gen pwoblèm grav (clipping, labou, vocal malbalanse), map di ou san maske kisa pou repare an premye. M pi pito kenbe ou kòm kliyan long tèm pase vann ou yon master ki son move.",
-  q2:"Ki genre ou masterize?", a2:"Tout: trap, drill, afrobeat, konpa, reggaeton, dancehall, pop, R&B — enstrimantal, chanson konplè ak vocal, loop, podcast. Sib la (Sample Peak −0.01 dBFS, dinamik konsève) inivèsèl paske l swiv track la, pa yon preset.",
+  q2:"Ki genre ou masterize?", a2:"Tout: trap, drill, afrobeat, konpa, reggaeton, dancehall, pop, R&B — enstrimantal, chanson konplè ak vocal, loop, podcast. Sib la (Sample Peak −0.03 dBFS, dinamik konsève) inivèsèl paske l swiv track la, pa yon preset.",
   q3:"Èske m dwe voye w track mwen?", a3:"Non — Magic Master rann tout nan navigatè ou epi telechajman an debloke la menm apre peman an. Chwazi Frid Signature epi w ap voye menm fichye yo ak ID kòmand ou via WhatsApp (+1 829 602 6502) oswa contact@fridbeats.com pou pas pèsonèl la.",
   q4:"Kisa egzakteman m resevwa?", a4:"Yon WAV 24-bit masterize (pou distribisyon: DistroKid, TuneCore, BeatStars...) + MP3 320k (pou preview, rezo sosyo) + yon rapò ki montre chif avan/apre track ou.",
   q5:"Èske mizik mwen an sekirite?", a5:"100%. Track ou rete prive — se sèlman mwen k koute l, l sèvi sèlman pou master ou, epi l pa janm distribye ni pataje. Analiz gratis paj sa a kouri antyèman nan navigatè ou; odyo a pa janm kite aparèy ou.",
   footer_tag:"studio ou, règ ou", f_home:"Akèy", f_beats:"Beats", f_analysis:"Analiz Gratui",
   toast_analyzing:"Ap analize", toast_badfile:"Pa ka dekode fichye sa a — eseye WAV oswa MP3.",
   toast_email:"⚠️ Mete yon imel valid anpremye — se la master ou ap delivre.",
-  toast_paid:"✅ Peman konfime — kounya voye track ou!", toast_pp_err:"⚠️ Erè PayPal — eseye ankò oswa kòmande via WhatsApp.",
-  v_solid:"✅ Track solid!", v_solid_p:" Nivo ou pre plaj komenalsyòt. Yon master pwofesyonèl ap toujou ajiste ton an pou egzale pi gwo track nan genre ou — epi mete pik final nan egzakteman −0.01 dBFS pou distribisyon.",
+  toast_paid:"✅ Peman konfime — telechajman ou yo debloke anba a!", toast_pp_err:"⚠️ Erè PayPal — eseye ankò oswa kòmande via WhatsApp.",
+  v_solid:"✅ Track solid!", v_solid_p:" Nivo ou pre plaj komenalsyòt. Yon master pwofesyonèl ap toujou ajiste ton an pou egzale pi gwo track nan genre ou — epi mete pik final nan egzakteman −0.03 dBFS pou distribisyon.",
   v_headroom:"⚠️ Track ou", v_headroom_p1:"dB anba kote mizik komenalsyòt pik.", v_headroom_p2:"Sonorite ki manke se egzakteman sa w tande sou Spotify/YouTube. Yon master pwofesyonèl fèmen gap sa a san l kraze dinamik ou.",
   v_loudness:"⚠️ Sonorite deyò plaj.", v_loudness_p1:"Mizik komenalsyòt ye ant −14 ak −8 LUFS. Ou ye nan", v_loudness_p2:"LUFS. Yon bon master mennen ou nan fenèt modèn nan kenbe chak kouto enteg.",
   v_dyn:"⚠️ Dinamik kraze", v_dyn_p:"Track ou ka twò limite. Yon re-master ki fèt ak serye ak reference matching retabli kouto a — voye l.",
-  v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— delivre nan 24è: WAV 24-bit + MP3 320k + rapò.",
+  v_unlock:"Debloke master ou pou $9.99", v_unlock_p:"— WAV 24-bit + MP3 320k + rapò imedya.",
   wa_msg:"Bonjou Frid! M fe analiz gratis la sou fridbeats.com e m vle masterize track mwen.",
   wa_paid:"Bonjou Frid! M peye $9.99 pou mastering sou fridbeats.com", wa_paid_track:". Men track mwen",
   mail_sub:"Kòmand Mastering", mail_body:"Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an pice jwent (WAV/MP3).\nReference opsyonèl: ",
@@ -777,6 +773,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (dict[k] !== undefined) el.innerHTML = dict[k]; });
   $('currentLangLabel').textContent = LANG_LABEL[lang];
   $('waTop').href = 'https://wa.me/18296026502?text=' + encodeURIComponent(dict.wa_msg);
+  if(window.anLast) renderAnalysis();   // keep analysis panel in the selected language
 }
 function toggleLangMenu(){ const m=$('langMenu'); m.style.display = m.style.display==='none' ? 'block' : 'none'; }
 document.addEventListener('click', e => { const b=$('langBtn'), m=$('langMenu'); if (b && m && !b.contains(e.target) && !m.contains(e.target)) m.style.display='none'; });
@@ -841,35 +838,47 @@ function kWeightBuffer(ctx, buf){
   }
   return out;
 }
-function lufsIntegrated(filtered, sr){
+function lufsIntegratedJoint(chans, sr){
+  // ITU BS.1770-4: joint 400ms blocks (100ms hop), SUM of channel powers per block,
+  // absolute gate −70 LUFS, relative gate −10 LU below gated mean. Full rate (no stride).
   const block = Math.round(0.4*sr), hop = Math.round(0.1*sr);
-  const powers=[];
-  for(let st=0; st+block<filtered.length; st+=hop){
-    let sum=0;
-    for(let i=st;i<st+block;i+=4){ const v=filtered[i]; sum+=v*v; }
-    powers.push(sum/(block/4));
+  const Z=[];
+  for(let st=0; st+block<chans[0].length; st+=hop){
+    const z=new Array(chans.length);
+    for(let c=0;c<chans.length;c++){
+      const d=chans[c]; let s=0;
+      for(let i=st;i<st+block;i++){ const v=d[i]; s+=v*v; }
+      z[c]=s/block;
+    }
+    Z.push(z);
   }
-  if(!powers.length) return null;
-  const abs=powers.map(p=>10*Math.log10(p+1e-12)).sort((a,b)=>b-a);
-  const g1=abs.filter(l=>l>-70);
+  if(!Z.length) return null;
+  const loud=z=>-0.691+10*Math.log10(z.reduce((s,p)=>s+p,0)+1e-12);
+  const g1=Z.filter(z=>loud(z)>-70);
   if(!g1.length) return null;
-  const mean=l=>10*Math.log10(l.reduce((s,p)=>s+Math.pow(10,p/10),0)/l.length+1e-12);
-  const rel = mean(g1)-10;
-  const g2=g1.filter(l=>l>rel);
-  return g2.length? mean(g2): mean(g1);
+  const meanL=l=>-0.691+10*Math.log10(l.reduce((s,z)=>s+z.reduce((a,p)=>a+p,0),0)/l.length+1e-12);
+  const rel = meanL(g1)-10;
+  const g2=g1.filter(z=>loud(z)>rel);
+  return g2.length? meanL(g2): meanL(g1);
 }
-function lraEstimate(filtered, sr){
+function lraEstimateJoint(chans, sr, integrated){
+  // EBU Tech 3342: joint 3s short-term windows (1s hop), absolute gate −70, relative gate
+  // integrated−20 LU. LRA = P95 − P10 of the distribution. Full rate.
   const block = Math.round(3.0*sr), hop = Math.round(1.0*sr);
   const vals=[];
-  for(let st=0; st+block<filtered.length; st+=hop){
-    let sum=0, n=0;
-    for(let i=st;i<st+block;i+=8){ const v=filtered[i]; sum+=v*v; n++; }
-    if(n) vals.push(10*Math.log10(sum/n+1e-12));
+  for(let st=0; st+block<chans[0].length; st+=hop){
+    let sum=0;
+    for(let c=0;c<chans.length;c++){ const d=chans[c]; let s=0; for(let i=st;i<st+block;i++){const v=d[i]; s+=v*v;} sum+=s/block; }
+    vals.push(-0.691+10*Math.log10(sum+1e-12));
   }
   if(vals.length<3) return null;
-  vals.sort((a,b)=>a-b);
-  const q=(p)=>vals[Math.floor(p*(vals.length-1))];
-  return Math.max(0, q(0.95)-q(0.10)).toFixed(1);
+  const abs=vals.filter(v=>v>-70);
+  if(abs.length<3) return null;
+  let rel=abs.filter(v=>v>integrated-20);
+  if(rel.length<3) rel=abs;
+  rel.sort((a,b)=>a-b);
+  const q=p=>rel[Math.floor(p*(rel.length-1))];
+  return Math.max(0, q(0.95)-q(0.10));
 }
 async function analyze(file){
   const dict = I18N[currentLang()];
@@ -885,35 +894,27 @@ async function analyze(file){
     for(let i=0;i<ch.length;i++){ const v=Math.abs(ch[i]); if(v>peak)peak=v; if(ch2){const v2=Math.abs(ch2[i]); if(v2>peak)peak=v2;} }
     const tp = peak>0? (20*Math.log10(peak)).toFixed(2) : '-Inf';
     const fw = kWeightBuffer(ctx, ab);
-    const data=fw.getChannelData(0);
-    const lufsI = lufsIntegrated(data, ab.sampleRate);
+    // ITU BS.1770 joint measurement (all channels gated together) — mirrors ffmpeg loudnorm
+    const per=[]; for(let c=0;c<fw.numberOfChannels;c++) per.push(fw.getChannelData(c));
+    const lufsI = lufsIntegratedJoint(per, ab.sampleRate);
     const lufs = lufsI!==null? lufsI.toFixed(1) : '—';
-    const lra = lraEstimate(data, ab.sampleRate) || '—';
+    const lraV = lufsI!==null? lraEstimateJoint(per, ab.sampleRate, lufsI) : null;
+    const lra = lraV!==null? lraV.toFixed(1) : '—';
     const lufsN=parseFloat(lufs), tpN=parseFloat(tp), lraN=parseFloat(lra);
     const okLufs = !isNaN(lufsN) && lufsN>=-16 && lufsN<=-6;
     const okTp = !isNaN(tpN) && tpN>=-6 && tpN<0;
     const okLra = isNaN(lraN) || lraN>=3;
-    $('r-lufs').textContent=isNaN(lufsN)?'—':lufsN.toFixed(1);
-    $('g-lufs').textContent=isNaN(lufsN)?'—':(okLufs?dict.g_in_range:dict.g_needs_work);
-    $('g-lufs').className='g '+(okLufs?'good':'bad');
-    $('r-tp').textContent=tp+' dBFS';
-    $('g-tp').textContent=okTp?dict.g_in_range:dict.g_needs_headroom;
-    $('g-tp').className='g '+(okTp?'good':'bad');
-    $('r-lra').textContent=lra;
-    $('g-lra').textContent=isNaN(lraN)?'—':(okLra?dict.g_alive:dict.g_squashed);
-    $('g-lra').className='g '+(okLra?'good':'bad');
-    const m=Math.floor(ab.duration/60), s=Math.floor(ab.duration%60);
-    $('r-dur').textContent=m+':'+String(s).padStart(2,'0');
-    $('g-dur').textContent=dict.g_ready;
+    window.anLast = { lufsN, tpN, lraN, okLufs, okTp, okLra, durM:Math.floor(ab.duration/60), durS:Math.floor(ab.duration%60) };
+    renderAnalysis();
     let msg;
-    if(okTp && okLufs && okLra){
+    if(anLast.okTp && anLast.okLufs && anLast.okLra){
       msg='<b>'+dict.v_solid+'</b>'+dict.v_solid_p;
-    } else if(!okTp){
-      msg='<b>'+dict.v_headroom+' '+Math.abs(tpN).toFixed(1)+' '+dict.v_headroom_p1+'</b> '+dict.v_headroom_p2;
-    } else if(!okLufs){
-      msg='<b>'+dict.v_loudness+'</b> '+dict.v_loudness_p1+' <b>'+lufsN.toFixed(1)+' '+dict.v_loudness_p2+'</b>';
+    } else if(!anLast.okTp){
+      msg='<b>'+dict.v_headroom+' '+Math.abs(anLast.tpN).toFixed(1)+' '+dict.v_headroom_p1+'</b> '+dict.v_headroom_p2;
+    } else if(!anLast.okLufs){
+      msg='<b>'+dict.v_loudness+'</b> '+dict.v_loudness_p1+' <b>'+anLast.lufsN.toFixed(1)+' '+dict.v_loudness_p2+'</b>';
     } else {
-      msg='<b>'+dict.v_dyn+' ('+lra+' LRA).</b> '+dict.v_dyn_p;
+      msg='<b>'+dict.v_dyn+' ('+anLast.lraN.toFixed(1)+' LRA).</b> '+dict.v_dyn_p;
     }
     msg+='<br><br><b>'+dict.v_unlock+'</b>'+dict.v_unlock_p;
     $('verdict').innerHTML=msg;
@@ -924,6 +925,34 @@ async function analyze(file){
   }catch(e){
     toast(I18N[currentLang()].toast_badfile);
   }
+}
+function renderAnalysis(){
+  // re-render analysis panel from stored metrics — called on analyze() AND on language switch
+  const A = window.anLast; if(!A) return;
+  const dict = I18N[currentLang()];
+  $('r-lufs').textContent=isNaN(A.lufsN)?'—':A.lufsN.toFixed(1);
+  $('g-lufs').textContent=isNaN(A.lufsN)?'—':(A.okLufs?dict.g_in_range:dict.g_needs_work);
+  $('g-lufs').className='g '+(A.okLufs?'good':'bad');
+  $('r-tp').textContent=(isNaN(A.tpN)?'—':A.tpN.toFixed(2))+' dBFS';
+  $('g-tp').textContent=A.okTp?dict.g_in_range:dict.g_needs_headroom;
+  $('g-tp').className='g '+(A.okTp?'good':'bad');
+  $('r-lra').textContent=isNaN(A.lraN)?'—':A.lraN.toFixed(1);
+  $('g-lra').textContent=isNaN(A.lraN)?'—':(A.okLra?dict.g_alive:dict.g_squashed);
+  $('g-lra').className='g '+(A.okLra?'good':'bad');
+  $('r-dur').textContent=A.durM+':'+String(A.durS).padStart(2,'0');
+  $('g-dur').textContent=dict.g_ready;
+  let msg;
+  if(A.okTp && A.okLufs && A.okLra){
+    msg='<b>'+dict.v_solid+'</b>'+dict.v_solid_p;
+  } else if(!A.okTp){
+    msg='<b>'+dict.v_headroom+' '+Math.abs(A.tpN).toFixed(1)+' '+dict.v_headroom_p1+'</b> '+dict.v_headroom_p2;
+  } else if(!A.okLufs){
+    msg='<b>'+dict.v_loudness+'</b> '+dict.v_loudness_p1+' <b>'+A.lufsN.toFixed(1)+' '+dict.v_loudness_p2+'</b>';
+  } else {
+    msg='<b>'+dict.v_dyn+' ('+A.lraN.toFixed(1)+' LRA).</b> '+dict.v_dyn_p;
+  }
+  msg+='<br><br><b>'+dict.v_unlock+'</b>'+dict.v_unlock_p;
+  $('verdict').innerHTML=msg;
 }
 function drawWave(ab){
   const cv=$('wv');
@@ -1001,7 +1030,7 @@ function limiterCurve(){
   // Domain: input scaled by 1/OV before curve (models drive up to +12 dB over).
   // Curve restores unity (y=a*OV) below threshold T, then tanh-saturates to ceiling.
   const OV=4, n=4096, c=new Float32Array(n);
-  const ceil=0.9988, T=0.891, span=ceil-T;    // T ≈ −1 dBFS
+  const ceil=0.99655, T=0.891, span=ceil-T;    // ceil = −0.03 dBFS, T ≈ −1 dBFS
   for(let i=0;i<n;i++){
     const x=i/(n-1)*2-1, a=Math.abs(x)*OV;
     let y;
@@ -1026,7 +1055,7 @@ function mgChainRender(ab, gains, makeup, useLimiter){
     const {curve, ov}=limiterCurve();
     const pre=off.createGain(); pre.gain.value=1/ov;      // widen headroom: |x| up to ov maps into curve domain
     const lim=off.createWaveShaper(); lim.curve=curve; lim.oversample='4x';
-    mk.connect(pre); pre.connect(lim); lim.connect(off.destination);   // curve output IS the limited sample (ceiling −0.01 dBFS)
+    mk.connect(pre); pre.connect(lim); lim.connect(off.destination);   // curve output IS the limited sample (ceiling −0.03 dBFS)
   } else {
     mk.connect(off.destination);
   }
@@ -1040,13 +1069,8 @@ function mgMeasureLufs(buf){
   let lufs=null;
   try{
     const fw=kWeightBuffer(ctx, buf);
-    const per=[];
-    for(let c=0;c<fw.numberOfChannels;c++) per.push(lufsIntegrated(fw.getChannelData(c), buf.sampleRate));
-    const valid=per.filter(v=>v!==null);
-    if(valid.length){
-      const sumSq=valid.reduce((s,v)=>s+Math.pow(10,v/10),0);   // ITU: SUM of channel powers
-      lufs = 10*Math.log10(sumSq) + 0.691;
-    }
+    const chans=[]; for(let c=0;c<fw.numberOfChannels;c++) chans.push(fw.getChannelData(c));
+    lufs = lufsIntegratedJoint(chans, buf.sampleRate);
   }catch(e){}
   finally{ try{ctx.close();}catch(e){} }
   return lufs;
@@ -1068,8 +1092,8 @@ function peakP95(buf){
   return peaks[Math.floor(0.95*(peaks.length-1))];
 }
 function mgSafetyCeil(buf){
-  // hard safety: nothing above −0.01 dBFS, ever
-  const CEIL=0.9988;
+  // hard safety: nothing above −0.03 dBFS, ever
+  const CEIL=0.99655;
   let peak=0;
   for(let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i++){ const v=Math.abs(d[i]); if(v>peak)peak=v; } }
   if(peak>CEIL){
@@ -1152,7 +1176,7 @@ async function magicStart(){
     mgStage(1,'done');
     mgStage(2,'on');
     const MAX_PUSH = Math.pow(10, 14/20);   // +14 dB cap
-    const CEIL = 0.9988;                     // −0.01 dBFS
+    const CEIL = 0.99655;                     // −0.03 dBFS
     const l0 = mgMeasureLufs(mgState.track);
     let push = Math.min(Math.pow(10, ((-10.5 - (l0===null?-14:l0)) / 20)), MAX_PUSH);
     // render -> measure -> correct once (limiter eats some loudness; converge on the real output)
@@ -1169,8 +1193,15 @@ async function magicStart(){
     // like Frid's studio chain) instead of letting peaks float up to 1 dB under the knee
     const p95 = peakP95(pass2);
     if(p95 > 0.05 && p95 < CEIL*0.94){
-      push = Math.min(MAX_PUSH, push * Math.min((CEIL*0.985)/p95, 2.0));
-      pass2 = await mgChainRender(mgState.track, gains, push, true);
+      const pushPk = Math.min(MAX_PUSH, push * Math.min((CEIL*0.985)/p95, 2.0));
+      const cand = await mgChainRender(mgState.track, gains, pushPk, true);
+      const l3 = mgMeasureLufs(cand);
+      // guard: on loud/slammed material the limiter can sit in its linear zone, so the
+      // peak-pinning push can blow LUFS way past target. Loudness accuracy wins -> pull back.
+      if(l3 !== null && (l3 - (-10.5)) > 0.6){
+        push = Math.max(0.25, Math.min(MAX_PUSH, pushPk * Math.pow(10, (-10.5 - l3)/20)));
+        pass2 = await mgChainRender(mgState.track, gains, push, true);
+      } else { push = pushPk; pass2 = cand; }
     }
     mgStage(2,'done');
     mgStage(3,'on');
@@ -1268,6 +1299,14 @@ const mgState={ fileT:null, fileR:null, track:null, ref:null, master:null };
 /* init */
 applyI18n();
 applyPromo();
+/* A/B players: never play both at once — starting one pauses the other */
+(function(){
+  const bA=$('abA'), bB=$('abB');
+  if(bA&&bB){
+    bA.addEventListener('play',()=>{ if(!bB.paused) bB.pause(); });
+    bB.addEventListener('play',()=>{ if(!bA.paused) bA.pause(); });
+  }
+})();
 </script>
 </body>
 </html>
