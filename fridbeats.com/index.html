@@ -7343,7 +7343,7 @@ function mgpStartPp(){
         createOrder: function(data, actions){
           const email=($mgp('mgpEmail').value||'').trim();
           if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ mgpToast(MGP_I18N[mgpLang()].mgp_toast_email); $mgp('mgpEmail').focus(); return Promise.reject(new Error('invalid email')); }
-          return actions.order.create({ purchase_units:[{ amount:{ value: mgpCheckoutTotal().toFixed(2) }, description: 'Frid Mastering Service (1 track, 24h delivery) — Frid Beats' }] });
+          return actions.order.create({ purchase_units:[{ amount:{ value: mgpCheckoutTotal().toFixed(2) } }] });
         },
         onApprove: async function(data, actions){
           const details = await actions.order.capture();
