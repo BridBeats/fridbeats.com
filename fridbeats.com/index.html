@@ -1678,12 +1678,12 @@ input[type="range"]::-moz-range-thumb {
         .mgp-card h2 { font-size:13px; letter-spacing:2.5px; color:var(--text-secondary); font-weight:800; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 4px; }
         .mgp-free { background:rgba(34,197,94,0.12); color:#22c55e; font-size:10px; letter-spacing:1.5px; border-radius:var(--radius-full); padding:4px 10px; }
         .mgp-sec { font-size:13px; letter-spacing:3px; color:var(--text-tertiary); font-weight:800; text-align:center; margin:22px 0 0; }
-        .mgp-dz { border:1.5px dashed rgba(255,255,255,0.16); border-radius:var(--radius-lg); padding:34px 16px; text-align:center; cursor:pointer; transition:all 250ms; background:var(--bg-input); margin-top:16px; }
+        .mgp-dz { border:1.5px dashed rgba(255,255,255,0.16); border-radius:var(--radius-lg); padding:16px 16px; text-align:center; cursor:pointer; transition:all 250ms; background:var(--bg-input); margin-top:12px; }
         .mgp-dz:hover, .mgp-dz.over { border-color:var(--accent-light); background:rgba(26,90,74,0.10); }
-        .mgp-dz .ic { font-size:26px; color:var(--accent-light); }
-        .mgp-dz .t1 { margin-top:10px; font-weight:700; font-size:15px; }
-        .mgp-dz .t2 { color:var(--text-muted); font-size:12px; margin-top:5px; }
-        .mgp-fname { margin-top:11px; font-size:12.5px; color:#22c55e; word-break:break-all; min-height:17px; font-weight:500; }
+        .mgp-dz .ic { font-size:20px; color:var(--accent-light); }
+        .mgp-dz .t1 { margin-top:6px; font-weight:700; font-size:14px; }
+        .mgp-dz .t2 { color:var(--text-muted); font-size:11.5px; margin-top:3px; }
+        .mgp-fname { margin-top:8px; font-size:12.5px; color:#22c55e; word-break:break-all; min-height:17px; font-weight:500; }
         .mgp-res { display:none; margin-top:20px; }
         .mgp-res.show { display:block; }
         .mgp-rgrid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
@@ -2112,7 +2112,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                     <div class="mgp-note" data-i18n="mgp_an_note_pay">⚡ Magic Master renders your full master (WAV 24-bit + MP3 320k) instantly in your browser — or go Frid Signature for his personal pass.</div>
                 </div>
-                <div class="mgp-note" id="mgpPrivnote" style="margin-top:14px" data-i18n="mgp_priv_note">🔒 Your audio is analyzed locally in your browser — nothing is uploaded, ever.</div>
+                <div class="mgp-note" id="mgpPrivnote" style="margin-top:10px" data-i18n="mgp_priv_note">🔒 Your audio is analyzed locally in your browser — nothing is uploaded, ever.</div>
             </div>
 
             <!-- ===== MAGIC MASTER ===== -->
@@ -3909,6 +3909,37 @@ document.addEventListener('keydown', function(e) {
             }
         }
 
+        // Save the order so the Worker can verify payments + sign downloads.
+        // 1) Preferred: Worker /save-order (service_role key — PayPal-verified,
+        //    amount-checked, bypasses RLS). 2) Fallback: direct Supabase insert
+        //    (works once the anon INSERT policy is added on public.orders).
+        async function saveOrderRecord(orderRecord) {
+            if (R2_UPLOAD_ENDPOINT) {
+                try {
+                    const res = await fetch(R2_UPLOAD_ENDPOINT + '/save-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            orderId: orderRecord.paypal_order_id,
+                            email: orderRecord.email,
+                            items: orderRecord.items,
+                            total: orderRecord.total
+                        })
+                    });
+                    if (res.ok) {
+                        const d = await res.json().catch(() => ({}));
+                        if (d && d.ok) return true;
+                    }
+                    console.error('Worker save-order failed:', res.status, await res.text().catch(() => ''));
+                } catch (e) { console.error('Worker save-order error:', e); }
+            }
+            if (supabaseClient) {
+                try { await supabaseClient.from('orders').insert(orderRecord); return true; }
+                catch (e) { console.error('Error saving order to Supabase:', e); }
+            }
+            return false;
+        }
+
         async function handleSuccessfulOrder(details) {
             const emailEl = document.getElementById('checkoutEmail');
             const email = (emailEl && emailEl.value) || (details.payer && details.payer.email_address) || '';
@@ -3929,10 +3960,8 @@ document.addEventListener('keydown', function(e) {
                 total: getCartTotal(),
                 paypal_order_id: details.id
             };
-            if (supabaseClient) {
-                try { await supabaseClient.from('orders').insert(orderRecord); }
-                catch (e) { console.error('Error saving order to Supabase:', e); }
-            }
+            const orderSaved = await saveOrderRecord(orderRecord);
+            if (!orderSaved) console.error('⚠️ Order could not be saved — downloads/emails will fail for ' + (orderRecord.paypal_order_id || '?'));
             if (email && !subscribers.includes(email)) { subscribers.push(email); saveSubscribers(); }
             // Meta Pixel: purchase completed ✅
             try { metaTrack('Purchase', { value: Number(orderRecord.total) || getCartTotal(), currency: 'USD', num_items: orderRecord.items.reduce((s, i) => s + i.quantity, 0), content_ids: orderRecord.items.map(i => i.id), content_type: 'product' }); gaTrack('purchase', { transaction_id: orderRecord.id || ('ord_' + Date.now()), currency: 'USD', value: Number(orderRecord.total) || getCartTotal(), items: (orderRecord.items || []).map(i => ({ item_id: i.id, item_name: i.title })) }); } catch (e) {}
@@ -7350,6 +7379,7 @@ function mgpStartPp(){
           const email=($mgp('mgpEmail').value||'').trim() || (details.payer && details.payer.email_address) || '';
           const oid = details.id || '';
           const dict = MGP_I18N[mgpLang()];
+          try { if (R2_UPLOAD_ENDPOINT) { await fetch(R2_UPLOAD_ENDPOINT + '/save-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: oid, email: email, items: [{ id: 'mastering-service', title: 'Frid Mastering Service (1 track)', type: 'mastering', price: mgpCheckoutTotal(), quantity: 1, license: null, files: null }], total: mgpCheckoutTotal() }) }); } } catch (e) {}
           if (mgpSupabase){ try{ await mgpSupabase.from('orders').insert({ email, items:[{ id:'mastering-service', title:'Frid Mastering Service (1 track)', type:'mastering', price: mgpCheckoutTotal(), quantity:1, license:null, files:null }], total: mgpCheckoutTotal(), paypal_order_id: oid }); }catch(e){ console.error('order save failed', e); } }
           mgpPaid=true;
           $mgp('mgpOrderId').textContent = oid;
