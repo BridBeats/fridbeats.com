@@ -176,13 +176,15 @@
             line-height:1.6;
             overflow-x:hidden;
             min-height:100vh;
+            background-color:var(--bg-primary);
             background-image:
-                radial-gradient(ellipse at 30% 40%, rgba(26,90,74,0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 60%, rgba(26,90,74,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(26,90,74,0.05) 0%, transparent 40%);
+                radial-gradient(ellipse 58% 24% at 50% 15%, rgba(48,145,119,0.34) 0%, rgba(26,90,74,0.16) 48%, transparent 100%),
+                radial-gradient(ellipse 72% 22% at 18% 12%, rgba(26,90,74,0.14) 0%, transparent 100%),
+                linear-gradient(160deg, #0c1821 0%, #091722 38%, #07131a 100%);
         }
         body::before {
             content:'';
+            display:none;
             position:fixed;
             top:0; left:0; right:0; bottom:0;
             z-index:-1;
@@ -203,34 +205,6 @@
         ::selection { background:var(--accent-primary); color:#fff; }
         .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
 
-        /* ===== DISTANT TROPICAL / PALM TREE BACKGROUND (decorative texture, far behind content) ===== */
-        .nature-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            opacity: 0.30;
-            pointer-events: none;
-            filter: blur(0.5px);
-        }
-        .nature-bg-svg { width: 100%; height: 100%; }
-        .palm-fronds {
-            animation: palmSway 7s ease-in-out infinite alternate;
-        }
-        .palm-2 .palm-fronds { animation-duration: 8.5s; animation-delay: 0.6s; }
-        .palm-3 .palm-fronds { animation-duration: 6.2s; animation-delay: 1.2s; }
-        @keyframes palmSway {
-            0%   { transform: rotate(-2.5deg); }
-            100% { transform: rotate(2.5deg); }
-        }
-        @media (max-width: 900px) {
-            .nature-bg { opacity: 0.22; }
-        }
-        @media (max-width: 480px) {
-            .nature-bg { opacity: 0.16; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .palm-fronds { animation: none; }
-        }
 
         /* ===== REAL-TIME VU METER — fixed panel, visible on EVERY page, only while audio plays ===== */
         .vu-meter-panel {
@@ -659,7 +633,8 @@ background-clip: text;
         .section-title span { color:var(--accent-primary); font-weight:300; }
         .section-subtitle { text-align:center; color:var(--text-tertiary); max-width:600px; margin:0 auto 2.5rem; font-weight:300; font-size:0.95rem; }
 
-        .beat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1.5rem; }
+        .beat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; }
+        .templates-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,360px)); gap:1.5rem; justify-content:center; }
         .beat-card {
     background: var(--bg-card); 
     backdrop-filter: blur(10px);
@@ -1557,7 +1532,7 @@ input[type="range"]::-moz-range-thumb {
 }
 @media (max-width:768px) {
             html { scroll-behavior:auto; }
-            .nature-bg, .glass-section::before, .glass-section::after { animation:none !important; }
+            .glass-section::before, .glass-section::after { animation:none !important; }
             body {
                 background-color:var(--bg-primary);
                 background-image:
@@ -1565,7 +1540,7 @@ input[type="range"]::-moz-range-thumb {
                     radial-gradient(ellipse 72% 22% at 18% 12%, rgba(26,90,74,0.14) 0%, transparent 100%),
                     linear-gradient(160deg, #0c1821 0%, #091722 38%, #07131a 100%);
             }
-            body::before, .nature-bg { display:none; }
+            body::before { display:none; }
             .hero-content, .hero-title, .hero-subtitle, .hero-statement, .hero-buttons, .stats-grid,
             .glass-section::before, .glass-section::after { animation:none; }
             .header, .glass-section, .beat-card, .template-card, .flp-card, .filters-panel,
@@ -1574,6 +1549,7 @@ input[type="range"]::-moz-range-thumb {
                 -webkit-backdrop-filter:none;
             }
             .beat-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr)); gap:0.75rem; }
+            .templates-grid { grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr)); gap:0.75rem; }
             .flp-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:0.75rem; }
     .filters-section { grid-template-columns:1fr; }
     .beat-detail { grid-template-columns:1fr; }
@@ -1655,6 +1631,7 @@ input[type="range"]::-moz-range-thumb {
     @media (max-width:360px) {
         .glass-section { padding-left:0.4rem; padding-right:0.4rem; }
         .beat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
+        .templates-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
         .flp-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
     }
         .text-center { text-align:center; }
@@ -1760,7 +1737,7 @@ input[type="range"]::-moz-range-thumb {
       }
       /* 2) Stop the always-on animations (they restart instantly on
             desktop and are decorative only). */
-      .glass-section, .palm-decoration {
+      .glass-section {
         animation: none !important;
       }
       /* 3) Pause animations for elements far off-screen (nice-to-have
@@ -1793,63 +1770,6 @@ input[type="range"]::-moz-range-thumb {
         <text x="80" y="148" text-anchor="middle" class="vu-caption">LIVE LEVEL</text>
     </svg>
 </div>
-
-    <!-- ===== DISTANT TROPICAL BACKGROUND ===== -->
-<div class="nature-bg" aria-hidden="true">
-    <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" class="nature-bg-svg">
-        <defs>
-            <radialGradient id="sunGlow" cx="50%" cy="35%" r="45%">
-                <stop offset="0%" stop-color="rgba(120,220,190,0.30)"/>
-                <stop offset="60%" stop-color="rgba(46,180,140,0.10)"/>
-                <stop offset="100%" stop-color="rgba(46,180,140,0)"/>
-            </radialGradient>
-        </defs>
-
-        <!-- Sun -->
-        <circle cx="500" cy="380" r="350" fill="url(#sunGlow)"/>
-
-        <!-- COCONUT TREE 1 (left) -->
-        <g opacity="0.35">
-            <path d="M180,530 Q175,480 180,440" stroke="#1a4a35" stroke-width="4" fill="none"/>
-            <path d="M180,440 Q140,425 100,445" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M180,440 Q150,410 120,400" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M180,440 Q180,400 178,375" stroke="#2a5a45" stroke-width="2.5" fill="none"/>
-            <path d="M180,440 Q210,410 240,400" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M180,440 Q220,425 260,445" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-        </g>
-
-        <!-- PYE KOKOYE 2 (dwat) -->
-        <g opacity="0.35">
-            <path d="M820,535 Q815,485 820,445" stroke="#1a4a35" stroke-width="4.5" fill="none"/>
-            <path d="M820,445 Q780,430 740,450" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M820,445 Q790,415 760,405" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M820,445 Q820,405 818,380" stroke="#2a5a45" stroke-width="2.5" fill="none"/>
-            <path d="M820,445 Q850,415 880,405" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-            <path d="M820,445 Q860,430 900,450" stroke="#1a4a35" stroke-width="2.5" fill="none"/>
-        </g>
-
-        <!-- PYE KOKOYE 3 (sant) -->
-        <g opacity="0.45">
-            <path d="M500,565 Q495,500 500,455" stroke="#1a4a35" stroke-width="6" fill="none"/>
-            <path d="M500,455 Q450,430 400,460" stroke="#1a4a35" stroke-width="3" fill="none"/>
-            <path d="M500,455 Q460,415 420,400" stroke="#1a4a35" stroke-width="3" fill="none"/>
-            <path d="M500,455 Q500,410 497,380" stroke="#2a5a45" stroke-width="3" fill="none"/>
-            <path d="M500,455 Q540,415 580,400" stroke="#1a4a35" stroke-width="3" fill="none"/>
-            <path d="M500,455 Q550,430 600,460" stroke="#1a4a35" stroke-width="3" fill="none"/>
-            <path d="M500,455 Q485,448 470,455" stroke="#2a5a45" stroke-width="2" fill="none"/>
-            <path d="M500,455 Q515,448 530,455" stroke="#2a5a45" stroke-width="2" fill="none"/>
-        </g>
-
-        <!-- Ti vejetasyon anba -->
-        <g opacity="0.20" stroke="#1a4a35" stroke-width="1.5" fill="none">
-            <path d="M60,540 Q80,535 100,540"/>
-            <path d="M900,535 Q920,530 940,535"/>
-            <path d="M250,560 Q270,555 290,560"/>
-            <path d="M710,555 Q730,550 750,555"/>
-        </g>
-    </svg>
-</div>
-
 
 
     <!-- ===== HEADER ===== -->
@@ -1927,7 +1847,7 @@ input[type="range"]::-moz-range-thumb {
                      <img loading="lazy" decoding="async" src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
                 </div>
                 <h1 class="hero-title">FRID <span>BEATS</span></h1>
-                <p class="hero-subtitle" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mixing Engineer</p>
+                <p class="hero-subtitle" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mastering Engineer</p>
                 <p class="hero-statement" data-i18n="hero_statement">"Original production, remakes and sound crafted for artists who want their music to stand out."</p>
                 <div class="hero-buttons">
                     <button class="btn btn-gradient" onclick="navigateTo('beats')">
@@ -1950,7 +1870,7 @@ input[type="range"]::-moz-range-thumb {
         <div id="aiFinder" style="background:linear-gradient(135deg,rgba(74,222,128,0.07),rgba(56,189,248,0.05));border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-lg);padding:0.9rem 1.1rem;">
             <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
                 <div style="display:flex;align-items:center;gap:0.4rem;flex-shrink:0;">
-                    <span style="font-size:1.05rem;">🤖</span>
+                    <i class="fas fa-robot" style="font-size:0.95rem;color:var(--accent-light);" aria-hidden="true"></i>
                     <strong style="font-size:0.88rem;color:var(--text-primary);white-space:nowrap;" data-i18n="ai_title">AI Beat Finder</strong>
                     <span style="font-size:0.62rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:1px 7px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
                 </div>
@@ -1960,7 +1880,7 @@ input[type="range"]::-moz-range-thumb {
                            onkeydown="if(event.key==='Enter')aiFind()">
                     <button onclick="aiFind()" id="aiSearchBtn"
                             style="padding:0.6rem 1.3rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.3s ease;flex-shrink:0;" data-i18n="ai_find">
-                        ✨ Find
+                        Find
                     </button>
                 </div>
             </div>
@@ -2059,7 +1979,7 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="templates_title">FL Studio <span>Templates</span></h1><p class="text-muted" data-i18n="templates_subtitle">Premium FL Studio templates for producers — $9.99 each</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
-            <div class="beat-grid" id="templateGrid">
+            <div class="templates-grid" id="templateGrid">
                 <div class="loading-state"><div class="loading-spinner"></div><span>Loading templates…</span></div>
             </div>
         </div>
@@ -2211,7 +2131,7 @@ input[type="range"]::-moz-range-thumb {
         <img src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/profile/frid-beats-profile.jpg" alt="Frid Beats" id="profileImage" loading="lazy" decoding="async" onerror="this.style.display='none'">
     </div>
     <div class="about-bio">
-                        <p data-i18n="about_bio1"><strong>Frid Beats</strong> is a music producer, beatmaker, composer, artist and mixing engineer driven by creativity and sound.</p>
+                        <p data-i18n="about_bio1"><strong>Frid Beats</strong> is a music producer, beatmaker, composer, artist and mastering engineer driven by creativity and sound.</p>
                         <p data-i18n="about_bio2">I create original music and productions across genres such as Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap and more.</p>
                         <p data-i18n="about_bio3">Whether I'm creating music for myself, building beats for artists, or developing tools for other producers, my goal is always the same: creating music with character, emotion and a strong creative direction.</p>
                         <p data-i18n="about_bio4"><strong>Frid Beats</strong> is more than a beat store — it's a creative space where music, production and ideas come together.</p>
@@ -2484,7 +2404,7 @@ input[type="range"]::-moz-range-thumb {
             <div class="footer-grid">
                 <div>
                     <h4 style="font-size:1.1rem;">FRID <span style="color:var(--text-secondary);">BEATS</span></h4>
-                    <p class="text-muted" style="font-size:0.8rem;" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mixing Engineer</p>
+                    <p class="text-muted" style="font-size:0.8rem;" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mastering Engineer</p>
                     <div class="social-icons" style="justify-content:flex-start;margin-top:0.75rem;">
                         <a href="https://instagram.com/FridBeats" target="_blank" class="social-icon instagram" style="width:34px;height:34px;font-size:0.8rem;"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.youtube.com/@FridBeats" target="_blank" class="social-icon youtube" style="width:34px;height:34px;font-size:0.8rem;"><i class="fab fa-youtube"></i></a>
@@ -2493,7 +2413,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                 </div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a onclick="navigateTo('mastering')" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
-                <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('contact')" data-i18n="footer_mixing">Mixing & Vocal</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
+                <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('mastering')" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('contact')" data-i18n="footer_mixing">Mixing & Vocal</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
             <div class="footer-bottom"><span onclick="secretAdminTap()" style="cursor:default;">© 2026 Frid Beats. All rights reserved.</span><span data-i18n="footer_tagline">Made by Frid Beats 🎵</span></div>
@@ -3380,7 +3300,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
         const translations = {
             en: {
                 nav_home: "Home", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "FLP Remakes", nav_mastering: "Mastering", nav_about: "About", nav_contact: "Contact",
-                hero_subtitle: "Music Producer • Beatmaker • Mixing Engineer",
+                hero_subtitle: "Music Producer • Beatmaker • Mastering Engineer",
                 hero_statement: "\"Original production, remakes and sound crafted for artists who want their music to stand out.\"",
                 hero_btn_explore: "Explore Beats", hero_btn_work: "Work With Me",
                 stat_beats: "Beats", stat_clients: "Clients", stat_years: "Years", stat_collabs: "Collabs",
@@ -3395,7 +3315,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 success_title: "Payment Successful! 🎉", success_line1: "Thank you for your purchase! Your order has been confirmed.",
                 success_line2: "You will receive a confirmation email with your download links shortly.", success_btn_continue: "Continue Exploring",
                 about_title: "About <span>Me</span>",
-                about_bio1: "<strong>Frid Beats</strong> is a music producer, beatmaker, composer, artist and mixing engineer driven by creativity and sound.",
+                about_bio1: "<strong>Frid Beats</strong> is a music producer, beatmaker, composer, artist and mastering engineer driven by creativity and sound.",
                 about_bio2: "I create original music and productions across genres such as Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap and more.",
                 about_bio3: "Whether I'm creating music for myself, building beats for artists, or developing tools for other producers, my goal is always the same: creating music with character, emotion and a strong creative direction.",
                 about_bio4: "<strong>Frid Beats</strong> is more than a beat store — it's a creative space where music, production and ideas come together.",
@@ -3407,11 +3327,11 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Click to chat →", contact_send_message: "Send a message →", contact_follow_me: "Follow Me",
                 footer_pages: "Pages", footer_services: "Services", footer_custom_beats: "Custom Beats", footer_mixing: "Mixing & Vocal",
                 footer_licensing: "Licensing", footer_tagline: "Made by Frid Beats 🎵",
-                ai_title: "AI Beat Finder", ai_placeholder: 'Try "rihanna type flp remake", "dark reggaeton beat"...', ai_find: "✨ Find", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again."
+                ai_title: "AI Beat Finder", ai_placeholder: 'Try "rihanna type flp remake", "dark reggaeton beat"...', ai_find: "Find", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again."
             },
             es: {
                 nav_home: "Inicio", nav_beats: "Beats", nav_templates: "Plantillas", nav_flp: "Remakes FLP", nav_mastering: "Masterización", nav_about: "Sobre mí", nav_contact: "Contacto",
-                hero_subtitle: "Productor Musical • Beatmaker • Ingeniero de Mezcla",
+                hero_subtitle: "Productor Musical • Beatmaker • Ingeniero de Mastering",
                 hero_statement: "\"Producción original, remakes y sonido creados para artistas que quieren que su música destaque.\"",
                 hero_btn_explore: "Explorar Beats", hero_btn_work: "Trabaja Conmigo",
                 stat_beats: "Beats", stat_clients: "Clientes", stat_years: "Años", stat_collabs: "Colaboraciones",
@@ -3426,7 +3346,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 success_title: "¡Pago Exitoso! 🎉", success_line1: "¡Gracias por tu compra! Tu pedido ha sido confirmado.",
                 success_line2: "Recibirás un correo de confirmación con tus enlaces de descarga en breve.", success_btn_continue: "Seguir Explorando",
                 about_title: "Sobre <span>Mí</span>",
-                about_bio1: "<strong>Frid Beats</strong> es un productor musical, beatmaker, compositor, artista e ingeniero de mezcla impulsado por la creatividad y el sonido.",
+                about_bio1: "<strong>Frid Beats</strong> es un productor musical, beatmaker, compositor, artista e ingeniero de mastering impulsado por la creatividad y el sonido.",
                 about_bio2: "Creo música y producciones originales en géneros como Kompa, Afrobeat, Reggaetón, Dancehall, Trap, Drill, Boom Bap y más.",
                 about_bio3: "Ya sea creando música para mí mismo, produciendo beats para artistas, o desarrollando herramientas para otros productores, mi objetivo siempre es el mismo: crear música con carácter, emoción y una fuerte dirección creativa.",
                 about_bio4: "<strong>Frid Beats</strong> es más que una tienda de beats: es un espacio creativo donde la música, la producción y las ideas se encuentran.",
@@ -3438,11 +3358,11 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Haz clic para chatear →", contact_send_message: "Enviar un mensaje →", contact_follow_me: "Sígueme",
                 footer_pages: "Páginas", footer_services: "Servicios", footer_custom_beats: "Beats Personalizados", footer_mixing: "Mezcla y Voz",
                 footer_licensing: "Licencias", footer_tagline: "Hecho por Frid Beats 🎵",
-                ai_title: "Buscador IA de Beats", ai_placeholder: 'Prueba "flp remake tipo rihanna", "beat reggaetón oscuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Mejores", ai_matches_suffix: "coincidencia(s):", ai_no_results: '😕 Nada coincidió con esa descripción — prueba otras palabras o', ai_browse_beats: "explora todos los beats", ai_unavailable: "⚠️ Búsqueda temporalmente no disponible — intenta de nuevo."
+                ai_title: "Buscador IA de Beats", ai_placeholder: 'Prueba "flp remake tipo rihanna", "beat reggaetón oscuro"...', ai_find: "Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Mejores", ai_matches_suffix: "coincidencia(s):", ai_no_results: '😕 Nada coincidió con esa descripción — prueba otras palabras o', ai_browse_beats: "explora todos los beats", ai_unavailable: "⚠️ Búsqueda temporalmente no disponible — intenta de nuevo."
             },
             pt: {
                 nav_home: "Início", nav_beats: "Beats", nav_templates: "Templates", nav_flp: "Remakes FLP", nav_mastering: "Masterização", nav_about: "Sobre", nav_contact: "Contato",
-                hero_subtitle: "Produtor Musical • Beatmaker • Engenheiro de Mixagem",
+                hero_subtitle: "Produtor Musical • Beatmaker • Engenheiro de Masterização",
                 hero_statement: "\"Produção original, remakes e som feitos para artistas que querem que sua música se destaque.\"",
                 hero_btn_explore: "Explorar Beats", hero_btn_work: "Trabalhe Comigo",
                 stat_beats: "Beats", stat_clients: "Clientes", stat_years: "Anos", stat_collabs: "Colaborações",
@@ -3457,7 +3377,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 success_title: "Pagamento Aprovado! 🎉", success_line1: "Obrigado pela sua compra! Seu pedido foi confirmado.",
                 success_line2: "Você receberá um e-mail de confirmação com os links de download em breve.", success_btn_continue: "Continuar Explorando",
                 about_title: "Sobre <span>Mim</span>",
-                about_bio1: "<strong>Frid Beats</strong> é um produtor musical, beatmaker, compositor, artista e engenheiro de mixagem movido pela criatividade e pelo som.",
+                about_bio1: "<strong>Frid Beats</strong> é um produtor musical, beatmaker, compositor, artista e engenheiro de masterização movido pela criatividade e pelo som.",
                 about_bio2: "Crio músicas e produções originais em gêneros como Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap e mais.",
                 about_bio3: "Seja criando música para mim mesmo, produzindo beats para artistas, ou desenvolvendo ferramentas para outros produtores, meu objetivo é sempre o mesmo: criar música com caráter, emoção e uma forte direção criativa.",
                 about_bio4: "<strong>Frid Beats</strong> é mais que uma loja de beats — é um espaço criativo onde música, produção e ideias se encontram.",
@@ -3469,11 +3389,11 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Clique para conversar →", contact_send_message: "Enviar uma mensagem →", contact_follow_me: "Me Siga",
                 footer_pages: "Páginas", footer_services: "Serviços", footer_custom_beats: "Beats Personalizados", footer_mixing: "Mixagem e Vocal",
                 footer_licensing: "Licenciamento", footer_tagline: "Feito por Frid Beats 🎵",
-                ai_title: "Buscador IA de Beats", ai_placeholder: 'Tente "flp remake tipo rihanna", "beat reggaetão escuro"...', ai_find: "✨ Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Melhores", ai_matches_suffix: "correspondência(s):", ai_no_results: '😕 Nada correspondeu a essa descrição — tente outras palavras ou', ai_browse_beats: "explorar todos os beats", ai_unavailable: "⚠️ Pesquisa temporariamente indisponível — tente novamente."
+                ai_title: "Buscador IA de Beats", ai_placeholder: 'Tente "flp remake tipo rihanna", "beat reggaetão escuro"...', ai_find: "Buscar", ai_searching: "🔍 Buscando...", ai_top_matches: "Melhores", ai_matches_suffix: "correspondência(s):", ai_no_results: '😕 Nada correspondeu a essa descrição — tente outras palavras ou', ai_browse_beats: "explorar todos os beats", ai_unavailable: "⚠️ Pesquisa temporariamente indisponível — tente novamente."
             },
             fr: {
                 nav_home: "Accueil", nav_beats: "Beats", nav_templates: "Modèles", nav_flp: "Remakes FLP", nav_mastering: "Masterisation", nav_about: "À propos", nav_contact: "Contact",
-                hero_subtitle: "Producteur de Musique • Beatmaker • Ingénieur du Son",
+                hero_subtitle: "Producteur de Musique • Beatmaker • Ingénieur de Mastering",
                 hero_statement: "« Production originale, remakes et son conçus pour les artistes qui veulent que leur musique se démarque. »",
                 hero_btn_explore: "Explorer les Beats", hero_btn_work: "Travailler Avec Moi",
                 stat_beats: "Beats", stat_clients: "Clients", stat_years: "Années", stat_collabs: "Collaborations",
@@ -3488,7 +3408,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 success_title: "Paiement Réussi ! 🎉", success_line1: "Merci pour votre achat ! Votre commande a été confirmée.",
                 success_line2: "Vous recevrez bientôt un e-mail de confirmation avec vos liens de téléchargement.", success_btn_continue: "Continuer à Explorer",
                 about_title: "À Propos de <span>Moi</span>",
-                about_bio1: "<strong>Frid Beats</strong> est un producteur de musique, beatmaker, compositeur, artiste et ingénieur du son animé par la créativité et le son.",
+                about_bio1: "<strong>Frid Beats</strong> est un producteur de musique, beatmaker, compositeur, artiste et ingénieur de mastering animé par la créativité et le son.",
                 about_bio2: "Je crée de la musique et des productions originales dans des genres tels que Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap et plus encore.",
                 about_bio3: "Que ce soit pour créer de la musique pour moi-même, produire des beats pour des artistes, ou développer des outils pour d'autres producteurs, mon objectif reste toujours le même : créer une musique avec du caractère, de l'émotion et une forte direction créative.",
                 about_bio4: "<strong>Frid Beats</strong> est bien plus qu'une boutique de beats — c'est un espace créatif où la musique, la production et les idées se rencontrent.",
@@ -3500,11 +3420,11 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Cliquez pour discuter →", contact_send_message: "Envoyer un message →", contact_follow_me: "Suivez-Moi",
                 footer_pages: "Pages", footer_services: "Services", footer_custom_beats: "Beats Personnalisés", footer_mixing: "Mixage et Voix",
                 footer_licensing: "Licences", footer_tagline: "Fait par Frid Beats 🎵",
-                ai_title: "Recherche IA de Beats", ai_placeholder: 'Essayez "flp remake type rihanna", "beat reggaeton sombre"...', ai_find: "✨ Chercher", ai_searching: "🔍 Recherche...", ai_top_matches: "Meilleures", ai_matches_suffix: "correspondance(s) :", ai_no_results: '😕 Rien ne correspond à cette description — essayez d\'autres mots ou', ai_browse_beats: "parcourir tous les beats", ai_unavailable: "⚠️ Recherche temporairement indisponible — réessayez."
+                ai_title: "Recherche IA de Beats", ai_placeholder: 'Essayez "flp remake type rihanna", "beat reggaeton sombre"...', ai_find: "Chercher", ai_searching: "🔍 Recherche...", ai_top_matches: "Meilleures", ai_matches_suffix: "correspondance(s) :", ai_no_results: '😕 Rien ne correspond à cette description — essayez d\'autres mots ou', ai_browse_beats: "parcourir tous les beats", ai_unavailable: "⚠️ Recherche temporairement indisponible — réessayez."
             },
             ht: {
                 nav_home: "Akèy", nav_beats: "Beats", nav_templates: "Modèl", nav_flp: "Remakes FLP", nav_mastering: "Mastering", nav_about: "Konsènan Mwen", nav_contact: "Kontak",
-                hero_subtitle: "Pwodiktè Mizik • Beatmaker • Enjenyè Mixaj",
+                hero_subtitle: "Pwodiktè Mizik • Beatmaker • Enjenyè Mastering",
                 hero_statement: "« Pwodiksyon orijinal, remakes ak son ki fèt pou atis ki vle mizik yo demake. »",
                 hero_btn_explore: "Eksplore Beats", hero_btn_work: "Travay Avè M",
                 stat_beats: "Beats", stat_clients: "Kliyan", stat_years: "Ane", stat_collabs: "Kolaborasyon",
@@ -3519,7 +3439,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 success_title: "Peman Reyisi! 🎉", success_line1: "Mèsi pou acha ou! Kòmand ou konfime.",
                 success_line2: "Ou pral resevwa yon imèl konfimasyon ak lyen telechajman ou yo talè.", success_btn_continue: "Kontinye Eksplore",
                 about_title: "Konsènan <span>Mwen</span>",
-                about_bio1: "<strong>Frid Beats</strong> se yon pwodiktè mizik, beatmaker, konpozitè, atis ak enjenyè mixaj ki gide pa kreyativite ak son.",
+                about_bio1: "<strong>Frid Beats</strong> se yon pwodiktè mizik, beatmaker, konpozitè, atis ak enjenyè mastering ki gide pa kreyativite ak son.",
                 about_bio2: "Mwen kreye mizik ak pwodiksyon orijinal nan genre tankou Kompa, Afrobeat, Reggaeton, Dancehall, Trap, Drill, Boom Bap ak plis ankò.",
                 about_bio3: "Kit se pou kreye mizik pou tèt mwen, fè beats pou atis, oswa devlope zouti pou lòt pwodiktè, objektif mwen toujou menm bagay la: kreye mizik ak karaktè, emosyon ak yon direksyon kreyatif solid.",
                 about_bio4: "<strong>Frid Beats</strong> se plis pase yon magazen beats — se yon espas kreyatif kote mizik, pwodiksyon ak lide reyini.",
@@ -3531,7 +3451,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Klike pou chat →", contact_send_message: "Voye yon mesaj →", contact_follow_me: "Swiv Mwen",
                 footer_pages: "Paj", footer_services: "Sèvis", footer_custom_beats: "Beats Pèsonalize", footer_mixing: "Mixaj & Vwa",
                 footer_licensing: "Lisans", footer_tagline: "Fèt pa Frid Beats 🎵",
-                ai_title: "Chèche Beats AI", ai_placeholder: 'Eseye "flp remake jan rihanna", "beat reggaeton nwa"...', ai_find: "✨ Chèche", ai_searching: "🔍 Ap chèche...", ai_top_matches: "Top", ai_matches_suffix: "rezilta :", ai_no_results: 'Tokenizer anyen pa koresponn ak deskripsyon sa a — eseye lòt mo oswa', ai_browse_beats: "gade tout beats yo", ai_unavailable: "⚠️ Rechèch la pa disponib kounye a — eseye ankò."
+                ai_title: "Chèche Beats AI", ai_placeholder: 'Eseye "flp remake jan rihanna", "beat reggaeton nwa"...', ai_find: "Chèche", ai_searching: "🔍 Ap chèche...", ai_top_matches: "Top", ai_matches_suffix: "rezilta :", ai_no_results: 'Tokenizer anyen pa koresponn ak deskripsyon sa a — eseye lòt mo oswa', ai_browse_beats: "gade tout beats yo", ai_unavailable: "⚠️ Rechèch la pa disponib kounye a — eseye ankò."
             }
         };
 
