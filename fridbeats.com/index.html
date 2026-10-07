@@ -2314,7 +2314,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                     <div style="overflow-x:auto;">
                         <table class="admin-table">
-                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Plays</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Plays</th><th>Views</th><th>Actions</th></tr></thead>
                             <tbody id="adminBeatList"></tbody>
                         </table>
                         <div id="adminPlayStatsNote" style="font-size:0.7rem;color:var(--text-muted);margin-top:0.6rem;"></div>
@@ -2329,7 +2329,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                     <div style="overflow-x:auto;">
                         <table class="admin-table">
-                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Cover</th><th>Title</th><th>Genre</th><th>BPM</th><th>Price</th><th>Views</th><th>Actions</th></tr></thead>
                             <tbody id="adminTemplateList"></tbody>
                         </table>
                     </div>
@@ -2340,7 +2340,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                     <div style="overflow-x:auto;">
                         <table class="admin-table">
-                            <thead><tr><th>Thumbnail</th><th>Title</th><th>Artist</th><th>Genre</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Thumbnail</th><th>Title</th><th>Artist</th><th>Genre</th><th>Views</th><th>Downloads</th><th>Actions</th></tr></thead>
                             <tbody id="adminFlpList"></tbody>
                         </table>
                     </div>
@@ -2413,7 +2413,7 @@ input[type="range"]::-moz-range-thumb {
                     </div>
                 </div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="footer_pages">Pages</h4><a onclick="navigateTo('home')" data-i18n="nav_home">Home</a><a onclick="navigateTo('beats')" data-i18n="nav_beats">Beats</a><a onclick="navigateTo('templates')" data-i18n="nav_templates">Templates</a><a onclick="navigateTo('flp')" data-i18n="nav_flp">FLP Remakes</a><a onclick="navigateTo('mastering')" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('about')" data-i18n="nav_about">About</a><a onclick="navigateTo('contact')" data-i18n="nav_contact">Contact</a></div>
-                <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('mastering')" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('contact')" data-i18n="footer_mixing">Mixing & Vocal</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
+                <div><h4 style="font-size:0.9rem;" data-i18n="footer_services">Services</h4><a onclick="navigateTo('contact')" data-i18n="footer_custom_beats">Custom Beats</a><a onclick="navigateTo('mastering')" data-i18n="nav_mastering">Mastering</a><a onclick="navigateTo('contact')" data-i18n="nav_flp">Remakes</a><a onclick="navigateTo('contact')" data-i18n="footer_licensing">Licensing</a></div>
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
             <div class="footer-bottom"><span onclick="secretAdminTap()" style="cursor:default;">© 2026 Frid Beats. All rights reserved.</span><span data-i18n="footer_tagline">Made by Frid Beats 🎵</span></div>
@@ -4204,7 +4204,7 @@ document.addEventListener('keydown', function(e) {
 
         function createBeatCardHTML(beat) {
             return `
-                <div class="beat-card">
+                <div class="beat-card" data-vstat="beat:${beat.id}">
                     <div class="beat-artwork">
                         <img src="${beat.artwork}" alt="${beat.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-image\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>No Image</div>'">
                         <div class="beat-play-overlay">
@@ -4314,7 +4314,7 @@ document.addEventListener('keydown', function(e) {
                 return;
             }
             grid.innerHTML = templatesData.map(t => `
-                <div class="beat-card" id="template-card-${t.id}">
+                <div class="beat-card" id="template-card-${t.id}" data-vstat="template:${t.id}">
                     <div class="beat-artwork">
                         <img src="${t.artwork}" alt="${t.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${t.title}</div>'">
                     </div>
@@ -4350,7 +4350,7 @@ document.addEventListener('keydown', function(e) {
                 return;
             }
             grid.innerHTML = flpData.map(flp => `
-                <div class="flp-card" id="flp-card-${flp.id}">
+                <div class="flp-card" id="flp-card-${flp.id}" data-vstat="flp:${flp.id}">
                     <div class="flp-artwork">
                         <img src="${flp.thumbnail}" alt="${flp.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${flp.title}</div>'">
                         <div class="play-overlay">
@@ -4433,6 +4433,7 @@ document.addEventListener('keydown', function(e) {
             const email = input.value;
             const flp = flpData.find(f => f.id === flpId);
             if (!flp) { alert('FLP not found.'); return; }
+            trackEvent('download', flpId); // admin analytics: FLP download requested
             
             // Save subscriber
             if (!subscribers.includes(email)) {
@@ -5168,18 +5169,30 @@ document.addEventListener('keydown', function(e) {
             else if (type === 'flp') { flpData = flpData.filter(d => d.id !== id); saveFlp(); deleteRowFromSupabase(type, id); renderAdminFlp(); renderFLP(); updateAdminStats(); }
         }
 
-        let playStats = {}; // beatId -> play count (loaded from Worker /admin-stats)
+        let playStats = {}; // beatId    -> play count     (Worker /admin-stats)
+        let viewStats = {}; // productId -> view count
+        let dlStats = {};   // flpId     -> download count
         async function loadPlayStats() {
             try {
                 if (!window.R2_UPLOAD_ENDPOINT || !(await supabaseAdminReady())) return;
                 const r = await fetch(R2_UPLOAD_ENDPOINT + '/admin-stats', { headers: await adminAuthHeader() });
                 if (!r.ok) return;
                 const d = await r.json();
-                if (d && d.ok && d.stats) playStats = d.stats;
+                if (d && d.ok && d.stats) {
+                    if (d.stats.play) { // grouped shape { play:{id:n}, download:{id:n}, view:{id:n} }
+                        playStats = d.stats.play || {};
+                        dlStats = d.stats.download || {};
+                        viewStats = d.stats.view || {};
+                    } else {
+                        playStats = d.stats; // legacy flat shape { id: plays }
+                    }
+                }
                 const el = document.getElementById('adminPlayStatsNote');
-                if (el) el.textContent = '▶ Plays are counted each time a visitor plays a beat (server-side, deduped per 30s).';
+                if (el) el.textContent = '▶ Plays, 👁 Views and ⬇ Downloads are counted server-side (plays/views deduped — one count per product per page).';
             } catch (e) { /* stats are optional — never block the admin panel */ }
             renderAdminBeats();
+            renderAdminTemplates();
+            renderAdminFlp();
         }
 
         function renderAdminBeats() {
@@ -5193,6 +5206,7 @@ document.addEventListener('keydown', function(e) {
                     <td>${beat.bpm}</td>
                     <td style="color:var(--text-secondary);">$${beat.price.basic}</td>
                     <td style="color:var(--accent-primary);font-weight:600;">▶ ${playStats[beat.id] || 0}</td>
+                    <td style="color:var(--text-secondary);">👁 ${viewStats[beat.id] || 0}</td>
                     <td>
                         <div class="admin-actions">
                             <button class="btn btn-sm ${beat.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('beat', '${beat.id}')" title="${beat.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
@@ -5214,6 +5228,7 @@ document.addEventListener('keydown', function(e) {
                     <td>${t.genre}</td>
                     <td>${t.bpm}</td>
                     <td style="color:var(--text-secondary);">$${t.price}</td>
+                    <td style="color:var(--text-secondary);">👁 ${viewStats[t.id] || 0}</td>
                     <td>
                         <div class="admin-actions">
                             <button class="btn btn-sm ${t.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('template', '${t.id}')" title="${t.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
@@ -5234,6 +5249,8 @@ document.addEventListener('keydown', function(e) {
                     <td>${flp.title}</td>
                     <td>${flp.artist}</td>
                     <td>${flp.genre}</td>
+                    <td style="color:var(--text-secondary);">👁 ${viewStats[flp.id] || 0}</td>
+                    <td style="color:var(--accent-primary);font-weight:600;">⬇ ${dlStats[flp.id] || 0}</td>
                     <td>
                         <div class="admin-actions">
                             <button class="btn btn-sm ${flp.featured ? 'btn-primary' : 'btn-secondary'}" onclick="toggleFeatured('flp', '${flp.id}')" title="${flp.featured ? 'Unpin from top' : 'Pin to top'}">📌</button>
@@ -5423,24 +5440,74 @@ function loadPeaksFromStorage(beatId) {
 }
 
 // ============================================================
-// PLAY TRACKING — fire-and-forget counter for the admin panel
-// Counts each play (per beat, per browser session, throttled). The Worker
-// accumulates counts server-side, so numbers survive browser clears.
+// ANALYTICS TRACKING — fire-and-forget counters for the admin panel
+//   kind 'play'     → visitor pressed play on a beat
+//   kind 'download' → visitor requested a free FLP download
+//   kind 'view'     → a product card became visible in the viewport
+// The Worker accumulates counts server-side (product_stats table), so
+// numbers survive browser clears. Throttled per kind+id (30s).
 // ============================================================
-const _playTracked = {}; // beatId -> timestamp of last ping
-function trackBeatPlay(beatId) {
+const _statTracked = {}; // "kind:id" -> timestamp of last ping
+function trackEvent(kind, id) {
     try {
+        if (kind !== 'play' && kind !== 'download' && kind !== 'view') return;
+        const key = kind + ':' + id;
         const now = Date.now();
-        if (_playTracked[beatId] && now - _playTracked[beatId] < 30000) return; // max 1 ping / 30s / beat
-        _playTracked[beatId] = now;
+        if (_statTracked[key] && now - _statTracked[key] < 30000) return; // max 1 ping / 30s / kind+id
+        _statTracked[key] = now;
         if (!window.R2_UPLOAD_ENDPOINT) return;
         fetch(R2_UPLOAD_ENDPOINT + '/track', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ kind: 'play', id: String(beatId).slice(0, 64) }),
+            body: JSON.stringify({ kind: kind, id: String(id).slice(0, 64) }),
+            keepalive: true,
         }).catch(() => {}); // never blocks or notifies — pure analytics
     } catch (e) { /* ignore */ }
 }
+function trackBeatPlay(beatId) { trackEvent('play', beatId); }
+
+// VIEW TRACKING — counts each product card the visitor actually sees.
+// One view per card per page load (IntersectionObserver + batched pings).
+const _viewSent = new Set();    // ids already counted this page load
+const _viewPending = new Set(); // ids seen, waiting to be sent
+let _viewFlushTimer = null;
+let _viewIO = null;
+function _flushViewPings() {
+    _viewFlushTimer = null;
+    const batch = Array.from(_viewPending);
+    _viewPending.clear();
+    batch.forEach(id => { _viewSent.add(id); trackEvent('view', id); });
+}
+function watchViewCards() {
+    try {
+        if (!_viewIO) {
+            if (!('IntersectionObserver' in window)) return;
+            _viewIO = new IntersectionObserver((entries) => {
+                let added = false;
+                entries.forEach(en => {
+                    if (!en.isIntersecting) return;
+                    const id = en.target.getAttribute('data-vstat');
+                    if (id && !_viewSent.has(id) && !_viewPending.has(id)) { _viewPending.add(id); added = true; }
+                    _viewIO.unobserve(en.target);
+                });
+                if (added && !_viewFlushTimer) _viewFlushTimer = setTimeout(_flushViewPings, 1500);
+            }, { threshold: 0.5 });
+            // Re-attach to new cards after every re-render (search, filters, admin edits…)
+            if ('MutationObserver' in window && document.body) {
+                let _vmoTimer = null;
+                new MutationObserver(() => {
+                    if (_vmoTimer) return;
+                    _vmoTimer = setTimeout(() => { _vmoTimer = null; watchViewCards(); }, 300);
+                }).observe(document.body, { childList: true, subtree: true });
+            }
+        }
+        document.querySelectorAll('[data-vstat]').forEach(el => {
+            if (!el.dataset.vstatObserved) { el.dataset.vstatObserved = '1'; _viewIO.observe(el); }
+        });
+    } catch (e) { /* analytics must never break the page */ }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watchViewCards);
+else watchViewCards();
 let currentWaveformPeaks = null;
 // Bars follow the active geometry (160 desktop / 80 touch). localStorage
 // entries saved for the other size are ignored and re-computed on demand.
