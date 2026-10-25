@@ -4268,7 +4268,7 @@ document.addEventListener('keydown', function(e) {
                         <p class="beat-detail-description">${localizedText(beat.description)}</p>
                         <h4 style="color:var(--text-secondary);font-weight:400;margin-bottom:1rem;">Choose a License</h4>
                         <div class="license-options">
-                            ${['basic','wav','premium','exclusive'].map(type => `
+                            ${['basic','wav','premium','exclusive'].filter(type => type !== 'exclusive' || beat.exclusiveAvailable !== false).map(type => `
                                 <div class="license-option" onclick="selectLicense(this, '${beat.id}', '${type}')" data-license="${type}">
                                     <div>
                                         <div class="name">${type.charAt(0).toUpperCase() + type.slice(1)} License</div>
@@ -4562,7 +4562,8 @@ document.addEventListener('keydown', function(e) {
                     <div class="form-group"><label>Price - Basic License (MP3)</label><input type="number" id="f_price_basic" value="${item ? item.price.basic : 30}"></div>
                     <div class="form-group"><label>Price - WAV License</label><input type="number" id="f_price_wav" value="${item && item.price.wav ? item.price.wav : 50}"></div>
                     <div class="form-group"><label>Price - Premium License (Trackouts)</label><input type="number" id="f_price_premium" value="${item && item.price.premium ? item.price.premium : 100}"></div>
-                    <div class="form-group"><label>Price - Exclusive License</label><input type="number" id="f_price_exclusive" value="${item && item.price.exclusive ? item.price.exclusive : 300}"></div>
+                    <div class="form-group"><label>Exclusive License</label><select id="f_exclusive_available" onchange="const p=document.getElementById('f_price_exclusive');p.disabled=(this.value==='false');p.parentElement.style.opacity=(this.value==='false'?'0.45':'1');"><option value="true" ${!(item && item.exclusiveAvailable === false) ? 'selected' : ''}>On</option><option value="false" ${item && item.exclusiveAvailable === false ? 'selected' : ''}>Off</option></select></div>
+                    <div class="form-group"><label>Price - Exclusive License</label><input type="number" id="f_price_exclusive" value="${item && item.price.exclusive ? item.price.exclusive : 300}" ${item && item.exclusiveAvailable === false ? 'disabled' : ''}></div>
                     <div class="form-group"><label>Featured</label><select id="f_featured"><option value="true" ${item && item.featured ? 'selected' : ''}>Yes</option><option value="false" ${item && !item.featured ? 'selected' : ''}>No</option></select></div>
                     <div class="form-group">
                         <label>Artwork (Image)</label>
@@ -5074,6 +5075,7 @@ document.addEventListener('keydown', function(e) {
                             premium: parseFloat(document.getElementById('f_price_premium').value) || 100,
                             exclusive: parseFloat(document.getElementById('f_price_exclusive').value) || 300
                         },
+                        exclusiveAvailable: document.getElementById('f_exclusive_available').value !== 'false',
                         featured: document.getElementById('f_featured').value === 'true',
                         files: {
                             mp3: mp3Url || (id ? beatsData.find(d => d.id === id)?.files?.mp3 || null : null),
