@@ -634,7 +634,7 @@ background-clip: text;
         .section-subtitle { text-align:center; color:var(--text-tertiary); max-width:600px; margin:0 auto 2.5rem; font-weight:300; font-size:0.95rem; }
 
         .beat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; }
-        .templates-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,360px)); gap:1.5rem; justify-content:center; }
+        .template-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; }
         .beat-card {
     background: var(--bg-card); 
     backdrop-filter: blur(10px);
@@ -716,6 +716,38 @@ background-clip: text;
             font-size:0.55rem; border-radius:var(--radius-full);
             color:var(--text-secondary); border:1px solid rgba(255,255,255,0.05);
         }
+        #page-beats .beat-store-card .beat-meta-tags {
+            top:0.45rem;
+            left:auto;
+            right:0.45rem;
+            bottom:auto;
+            z-index:2;
+        }
+        #page-beats .beat-store-card .beat-tags {
+            top:0.45rem;
+            left:0.45rem;
+            z-index:2;
+        }
+        #page-beats .beat-store-card .beat-tag.featured {
+            padding:0.2rem 0.45rem;
+            color:#fff;
+            background:var(--accent-primary);
+            border:1px solid var(--accent-border);
+            border-radius:999px;
+            font-size:8px;
+            line-height:1.2;
+            letter-spacing:0;
+        }
+        #page-beats .beat-store-card .beat-meta-tag {
+            padding:0.2rem 0.45rem;
+            color:rgba(255,255,255,0.92);
+            background:rgba(5,10,14,0.58);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:999px;
+            font-size:8px;
+            line-height:1.2;
+            white-space:nowrap;
+        }
         .beat-info { padding:0.8rem; }
 .card-desc { color:var(--text-tertiary); font-size:0.85rem; font-weight:300; margin-bottom:0.75rem; }
 .card-includes { margin-top:0.5rem; padding:0.5rem; background:var(--bg-glass); border-radius:var(--radius-lg); border:1px solid var(--border); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
@@ -736,6 +768,17 @@ background-clip: text;
             .beat-actions .btn-label-full { display:none; }
             .beat-actions .btn-label-short, .beat-actions .btn-label-short-icon { display:inline; }
             .beat-actions .btn { font-size:0.68rem; padding:0.4rem 0.3rem; }
+            #page-beats .beat-store-card .beat-meta-tags { top:0.15rem; right:0.2rem; }
+            #page-beats .beat-store-card .beat-meta-tag { padding:0 2px; font-size:5px; line-height:1.15; }
+            #page-beats .beat-store-card .beat-tags { top:0.15rem; left:0.2rem; gap:0; }
+            #page-beats .beat-store-card .beat-tag.featured {
+                padding:0 2px;
+                color:#fff;
+                background:var(--accent-primary);
+                border:1px solid var(--accent-border);
+                font-size:5px;
+                line-height:1.15;
+            }
         }
 
         
@@ -1035,6 +1078,15 @@ background-clip: text;
             font-family:var(--font-primary); font-size:0.9rem;
         }
         .modal .form-group textarea { min-height:80px; resize:vertical; }
+        .modal .field-counter { display:block; margin-top:0.25rem; color:var(--text-muted); font-size:0.7rem; text-align:right; }
+        .modal .field-counter.in-range { color:var(--accent-light); }
+        .modal .tag-editor { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .modal .tag-editor-pill { display:inline-flex; align-items:center; gap:0.35rem; padding:0.25rem 0.55rem; background:var(--bg-tertiary); border:1px solid var(--accent-border); border-radius:999px; color:var(--text-primary); font-size:0.75rem; }
+        .modal .tag-editor-pill button { padding:0; color:var(--text-tertiary); background:none; border:0; font-size:0.9rem; line-height:1; cursor:pointer; }
+        .modal .tag-editor-pill button:hover { color:var(--text-primary); }
+        .modal .tag-editor-row { display:flex; gap:0.5rem; margin-top:0.45rem; }
+        .modal .tag-editor-row input { min-width:0; flex:1; }
+        .modal .tag-help { margin-top:0.3rem; color:var(--text-muted); font-size:0.7rem; }
         .modal .form-group input:focus, .modal .form-group select:focus, .modal .form-group textarea:focus {
             outline:none; border-color:var(--accent-border);
         }
@@ -1079,7 +1131,8 @@ background-clip: text;
         .modal .modal-actions { display:flex; gap:1rem; margin-top:1.5rem; justify-content:flex-end; }
         .modal .modal-actions .btn { flex:1; justify-content:center; }
 
-        .flp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+        #page-flp .container, #page-templates .container { max-width:1600px; }
+        .flp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
         .flp-card {
             background:var(--bg-card); backdrop-filter:blur(10px);
             -webkit-backdrop-filter:blur(10px);
@@ -1091,6 +1144,7 @@ background-clip: text;
             background:var(--bg-card-hover); box-shadow:var(--shadow-card);
         }
         .flp-artwork { position:relative; aspect-ratio:16/9; background:var(--bg-tertiary); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+        .template-card .flp-artwork { aspect-ratio:1/1; }
         .flp-artwork img { width:100%; height:100%; object-fit:cover; }
         .flp-artwork .play-overlay {
             position:absolute; inset:0;
@@ -1111,16 +1165,45 @@ background-clip: text;
             transition:var(--transition-base); border:none; cursor:pointer;
         }
         .flp-play-btn:hover { transform:scale(1.1); background:rgba(255,255,255,0.15); }
-        .flp-info { padding:1rem; }
-        .flp-info h3 { font-weight:500; font-size:1rem; }
-        .flp-info .flp-artist { color:var(--text-tertiary); font-size:0.8rem; font-weight:300; }
-        .flp-info .flp-desc { color:var(--text-tertiary); font-size:0.8rem; margin-top:0.4rem; font-weight:300; }
-        .flp-download-form { display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap; }
+        .flp-card { cursor:pointer; }
+        .flp-card:focus-visible { outline:2px solid var(--accent-light); outline-offset:3px; }
+        .flp-card-title { color:inherit; text-decoration:none; }
+        .flp-card-title:hover { color:var(--text-primary); }
+        .flp-detail-container { max-width:1000px; }
+        .flp-detail {
+            display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);
+            align-items:start; gap:1.5rem; margin-top:1rem; padding:1.25rem;
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--radius-xl); box-shadow:var(--shadow-card);
+        }
+        .flp-detail-artwork { overflow:hidden; border-radius:var(--radius-lg); background:var(--bg-tertiary); }
+        .flp-detail-artwork img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
+        .template-detail .flp-detail-artwork img { aspect-ratio:1/1; }
+        .flp-detail-info h1 { font-size:clamp(1.35rem,2.4vw,2rem); line-height:1.2; margin-bottom:0.35rem; }
+        .flp-detail-artist { color:var(--text-tertiary); font-size:0.9rem; }
+        .flp-detail-meta { display:flex; flex-wrap:wrap; gap:0.45rem; margin:0.9rem 0; }
+        .flp-detail-meta span { padding:0.25rem 0.6rem; color:var(--text-secondary); background:var(--bg-glass); border:1px solid var(--border); border-radius:var(--radius-full); font-size:0.72rem; }
+        .flp-detail-description { color:var(--text-tertiary); line-height:1.55; margin:0.8rem 0; }
+        .flp-detail-includes { margin:0.9rem 0; }
+        .flp-detail-download { margin-top:1rem; }
+        .flp-detail-download label { display:block; margin-bottom:0.35rem; color:var(--text-secondary); font-size:0.82rem; }
+        .flp-detail-download .flp-download-form { margin-top:0; }
+        .flp-detail-youtube { margin-top:0.8rem; }
+        @media (max-width:768px) {
+            .flp-detail { grid-template-columns:1fr; gap:1rem; padding:0.85rem; }
+        }
+        .flp-info { padding:0.75rem; }
+        .flp-info h3 { font-weight:500; font-size:0.92rem; line-height:1.25; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; line-clamp:2; overflow:hidden; }
+        .flp-info .flp-artist { color:var(--text-tertiary); font-size:0.72rem; font-weight:300; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .flp-info .flp-desc { color:var(--text-tertiary); font-size:0.72rem; line-height:1.35; margin-top:0.25rem; font-weight:300; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; line-clamp:2; overflow:hidden; }
+        .flp-info .card-includes { margin-top:0.3rem; padding:0.3rem; }
+        .flp-info .card-includes p { font-size:0.6rem; }
+        .flp-download-form { display:flex; gap:0.4rem; margin-top:0.45rem; flex-wrap:nowrap; }
         .flp-download-form input {
-            flex:1; padding:0.4rem 0.7rem;
+            flex:1; padding:0.35rem 0.55rem;
             background:var(--bg-input); border:1px solid var(--border);
             border-radius:var(--radius-lg);
-            color:var(--text-primary); font-size:0.8rem; min-width:120px;
+            color:var(--text-primary); font-size:0.7rem; min-width:0;
             font-family:var(--font-primary);
             backdrop-filter:blur(10px);
             -webkit-backdrop-filter:blur(10px);
@@ -1531,6 +1614,10 @@ input[type="range"]::-moz-range-thumb {
     .hero { min-height:80vh; }
 }
 @media (max-width:768px) {
+    #page-beats .filters-section {
+        row-gap:0;
+        margin-bottom:1rem;
+    }
             html { scroll-behavior:auto; }
             .glass-section::before, .glass-section::after { animation:none !important; }
             body {
@@ -1549,7 +1636,8 @@ input[type="range"]::-moz-range-thumb {
                 -webkit-backdrop-filter:none;
             }
             .beat-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr)); gap:0.75rem; }
-            .templates-grid { grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr)); gap:0.75rem; }
+            #page-beats .beat-grid { grid-template-columns:repeat(auto-fill,minmax(min(100%,130px),1fr)); }
+            .template-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:0.75rem; }
             .flp-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:0.75rem; }
     .filters-section { grid-template-columns:1fr; }
     .beat-detail { grid-template-columns:1fr; }
@@ -1608,6 +1696,7 @@ input[type="range"]::-moz-range-thumb {
             .hero { min-height:70vh; }
             .hero-logo { max-width:150px; }
             .beat-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr)); gap:0.65rem; }
+            .template-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr)); gap:0.65rem; }
             .flp-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr)); gap:0.65rem; }
             .footer-grid { grid-template-columns:1fr; }
             .admin-stats { grid-template-columns:1fr; }
@@ -1625,13 +1714,13 @@ input[type="range"]::-moz-range-thumb {
 .beat-actions .btn { font-size:0.58rem; padding:0.3rem 0.3rem; }
 .card-desc { -webkit-line-clamp:1; line-clamp:1; overflow:hidden; }
 .flp-info { padding:0.5rem; }
-.flp-info h3 { font-size:0.75rem; }
+.flp-info h3 { font-size:0.78rem; }
 .flp-info .flp-artist { font-size:0.58rem; }
         }
     @media (max-width:360px) {
-        .glass-section { padding-left:0.4rem; padding-right:0.4rem; }
-        .beat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
-        .templates-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
+    .glass-section { padding-left:0.4rem; padding-right:0.4rem; }
+    .beat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
+    .template-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
         .flp-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
     }
         .text-center { text-align:center; }
@@ -1713,6 +1802,553 @@ input[type="range"]::-moz-range-thumb {
         .mgp-toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); background:var(--bg-secondary); border:1px solid var(--border); border-radius:var(--radius-full); padding:11px 20px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:all 250ms; z-index:1200; max-width:90vw; text-align:center; }
         .mgp-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
+        /* ===== HOMEPAGE PHASE 1 ===== */
+        #page-home { padding-top:70px; }
+        body:has(#page-home.active) .header-search {
+            display:flex;
+            flex:0 0 38px;
+            width:38px;
+            max-width:38px;
+            margin:0;
+            padding:0;
+            border:0;
+            background:transparent;
+        }
+        body:has(#page-home.active) .header-search input,
+        body:has(#page-home.active) .header-search .search-dropdown { display:none; }
+        body:has(#page-home.active) .header-search button {
+            width:38px;
+            height:38px;
+            color:var(--text-primary);
+            background:transparent;
+            font-size:1rem;
+        }
+        body:has(#page-home.active) .nav-links { gap:1rem; }
+        body:has(#page-home.active) .nav-links a { flex-shrink:0; white-space:nowrap; }
+        .home-main { max-width:960px; margin:0 auto; padding:0 1.25rem; }
+        .home-main > .container { max-width:none; padding:0; }
+        #page-home .home-hero { min-height:0; padding:1rem 0 0.75rem; }
+        .home-player {
+            display:grid;
+            grid-template-columns:190px minmax(0,1fr);
+            align-items:center;
+            gap:2rem;
+            width:min(710px,100%);
+            min-height:208px;
+            padding:0.85rem 1.1rem;
+            margin:0 auto;
+            text-align:left;
+            background:linear-gradient(110deg,rgba(255,255,255,0.055),rgba(255,255,255,0.018));
+            border:1px solid var(--accent-border);
+            border-radius:14px;
+            box-shadow:var(--shadow-card);
+        }
+        .home-player-disc {
+            position:relative;
+            width:188px;
+            height:188px;
+            overflow:hidden;
+            border:1px solid var(--accent-border);
+            border-radius:50%;
+            background:repeating-radial-gradient(circle at center, #101722 0 4px, #19232f 5px 6px, #0b111a 7px 9px);
+            box-shadow:0 0 0 5px rgba(255,255,255,0.035),0 12px 30px rgba(0,0,0,0.35);
+        }
+        .home-player-disc::after {
+            position:absolute;
+            inset:0;
+            border-radius:50%;
+            background:radial-gradient(circle, transparent 0 43%, rgba(5,9,15,0.16) 44%, transparent 46%, rgba(5,9,15,0.12) 67%, transparent 69%);
+            content:"";
+            pointer-events:none;
+        }
+        .home-player-disc.is-playing {
+            animation:homeVinylSpin 18s linear infinite;
+            box-shadow:0 0 0 5px rgba(255,255,255,0.035),0 0 22px rgba(58,122,106,0.45),0 12px 30px rgba(0,0,0,0.35);
+        }
+        @keyframes homeVinylSpin { to { transform:rotate(360deg); } }
+        .home-promo-stack {
+            display:none;
+            position:fixed;
+            top:50%;
+            left:max(14px,calc((100vw - 960px)/2 - 208px));
+            z-index:20;
+            width:194px;
+            flex-direction:column;
+            gap:1rem;
+            transform:translateY(-50%);
+        }
+        .home-promo-card {
+            position:relative;
+            padding:20px;
+            color:var(--text-primary);
+            background:linear-gradient(145deg,var(--bg-secondary),var(--bg-primary));
+            border:1px solid var(--accent-border);
+            border-radius:14px;
+            box-shadow:0 0 8px rgba(26,90,74,0.2),0 0 20px rgba(26,90,74,0.1),inset 0 0 14px rgba(26,90,74,0.045);
+        }
+        .home-promo-card::before {
+            position:absolute;
+            inset:7px;
+            border:1px solid var(--accent-border);
+            border-radius:10px;
+            box-shadow:inset 0 0 8px rgba(26,90,74,0.045);
+            content:"";
+            pointer-events:none;
+        }
+        .home-promo-card > * { position:relative; z-index:1; }
+        .home-promo-card h2 {
+            margin:0 0 0.2rem;
+            color:#f5fbfb;
+            font-size:16px;
+            font-weight:800;
+            line-height:1.25;
+        }
+        .home-promo-card p {
+            margin:0 0 0.55rem;
+            color:#c1cece;
+            font-size:16px;
+            line-height:1.55;
+        }
+        .home-promo-card .promo-price {
+            margin:0 0 0.25rem;
+            color:var(--text-primary);
+            font-size:16px;
+            font-weight:800;
+            line-height:1.25;
+        }
+        .home-promo-card .promo-tagline {
+            color:#c1cece;
+            font-size:16px;
+            font-weight:600;
+        }
+        .home-promo-card button,
+        .home-promo-card a {
+            display:block;
+            width:100%;
+            padding:0.52rem 0.45rem;
+            color:var(--text-primary);
+            background:var(--accent-primary);
+            border:1px solid var(--accent-border);
+            border-radius:7px;
+            font-size:16px;
+            font-weight:800;
+            text-align:center;
+            cursor:pointer;
+            text-decoration:none;
+            transition:transform 0.2s ease,filter 0.2s ease;
+        }
+        .home-promo-card button:hover,
+        .home-promo-card a:hover { transform:translateY(-2px); background:var(--accent-hover); box-shadow:0 0 9px var(--accent-glow); }
+        .home-promo-card .promo-price-label {
+            display:inline;
+            margin-left:0.15rem;
+            color:#f5fbfb;
+            font-size:16px;
+            font-weight:800;
+        }
+        .home-promo-custom .promo-starting {
+            margin-bottom:0.45rem;
+            color:var(--accent-light);
+            font-size:16px;
+            font-weight:800;
+        }
+        .home-remake-modal {
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:2100;
+            align-items:center;
+            justify-content:center;
+            padding:1rem;
+            background:rgba(0,0,0,0.78);
+            backdrop-filter:blur(8px);
+        }
+        .home-remake-modal.open { display:flex; }
+        .home-remake-dialog {
+            position:relative;
+            width:min(600px,100%);
+            max-height:min(85vh,760px);
+            overflow:auto;
+            padding:1.5rem;
+            color:var(--text-primary);
+            background:linear-gradient(145deg,var(--bg-secondary),var(--bg-tertiary));
+            border:1px solid var(--accent-border);
+            border-radius:16px;
+            box-shadow:0 0 28px var(--accent-glow),var(--shadow-card);
+        }
+        .home-remake-dialog h2 { margin:0 2.5rem 0.4rem 0; font-size:1.35rem; }
+        .home-remake-intro { margin:0 0 1.1rem; color:var(--text-secondary); font-size:0.88rem; line-height:1.55; }
+        .home-remake-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.8rem; }
+        .home-remake-option {
+            padding:1rem;
+            background:rgba(255,255,255,0.035);
+            border:1px solid var(--accent-border);
+            border-radius:11px;
+        }
+        .home-remake-option h3 { margin:0 0 0.35rem; color:#f5fbfb; font-size:0.95rem; }
+        .home-remake-option .option-price { margin:0 0 0.55rem; color:var(--accent-light); font-size:0.95rem; font-weight:800; }
+        .home-remake-option p { margin:0 0 0.8rem; color:#c1cece; font-size:0.78rem; line-height:1.55; }
+        .home-remake-option a {
+            display:block;
+            padding:0.55rem 0.6rem;
+            color:var(--accent-light);
+            border:1px solid var(--accent-border);
+            border-radius:7px;
+            font-size:0.75rem;
+            font-weight:700;
+            text-align:center;
+            text-decoration:none;
+        }
+        .home-remake-close {
+            position:absolute;
+            top:0.85rem;
+            right:0.85rem;
+            width:34px;
+            height:34px;
+            color:var(--text-primary);
+            background:rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:50%;
+            font-size:1.1rem;
+            cursor:pointer;
+        }
+        @media (max-width:640px) {
+            .home-remake-options { grid-template-columns:1fr; }
+            .home-remake-dialog { padding:1.2rem; }
+        }
+        .home-black-box {
+            width:min(710px,100%);
+            margin:0 auto 0.35rem;
+            padding:0.7rem 0.9rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:0.8rem;
+            color:var(--text-primary);
+            background:linear-gradient(112deg,var(--bg-secondary),var(--bg-tertiary) 58%,var(--bg-primary));
+            border:1px solid var(--accent-border);
+            border-left:3px solid var(--accent-light);
+            border-radius:8px;
+            box-shadow:0 8px 26px rgba(0,0,0,0.24),inset 0 0 22px var(--accent-glow);
+        }
+        .home-black-box-copy { min-width:0; }
+        .home-black-box-title {
+            display:block;
+            color:var(--text-primary);
+            font-size:0.78rem;
+            font-weight:800;
+            letter-spacing:0.09em;
+            line-height:1.35;
+        }
+        .home-black-box-detail {
+            display:block;
+            margin-top:0.18rem;
+            color:var(--text-secondary);
+            font-size:0.68rem;
+            line-height:1.4;
+        }
+        .home-black-box-detail strong { color:var(--accent-light); font-weight:700; }
+        .home-black-box button {
+            flex:0 0 auto;
+            padding:0.48rem 0.75rem;
+            color:var(--text-primary);
+            background:var(--accent-primary);
+            border:0;
+            border-radius:6px;
+            font-size:0.66rem;
+            font-weight:800;
+            letter-spacing:0.035em;
+            cursor:pointer;
+            transition:filter 0.2s ease,transform 0.2s ease;
+        }
+        .home-black-box button:hover { transform:translateY(-1px); background:var(--accent-hover); }
+        .home-player-artwork {
+            display:block;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            object-position:center;
+            border-radius:50%;
+            background:var(--bg-tertiary);
+        }
+        .home-player-kicker {
+            display:block;
+            margin-bottom:0.35rem;
+            color:var(--accent-light);
+            font-size:0.95rem;
+            font-weight:700;
+        }
+        .home-player-title {
+            margin:0 0 0.45rem;
+            color:var(--text-primary);
+            font-size:clamp(1.15rem,2.1vw,1.55rem);
+            font-weight:700;
+            line-height:1.22;
+        }
+        .home-player-meta {
+            display:flex;
+            flex-wrap:wrap;
+            gap:0.25rem 0.45rem;
+            margin-bottom:0.8rem;
+            color:var(--text-secondary);
+            font-size:0.68rem;
+        }
+        .home-player-meta span + span::before { content:"· "; color:var(--text-muted); }
+        .home-player-actions { display:flex; flex-wrap:wrap; gap:0.75rem; }
+        .home-player-actions .btn { justify-content:center; padding:0.55rem 1.15rem; }
+        .home-player-actions .btn-gradient {
+            min-width:112px;
+            color:var(--text-primary);
+            background:var(--accent-primary);
+            font-size:1rem;
+            font-weight:700;
+        }
+        .home-player-actions .btn-secondary {
+            min-width:220px;
+            color:var(--text-primary);
+            background:var(--accent-primary);
+            border:1px solid var(--accent-border);
+            font-size:0.95rem;
+            font-weight:700;
+        }
+        .home-player-actions button:disabled { cursor:not-allowed; opacity:0.55; transform:none; }
+        #aiFinderSection { width:min(650px,100%); margin:0 auto; }
+        .ai-finder-panel { padding:0.4rem 0 0; background:transparent; border:0; }
+        .ai-finder-heading {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:0.4rem;
+            margin:0 0 0.4rem;
+            color:var(--accent-light);
+            font-size:0.78rem;
+            font-weight:700;
+            letter-spacing:0.02em;
+            text-transform:uppercase;
+        }
+        .ai-finder-heading i { color:var(--accent-light); }
+        .ai-finder-search {
+            display:flex;
+            align-items:center;
+            gap:0.6rem;
+            width:100%;
+            padding:0.35rem;
+            border:1px solid var(--accent-light);
+            border-radius:12px;
+            background:var(--bg-secondary);
+            box-shadow:0 0 16px var(--accent-glow);
+        }
+        .ai-search-field { display:flex; align-items:center; flex:1; min-width:0; gap:0.55rem; padding-left:0.4rem; }
+        .ai-search-field > i { flex:0 0 auto; color:var(--text-tertiary); }
+        .ai-finder-search input {
+            flex:1;
+            min-width:0;
+            padding:0.45rem 0;
+            color:var(--text-primary);
+            background:transparent;
+            border:0;
+            font:inherit;
+            font-size:0.78rem;
+            outline:none;
+        }
+        .ai-finder-search input:focus { border:0; }
+        .ai-finder-search button {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:0.45rem;
+            min-width:82px;
+            padding:0.48rem 0.9rem;
+            color:var(--text-primary);
+            background:var(--accent-primary);
+            border:0;
+            border-radius:8px;
+            font-size:0.78rem;
+            font-weight:700;
+            cursor:pointer;
+        }
+        .ai-finder-search button:disabled { cursor:wait; opacity:0.7; }
+        .ai-genre-tags { display:flex; justify-content:center; flex-wrap:wrap; gap:0.45rem; margin-top:0.45rem; }
+        .ai-genre-tag {
+            padding:0.2rem 0.6rem;
+            color:var(--accent-light);
+            background:rgba(255,255,255,0.025);
+            border:1px solid var(--accent-border);
+            border-radius:var(--radius-full);
+            font-size:0.7rem;
+        }
+        .home-stats-grid {
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:0.5rem;
+            max-width:520px;
+            margin:0.45rem auto 0;
+        }
+        .home-stat {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:0.4rem;
+            padding:0.15rem 0.1rem;
+            background:transparent;
+            border:0;
+            backdrop-filter:none;
+            -webkit-backdrop-filter:none;
+        }
+        .home-stat-icon { color:var(--accent-light); font-size:0.95rem; }
+        .home-stat-main { color:var(--text-secondary); font-size:0.68rem; line-height:1.2; white-space:nowrap; }
+        .home-stat .stat-number { font-size:0.78rem; line-height:1.2; color:var(--text-primary); }
+        .home-stat .stat-label { font-size:0.68rem; line-height:1.2; color:var(--text-secondary); }
+        .home-stat-detail { color:var(--text-muted); font-size:0.58rem; line-height:1.2; }
+        #page-home .glass-section { margin-top:0.55rem; padding:0.65rem 0 0.9rem; }
+        #page-home .glass-section .container { max-width:710px; padding:0; }
+        .home-featured-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:0.45rem; }
+        .home-featured-header .section-title { margin:0; text-align:left; font-size:1rem; font-weight:700; }
+        .home-featured-header .section-title span { color:var(--text-primary); font-weight:700; }
+        .home-view-all { padding:0; color:var(--accent-light); background:none; border:0; font-size:0.76rem; font-weight:600; cursor:pointer; }
+        .home-view-all::after { content:" →"; }
+        #page-beats { padding-top:70px; }
+        #page-beats > .beats-page-container { padding-top:1rem; }
+        #page-beats #beatGrid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+        #page-beats .section-title { font-size:clamp(1.2rem,2vw,1.6rem); line-height:1.2; margin-bottom:0.25rem; }
+        #page-beats .beat-price { font-size:0.8rem; }
+        #page-beats .beat-price-label { font-size:0.45rem; }
+        #page-home .section-subtitle { display:none; }
+        #page-home .beat-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.8rem; }
+        #page-home .beat-card { border-radius:9px; }
+        #page-home .beat-artwork { aspect-ratio:1.08 / 1; }
+        #page-home .beat-artwork img { transition:transform 0.25s ease; }
+        #page-home .beat-info { padding:0.4rem 0.45rem 0.5rem; text-align:center; }
+        #page-home .beat-header { display:block; margin:0; }
+        #page-home .beat-title { display:-webkit-box; overflow:hidden; font-size:0.68rem; line-height:1.2; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+        #page-home .beat-artist, #page-home .beat-price-label, #page-home .beat-actions, #page-home .beat-tags { display:none; }
+        #page-home .beat-price { margin-top:0.12rem; font-size:0.72rem; color:var(--accent-light); }
+        .featured-home-card .beat-meta-tags {
+            top:0.2rem;
+            left:auto;
+            right:0.35rem;
+            bottom:auto;
+            z-index:2;
+            justify-content:flex-end;
+            flex-wrap:wrap;
+            max-width:calc(100% - 0.9rem);
+            gap:0.25rem;
+        }
+        .featured-home-card .beat-meta-tag {
+            padding:0.1rem 0.25rem;
+            color:rgba(255,255,255,0.88);
+            background:rgba(5,10,14,0.48);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:999px;
+            backdrop-filter:blur(4px);
+            -webkit-backdrop-filter:blur(4px);
+            font-size:8px;
+            line-height:1.2;
+            white-space:normal;
+        }
+        .featured-home-card .beat-play-overlay { display:none; }
+        .home-footer-bottom { display:none; }
+        @media (max-width:640px) {
+            #page-home { padding-top:56px; }
+            #page-beats { padding-top:56px; }
+            #page-beats > .beats-page-container { padding-top:0.75rem; }
+            #page-beats > .beats-page-container { padding-right:0.875rem; padding-left:0.875rem; }
+            #page-beats #beatGrid { grid-template-columns:repeat(auto-fill,minmax(min(100%,130px),1fr)); gap:0.75rem; }
+            #page-beats .section-title { font-size:1rem; line-height:1.2; }
+            #page-beats [data-i18n="beats_subtitle"] { font-size:0.75rem; line-height:1.3; }
+            #page-beats .beat-artwork { aspect-ratio:1 / 1; }
+            body:has(#page-home.active) .header-search { display:none; }
+            .home-main { padding:0 0.8rem; }
+            #page-home .home-hero { padding:0.75rem 0 0.45rem; }
+            .home-player { grid-template-columns:110px minmax(0,1fr); gap:0.85rem; min-height:0; padding:0.7rem; }
+            .home-player-disc { width:110px; height:110px; }
+            .home-player-kicker { margin-bottom:0.2rem; font-size:0.78rem; }
+            .home-player-title { margin-bottom:0.35rem; font-size:0.92rem; }
+            .home-player-meta { gap:0.15rem 0.35rem; margin-bottom:0.45rem; font-size:0.56rem; }
+            .home-player-actions { gap:0.35rem; }
+            .home-player-actions .btn { min-width:0; padding:0.42rem 0.5rem; font-size:0.7rem; }
+            .home-player-actions .btn-gradient { flex:0 0 82px; font-size:0.78rem; }
+            .home-player-actions .btn-secondary { flex:1; }
+            .home-black-box { align-items:flex-start; margin-bottom:0.3rem; padding:0.6rem; }
+            .home-black-box-title { font-size:0.65rem; }
+            .home-black-box-detail { font-size:0.58rem; }
+            .home-black-box button { padding:0.45rem 0.55rem; font-size:0.58rem; }
+            #aiFinderSection { width:100%; }
+            .ai-finder-panel { padding-top:0.35rem; }
+            .ai-finder-heading { font-size:0.72rem; }
+            .ai-finder-search { gap:0.35rem; padding:0.28rem; }
+            .ai-finder-search input { font-size:0.68rem; }
+            .ai-finder-search button { min-width:72px; padding:0.45rem 0.6rem; font-size:0.7rem; }
+            .ai-genre-tags { gap:0.3rem; margin-top:0.35rem; }
+            .ai-genre-tag { padding:0.16rem 0.5rem; font-size:0.63rem; }
+            .home-stats-grid { gap:0.1rem; margin-top:0.35rem; }
+            .home-stat { gap:0.25rem; }
+            .home-stat-icon { font-size:0.78rem; }
+            .home-stat .stat-number { font-size:0.68rem; }
+            .home-stat .stat-label { font-size:0.58rem; }
+            .home-stat-detail { font-size:0.49rem; }
+            #page-home .glass-section { margin-top:0.3rem; padding:0.4rem 0 0.75rem; }
+            #page-home .glass-section .container { width:100%; }
+            #page-home .beat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.75rem; }
+            #page-home .beat-artwork { aspect-ratio:1 / 1; }
+            .featured-home-card .beat-play-overlay { display:flex; }
+            #page-home .beat-title, #page-home .beat-price { font-size:0.62rem; }
+            .featured-home-card .beat-meta-tags {
+                top:0.15rem;
+                left:auto;
+                right:0.2rem;
+                bottom:auto;
+                flex-wrap:nowrap;
+                max-width:none;
+                gap:0;
+            }
+            .featured-home-card .beat-meta-tag {
+                padding:0 2px;
+                font-size:5px;
+                line-height:1.15;
+                white-space:nowrap;
+            }
+        }
+        @media (max-width:900px) {
+            body:has(#page-home.active) .header-search { display:none; }
+        }
+        @media (min-width:1320px) and (hover:hover) and (pointer:fine) {
+            body:has(#page-home.active) .home-promo-stack { display:flex; }
+        }
+        @media (max-width:1319px), (hover:none), (pointer:coarse) {
+            .home-promo-stack { display:none !important; }
+        }
+        @media (max-width:768px) {
+            body:has(#page-home.active) .home-promo-stack {
+                position:static;
+                display:flex !important;
+                width:calc(100% - 1.6rem);
+                max-width:710px;
+                margin:0 auto 1.2rem;
+                gap:0.85rem;
+                transform:none;
+            }
+            .home-promo-card {
+                width:100%;
+                padding:10px;
+            }
+            .home-promo-card h2 { font-size:14px; }
+            .home-promo-card p,
+            .home-promo-card .promo-tagline { font-size:12px; }
+            .home-promo-card .promo-price,
+            .home-promo-card .promo-price-label,
+            .home-promo-custom .promo-starting { font-size:13px; }
+            .home-promo-card p { margin-bottom:0.35rem; }
+            .home-promo-card a { padding:7px 8px; font-size:12px; }
+        }
+        @media (max-width:390px) {
+            .home-player { grid-template-columns:88px minmax(0,1fr); gap:0.6rem; }
+            .home-player-disc { width:88px; height:88px; }
+            .home-player-title { font-size:0.82rem; }
+            .home-player-meta { font-size:0.51rem; }
+            #page-home .beat-grid { gap:0.35rem; }
+            #page-beats .beat-grid { gap:0.35rem; }
+            #page-home .beat-info { padding-right:0.25rem; padding-left:0.25rem; }
+        }
     </style>
 
     <style>
@@ -1841,81 +2477,119 @@ input[type="range"]::-moz-range-thumb {
 
     <!-- ===== PAGE: HOME ===== -->
     <div class="page active" id="page-home">
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-logo">
-                     <img loading="lazy" decoding="async" src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
-                </div>
-                <h1 class="hero-title">FRID <span>BEATS</span></h1>
-                <p class="hero-subtitle" data-i18n="hero_subtitle">Music Producer • Beatmaker • Mastering Engineer</p>
-                <p class="hero-statement" data-i18n="hero_statement">"Original production, remakes and sound crafted for artists who want their music to stand out."</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-gradient" onclick="navigateTo('beats')">
-                        <i class="fas fa-headphones"></i> <span data-i18n="hero_btn_explore">Explore Beats</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="openWhatsApp()">
-                        <i class="fab fa-whatsapp"></i> <span data-i18n="hero_btn_work">Work With Me</span>
-                    </button>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-item"><div class="stat-number">150+</div><div class="stat-label" data-i18n="stat_beats">Beats</div></div>
-                    <div class="stat-item"><div class="stat-number">45+</div><div class="stat-label" data-i18n="stat_clients">Clients</div></div>
-                    <div class="stat-item"><div class="stat-number">5+</div><div class="stat-label" data-i18n="stat_years">Years</div></div>
-                    <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label" data-i18n="stat_collabs">Collabs</div></div>
+        <main class="home-main">
+        <aside class="home-black-box" aria-label="Black Box free mastering test">
+            <div class="home-black-box-copy">
+                <span class="home-black-box-title">BLACK BOX TEST — 20 SLOTS ONLY</span>
+                <span class="home-black-box-detail">Send 30s. Get <strong>FREE Master</strong> · Nov 1 → Dec 15</span>
+            </div>
+            <button type="button" onclick="claimBlackBoxSlot()">CLAIM SLOT →</button>
+        </aside>
+        <section class="hero home-hero">
+            <div class="home-player">
+                <div class="home-player-disc"><img id="homePlayerArtwork" class="home-player-artwork" alt="Tyga x Chris Brown - 5 AM Type Beat cover" decoding="async"></div>
+                <div class="home-player-info">
+                    <span class="home-player-kicker">Now Playing:</span>
+                    <h1 class="home-player-title">Tyga x Chris Brown - 5 AM Type Beat (110 BPM - F Major)</h1>
+                    <div class="home-player-meta" aria-label="Beat details">
+                        <span>Genre: Hip-Hop</span><span>Key: F Major</span><span>BPM: 110</span><span>File: MP3/WAV</span><span>Instant Download</span>
+                    </div>
+                    <div class="home-player-actions">
+                        <button class="btn btn-gradient" id="homePlayerPlay" onclick="playHomepageFeaturedBeat()" disabled>
+                            <i class="fas fa-play"></i> Play
+                        </button>
+                        <button class="btn btn-secondary" id="homePlayerAddToCart" onclick="addHomepageFeaturedBeatToCart()" disabled>
+                            Add to Cart - $14.99 <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
-        <!-- ===== AI BEAT FINDER (Frid Finder) — HOME (konpak: 1 liy) ===== -->
-        <div class="container" id="aiFinderSection" style="padding-top:1.25rem;">
-        <div id="aiFinder" style="background:linear-gradient(135deg,rgba(74,222,128,0.07),rgba(56,189,248,0.05));border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-lg);padding:0.9rem 1.1rem;">
-            <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-                <div style="display:flex;align-items:center;gap:0.4rem;flex-shrink:0;">
-                    <i class="fas fa-robot" style="font-size:0.95rem;color:var(--accent-light);" aria-hidden="true"></i>
-                    <strong style="font-size:0.88rem;color:var(--text-primary);white-space:nowrap;" data-i18n="ai_title">AI Beat Finder</strong>
-                    <span style="font-size:0.62rem;background:rgba(74,222,128,0.15);color:#4ade80;padding:1px 7px;border-radius:999px;font-weight:600;letter-spacing:0.5px;">BETA</span>
+        <div class="container" id="aiFinderSection">
+            <div class="ai-finder-panel" id="aiFinder">
+                <h2 class="ai-finder-heading"><span aria-hidden="true">✦</span><i class="fas fa-robot" aria-hidden="true"></i><span data-i18n="ai_title">AI Beat Finder</span><span aria-hidden="true">✦</span></h2>
+                <div class="ai-finder-search">
+                    <label class="ai-search-field"><i class="fas fa-search" aria-hidden="true"></i><input type="text" id="aiSearchInput" data-i18n-placeholder="ai_placeholder" placeholder='Search: "Joe Dwet File kompa type" or "dark trap beat"' aria-label="Search for a beat" onkeydown="if(event.key==='Enter')aiFind()"></label>
+                    <button onclick="aiFind()" id="aiSearchBtn" data-i18n="ai_find"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
                 </div>
-                <div style="display:flex;gap:0.5rem;flex:1;min-width:250px;">
-                    <input type="text" id="aiSearchInput" data-i18n-placeholder="ai_placeholder" placeholder='Try "rihanna type flp remake", "dark reggaeton beat"...'
-                           style="flex:1;min-width:180px;padding:0.6rem 1rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--text-primary);font-size:0.85rem;outline:none;"
-                           onkeydown="if(event.key==='Enter')aiFind()">
-                    <button onclick="aiFind()" id="aiSearchBtn"
-                            style="padding:0.6rem 1.3rem;background:linear-gradient(135deg,#4ade80,#38bdf8);color:#06130c;border:none;border-radius:999px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.3s ease;flex-shrink:0;" data-i18n="ai_find">
-                        Find
-                    </button>
+                <div class="ai-genre-tags" aria-label="Popular genres">
+                    <span class="ai-genre-tag">Dancehall</span>
+                    <span class="ai-genre-tag">Afrobeat</span>
+                    <span class="ai-genre-tag">Boom Bap</span>
+                    <span class="ai-genre-tag">Trap</span>
                 </div>
+                <div id="aiResults" style="margin-top:0.75rem;"></div>
             </div>
-            <div id="aiResults" style="margin-top:0.75rem;"></div>
         </div>
+        <div class="container">
+            <div class="stats-grid home-stats-grid" aria-label="FRID BEATS stats">
+                <div class="stat-item home-stat"><i class="home-stat-icon fas fa-headphones" aria-hidden="true"></i><div><div class="home-stat-main"><span class="stat-number">150+</span> <span class="stat-label">Beats</span></div><div class="home-stat-detail">Beats Available</div></div></div>
+                <div class="stat-item home-stat"><i class="home-stat-icon fas fa-users" aria-hidden="true"></i><div><div class="home-stat-main"><span class="stat-number">10K+</span> <span class="stat-label">Producers</span></div><div class="home-stat-detail">Joining Monthly</div></div></div>
+                <div class="stat-item home-stat"><i class="home-stat-icon far fa-star" aria-hidden="true"></i><div><div class="home-stat-main"><span class="stat-number">45+</span> <span class="stat-label">Clients</span></div><div class="home-stat-detail">Satisfied Clients</div></div></div>
+            </div>
         </div>
         <section class="glass-section">
-    <div class="container">
-        <h2 class="section-title" data-i18n="home_featured_title">Featured <span>Beats</span></h2>
-        <p class="section-subtitle" data-i18n="home_featured_subtitle">Check out some of my latest and most popular beats</p>
-        <div class="beat-grid" id="featuredGrid">
-            <div class="loading-state"><div class="loading-spinner"></div><span>Loading beats…</span></div>
+            <div class="container">
+                <div class="home-featured-header">
+                    <h2 class="section-title" data-i18n="home_featured_title">Featured Beats</h2>
+                    <button class="home-view-all" onclick="navigateTo('beats')" data-i18n="home_view_all">View All Beats</button>
+                </div>
+                <div class="beat-grid" id="featuredGrid">
+                    <div class="loading-state"><div class="loading-spinner"></div><span>Loading beats…</span></div>
+                </div>
+            </div>
+        </section>
+        </main>
+        <div class="home-promo-stack" aria-label="Featured services">
+            <aside class="home-promo-card home-promo-custom" aria-label="Custom remake promotion">
+                <h2>Custom Remake</h2>
+                <p class="promo-starting">Starting at $30</p>
+                <p>Tailored to your style. Delivered in 24-48h.</p>
+                <a href="#remake-options" aria-haspopup="dialog" aria-controls="homeRemakeModal" onclick="openRemakeOptions(); return false;">See Examples →</a>
+            </aside>
+            <aside class="home-promo-card home-promo-mastering" aria-label="Professional mastering promotion">
+                <div class="promo-price">From $15<span class="promo-price-label">Intro Price</span></div>
+                <p><span class="promo-tagline">Radio-ready polish &amp; loudness</span></p>
+                <p>Mastered for streaming &amp; radio clarity</p>
+                <a href="#mastering" onclick="navigateToSection('mastering','mastering'); return false;">Compare Plans →</a>
+            </aside>
         </div>
-        <div class="text-center mt-4">
-            <button class="btn btn-secondary" onclick="navigateTo('beats')" data-i18n="home_view_all">View All Beats</button>
+        <div class="home-remake-modal" id="homeRemakeModal" onclick="if(event.target===this) closeRemakeOptions()" role="presentation">
+            <section class="home-remake-dialog" role="dialog" aria-modal="true" aria-labelledby="homeRemakeTitle" aria-describedby="homeRemakeIntro">
+                <button class="home-remake-close" type="button" aria-label="Close remake options" onclick="closeRemakeOptions()">×</button>
+                <h2 id="homeRemakeTitle">Custom Remake Options</h2>
+                <p class="home-remake-intro" id="homeRemakeIntro">Choose the best fit for your idea. Share a reference and details to get started.</p>
+                <div class="home-remake-options">
+                    <article class="home-remake-option">
+                        <h3>Option 1 — Custom Remake</h3>
+                        <div class="option-price">Starting at $30</div>
+                        <p>Tailored to your style and delivered in 24-48 hours.</p>
+                        <a href="https://wa.me/18296026502?text=Hi%20Frid!%20I%27m%20interested%20in%20Option%201%20for%20a%20custom%20remake%20(starting%20at%20%2430)." target="_blank" rel="noopener noreferrer">Request Option 1 →</a>
+                    </article>
+                    <article class="home-remake-option">
+                        <h3>Option 2 — Custom Quote</h3>
+                        <div class="option-price">Price confirmed before work</div>
+                        <p>For a custom scope, send your reference and project details to receive a quote and delivery estimate.</p>
+                        <a href="https://wa.me/18296026502?text=Hi%20Frid!%20I%27d%20like%20a%20custom%20remake%20quote.%20I%27ll%20send%20a%20reference%20and%20project%20details." target="_blank" rel="noopener noreferrer">Discuss Option 2 →</a>
+                    </article>
+                </div>
+            </section>
         </div>
-    </div>
-</section>
     </div>
 
     <!-- ============================================================ -->
     <!-- PAGE: BEATS -->
     <!-- ============================================================ -->
     <div class="page" id="page-beats">
-        <div class="container" style="padding-top:2rem;">
+        <div class="container beats-page-container">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="beats_title">Beat <span>Store</span></h1><p class="text-muted" data-i18n="beats_subtitle">Premium instrumentals for artists and creators</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
             <div class="filters-section">
-    <button class="filters-toggle" onclick="toggleFilters()">
-        <i class="fas fa-sliders-h"></i> Filters
-    </button>
-</div>
-                <div class="filters-section">
+                <button class="filters-toggle" onclick="toggleFilters()">
+                    <i class="fas fa-sliders-h"></i> Filters
+                </button>
                 <div class="filters-panel" id="filtersPanel">
                     <div class="filters-header">
                         <h3><i class="fas fa-filter"></i> <span data-i18n="filters_title">Filters</span></h3>
@@ -1979,9 +2653,17 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="templates_title">FL Studio <span>Templates</span></h1><p class="text-muted" data-i18n="templates_subtitle">Premium FL Studio templates for producers — $9.99 each</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
-            <div class="templates-grid" id="templateGrid">
+            <div class="template-grid" id="templateGrid">
                 <div class="loading-state"><div class="loading-spinner"></div><span>Loading templates…</span></div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== PAGE: TEMPLATE DETAIL ===== -->
+    <div class="page" id="page-template-detail">
+        <div class="container flp-detail-container" style="padding-top:2rem;">
+            <button class="back-btn" onclick="navigateTo('templates')"><i class="fas fa-arrow-left"></i> Back to Templates</button>
+            <div id="templateDetailContent"></div>
         </div>
     </div>
 
@@ -1989,12 +2671,20 @@ input[type="range"]::-moz-range-thumb {
     <div class="page" id="page-flp">
         <div class="container" style="padding-top:2rem;">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-                <div><h1 class="section-title" style="text-align:left;" data-i18n="flp_title">FLP <span>Remakes</span></h1><p class="text-muted" data-i18n="flp_subtitle">Download FLP remakes for free. Enter your email to get the download link.</p></div>
+                <div><h1 class="section-title" id="remake" style="text-align:left;" data-i18n="flp_title">FLP <span>Remakes</span></h1><p class="text-muted" data-i18n="flp_subtitle">Choose a remake to view its details and unlock the free download.</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
             <div class="flp-grid" id="flpGrid">
                 <div class="loading-state"><div class="loading-spinner"></div><span>Loading FLP remakes…</span></div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== PAGE: FLP REMAKE DETAIL ===== -->
+    <div class="page" id="page-flp-remake-detail">
+        <div class="container flp-detail-container" style="padding-top:2rem;">
+            <button class="back-btn" onclick="navigateTo('flp')"><i class="fas fa-arrow-left"></i> Back to FLP Remakes</button>
+            <div id="flpDetailContent"></div>
             <div id="flpMessage" style="margin-top:1.5rem;text-align:center;"></div>
         </div>
     </div>
@@ -2006,6 +2696,14 @@ input[type="range"]::-moz-range-thumb {
                 <div><h1 class="section-title" style="text-align:left;" data-i18n="mgp_page_title">Mastering <span>Service</span></h1><p class="text-muted" style="font-size:0.9rem;margin-top:0.2rem;" data-i18n="mgp_page_sub">Free track analysis + professional mastering service — order now and receive your master within 24 hours.</p></div>
                 <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> <span data-i18n="btn_back_home">Back to Home</span></button>
             </div>
+
+            <aside class="home-black-box" aria-label="Black Box free mastering test">
+                <div class="home-black-box-copy">
+                    <span class="home-black-box-title">BLACK BOX TEST — 20 SLOTS ONLY</span>
+                    <span class="home-black-box-detail">Send a 30-second clip. Get a <strong>FREE test master</strong> · Nov 1 → Dec 15</span>
+                </div>
+                <button type="button" onclick="claimBlackBoxSlot()">CLAIM SLOT →</button>
+            </aside>
 
             <!-- ===== ANALYZER (100% free) ===== -->
             <div class="mgp-card" style="margin-top:1.5rem;" id="mgpAnalyzerCard">
@@ -2037,7 +2735,7 @@ input[type="range"]::-moz-range-thumb {
 
             <!-- ===== MAGIC MASTER ===== -->
             <div class="mgp-card" style="margin-top:1.5rem;" id="mgpMagicCard">
-                <h2>⚡ <span data-i18n="mgp_title">MASTERING SERVICE — FRID'S STUDIO RIG, 24H DELIVERY</span> <span class="mgp-free" data-i18n="mgp_magic_badge">24H DELIVERY</span></h2>
+                <h2 id="mastering">⚡ <span data-i18n="mgp_title">MASTERING SERVICE — FRID'S STUDIO RIG, 24H DELIVERY</span> <span class="mgp-free" data-i18n="mgp_magic_badge">24H DELIVERY</span></h2>
                 <p class="text-muted" style="font-size:13.5px;line-height:1.7;margin-top:10px;" data-i18n="mgp_sub">Order a professional master: I run your track through my studio tool (the same rig behind FRID MASTER), check it by ear and deliver WAV 24-bit + MP3 320k by email within 24 hours. Revisions included.</p>
                 <div class="mgp-stages">
                     <span class="stp" id="mgpSt0"><b>1</b> <span data-i18n="mgp_s1">PAY</span></span>
@@ -2417,8 +3115,7 @@ input[type="range"]::-moz-range-thumb {
                 <div><h4 style="font-size:0.9rem;" data-i18n="nav_contact">Contact</h4><a href="mailto:contact@fridbeats.com">contact@fridbeats.com</a><a href="https://wa.me/18296026502" target="_blank">WhatsApp: +1 829 602 6502</a></div>
             </div>
             <div class="footer-bottom"><span onclick="secretAdminTap()" style="cursor:default;">© 2026 Frid Beats. All rights reserved.</span><span data-i18n="footer_tagline">Made by Frid Beats 🎵</span></div>
-            <!-- SEO: crawlable per-product links (Google indexes each beat/template/FLP page) -->
-            <div id="seoProductLinks" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.65rem;line-height:1.9;"></div>
+            <div class="home-footer-bottom">© 2026 FRID BEATS · All beats are licensed for commercial use · Terms · Privacy · Support</div>
         </div>
     </footer>
     <!-- ===== GLOBAL AUDIO PLAYER ===== -->
@@ -2619,10 +3316,10 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             return t;
         }
 
-        function pingAbandonedCart(purchased) {
-            if (!R2_UPLOAD_ENDPOINT || !cart.length) return;
+        function pingAbandonedCart(purchased, emailOverride) {
+            if (!R2_UPLOAD_ENDPOINT || (!purchased && !cart.length)) return;
             const emailEl = document.getElementById('checkoutEmail');
-            const email = (emailEl && emailEl.value && emailEl.value.includes('@')) ? emailEl.value.trim() : '';
+            const email = emailOverride || ((emailEl && emailEl.value && emailEl.value.includes('@')) ? emailEl.value.trim() : '');
             if (!email) return;
             try {
                 fetch(R2_UPLOAD_ENDPOINT + '/cart-ping', {
@@ -3180,7 +3877,6 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             } catch (e) {
                 console.error('Error loading data from Supabase, falling back to local data:', e);
             }
-            renderSeoProductLinks(); // crawlable links refresh whenever data loads
         }
 
         // ============================================================
@@ -3309,7 +4005,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 filters_title: "Filters", filters_clear: "Clear All", filters_search: "Search", filters_search_placeholder: "Search beats...",
                 filters_genre: "Genre", filters_tempo: "Tempo", filters_sort: "Sort By",
                 templates_title: "FL Studio <span>Templates</span>", templates_subtitle: "Premium FL Studio templates for producers — $9.99 each",
-                flp_title: "FLP <span>Remakes</span>", flp_subtitle: "Download FLP remakes for free. Enter your email to get the download link.",
+                flp_title: "FLP <span>Remakes</span>", flp_subtitle: "Choose a remake to view its details and unlock the free download.",
                 cart_title: "Your <span>Cart</span>",
                 checkout_title: "Checkout", btn_back_cart: "Back to Cart",
                 success_title: "Payment Successful! 🎉", success_line1: "Thank you for your purchase! Your order has been confirmed.",
@@ -3327,7 +4023,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 contact_click_chat: "Click to chat →", contact_send_message: "Send a message →", contact_follow_me: "Follow Me",
                 footer_pages: "Pages", footer_services: "Services", footer_custom_beats: "Custom Beats", footer_mixing: "Mixing & Vocal",
                 footer_licensing: "Licensing", footer_tagline: "Made by Frid Beats 🎵",
-                ai_title: "AI Beat Finder", ai_placeholder: 'Try "rihanna type flp remake", "dark reggaeton beat"...', ai_find: "Find", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again.",
+                ai_title: "AI Beat Finder", ai_placeholder: 'Search: "Joe Dwet File kompa type" or "dark trap beat"', ai_find: "Search", ai_searching: "🔍 Searching...", ai_top_matches: "Top", ai_matches_suffix: "match(es):", ai_no_results: '😕 Nothing matched that description — try different words, or', ai_browse_beats: "browse all beats", ai_unavailable: "⚠️ Search temporarily unavailable — please try again.",
                 detail_choose_license: "Choose a License", detail_preview_hint: "Click to listen to a preview", detail_by: "by", detail_add_cart: "Add to Cart - $",
                 license_basic_name: "Basic License", license_wav_name: "Wav License", license_premium_name: "Premium License", license_exclusive_name: "Exclusive License",
                 license_basic_desc: "MP3 320kbps - Perfect for demos", license_wav_desc: "WAV 24-bit - Professional quality", license_premium_desc: "Trackouts - Full creative control", license_exclusive_desc: "Exclusive - Full ownership",
@@ -3344,7 +4040,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 filters_title: "Filtros", filters_clear: "Borrar Todo", filters_search: "Buscar", filters_search_placeholder: "Buscar beats...",
                 filters_genre: "Género", filters_tempo: "Tempo", filters_sort: "Ordenar Por",
                 templates_title: "Plantillas <span>FL Studio</span>", templates_subtitle: "Plantillas premium de FL Studio para productores — $9.99 cada una",
-                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Descarga remakes FLP gratis. Ingresa tu correo para recibir el enlace de descarga.",
+                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Elige un remake para ver los detalles y desbloquear la descarga gratuita.",
                 cart_title: "Tu <span>Carrito</span>",
                 checkout_title: "Pagar", btn_back_cart: "Volver al Carrito",
                 success_title: "¡Pago Exitoso! 🎉", success_line1: "¡Gracias por tu compra! Tu pedido ha sido confirmado.",
@@ -3379,7 +4075,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 filters_title: "Filtros", filters_clear: "Limpar Tudo", filters_search: "Buscar", filters_search_placeholder: "Buscar beats...",
                 filters_genre: "Gênero", filters_tempo: "Andamento", filters_sort: "Ordenar Por",
                 templates_title: "Templates <span>FL Studio</span>", templates_subtitle: "Templates premium de FL Studio para produtores — $9,99 cada",
-                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Baixe remakes FLP gratuitamente. Insira seu e-mail para receber o link de download.",
+                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Escolha um remake para ver os detalhes e liberar o download grátis.",
                 cart_title: "Seu <span>Carrinho</span>",
                 checkout_title: "Finalizar Compra", btn_back_cart: "Voltar ao Carrinho",
                 success_title: "Pagamento Aprovado! 🎉", success_line1: "Obrigado pela sua compra! Seu pedido foi confirmado.",
@@ -3414,7 +4110,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 filters_title: "Filtres", filters_clear: "Tout Effacer", filters_search: "Rechercher", filters_search_placeholder: "Rechercher des beats...",
                 filters_genre: "Genre", filters_tempo: "Tempo", filters_sort: "Trier Par",
                 templates_title: "Modèles <span>FL Studio</span>", templates_subtitle: "Modèles FL Studio premium pour producteurs — 9,99 $ chacun",
-                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Téléchargez des remakes FLP gratuitement. Entrez votre e-mail pour recevoir le lien de téléchargement.",
+                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Choisissez un remake pour voir les détails et débloquer le téléchargement gratuit.",
                 cart_title: "Votre <span>Panier</span>",
                 checkout_title: "Paiement", btn_back_cart: "Retour au Panier",
                 success_title: "Paiement Réussi ! 🎉", success_line1: "Merci pour votre achat ! Votre commande a été confirmée.",
@@ -3449,7 +4145,7 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
                 filters_title: "Filt", filters_clear: "Efase Tout", filters_search: "Chèche", filters_search_placeholder: "Chèche beats...",
                 filters_genre: "Genre", filters_tempo: "Tempo", filters_sort: "Klase Pa",
                 templates_title: "Modèl <span>FL Studio</span>", templates_subtitle: "Modèl FL Studio premium pou pwodiktè — $9.99 chak",
-                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Telechaje remakes FLP gratis. Antre imèl ou pou resevwa lyen telechajman an.",
+                flp_title: "Remakes <span>FLP</span>", flp_subtitle: "Chwazi yon remake pou wè detay li epi debloke telechajman gratis la.",
                 cart_title: "Panye <span>Ou</span>",
                 checkout_title: "Peman", btn_back_cart: "Tounen nan Panye",
                 success_title: "Peman Reyisi! 🎉", success_line1: "Mèsi pou acha ou! Kòmand ou konfime.",
@@ -3540,19 +4236,122 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             }
             return { en: unwrapToString(parsed) }; // still a plain string after unwrapping -> treat as English
         }
-        function renderDescriptionFields(item) {
+        function escapeFormHtml(value) {
+            return String(value || '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[char]);
+        }
+
+        function renderDescriptionFields(item, withCounters = false) {
             const desc = getItemDescObj(item);
+            if (withCounters) {
+                const value = escapeFormHtml(desc.en || desc[localStorage.getItem('fridBeats_lang') || 'en'] || Object.values(desc)[0] || '');
+                return `<div class="form-group"><label for="f_description_en">Description</label><textarea id="f_description_en" placeholder="Beat description" style="margin-bottom:0.4rem;" rows="3" maxlength="300" oninput="updateBeatDescriptionCounter('en')">${value}</textarea><span class="field-counter" id="f_description_en_counter"></span></div>`;
+            }
             return `<div class="form-group"><label>Description (one box per language — leave a box empty to fall back to English)</label>` +
-                DESC_LANGS.map(l => `<textarea id="f_description_${l.code}" placeholder="${l.label}" style="margin-bottom:0.4rem;" rows="2">${(desc[l.code] || '').replace(/</g, '&lt;')}</textarea>`).join('') +
+                DESC_LANGS.map(l => {
+                    const value = escapeFormHtml(desc[l.code] || '');
+                    return `<textarea id="f_description_${l.code}" placeholder="${l.label}" style="margin-bottom:0.4rem;" rows="2">${value}</textarea>`;
+                }).join('') +
                 `</div>`;
         }
-        function readDescriptionFromForm() {
+        function readDescriptionFromForm(singleField = false, item = null) {
+            if (singleField) {
+                const input = document.getElementById('f_description_en');
+                const descriptions = getItemDescObj(item);
+                descriptions.en = input ? input.value.trim() : '';
+                return descriptions;
+            }
             const obj = {};
             DESC_LANGS.forEach(l => {
                 const el = document.getElementById('f_description_' + l.code);
                 if (el && el.value.trim()) obj[l.code] = el.value.trim();
             });
             return obj;
+        }
+
+        function updateBeatTitleCounter() {
+            const input = document.getElementById('f_title');
+            const counter = document.getElementById('f_title_counter');
+            if (input && counter) counter.textContent = `${input.value.length}/60`;
+        }
+
+        function updateBeatDescriptionCounter(language) {
+            const input = document.getElementById(`f_description_${language}`);
+            const counter = document.getElementById(`f_description_${language}_counter`);
+            if (!input || !counter) return;
+            const length = input.value.length;
+            counter.textContent = `${length}/300 characters · 150–300 target`;
+            counter.classList.toggle('in-range', length >= 150 && length <= 300);
+        }
+
+        function updateBeatDescriptionCounters() {
+            DESC_LANGS.forEach(language => updateBeatDescriptionCounter(language.code));
+        }
+
+        function normalizeBeatTags(tags) {
+            const values = Array.isArray(tags) ? tags : typeof tags === 'string' ? tags.split(',') : [];
+            return [...new Set(values.map(tag => String(tag).trim().toLowerCase()).filter(Boolean))].slice(0, 10);
+        }
+
+        function renderBeatKeywordTags(tags) {
+            const container = document.getElementById('f_tags_pills');
+            if (!container) return;
+            container.replaceChildren();
+            normalizeBeatTags(tags).forEach(tag => {
+                const pill = document.createElement('span');
+                pill.className = 'tag-editor-pill';
+                pill.dataset.tag = tag;
+                const label = document.createElement('span');
+                label.textContent = tag;
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.setAttribute('aria-label', `Remove ${tag}`);
+                remove.textContent = '×';
+                remove.addEventListener('click', () => {
+                    pill.remove();
+                    updateBeatTagCount();
+                });
+                pill.append(label, remove);
+                container.appendChild(pill);
+            });
+            updateBeatTagCount();
+        }
+
+        function updateBeatTagCount(message = '') {
+            const pills = document.getElementById('f_tags_pills');
+            const count = document.getElementById('f_tags_count');
+            const addButton = document.getElementById('f_tags_add');
+            if (!pills || !count) return;
+            const total = pills.querySelectorAll('.tag-editor-pill').length;
+            count.textContent = message || `${total}/10 tags · minimum 5`;
+            if (addButton) addButton.disabled = total >= 10;
+        }
+
+        function addBeatKeywordTag() {
+            const input = document.getElementById('f_tag_input');
+            const pills = document.getElementById('f_tags_pills');
+            if (!input || !pills) return;
+            const entries = input.value.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean);
+            if (!entries.length) return;
+            const current = [...pills.querySelectorAll('.tag-editor-pill')].map(pill => pill.dataset.tag);
+            const next = [...current];
+            for (const tag of entries) {
+                if (next.includes(tag)) continue;
+                if (next.length >= 10) {
+                    updateBeatTagCount('Maximum 10 tags.');
+                    break;
+                }
+                next.push(tag);
+            }
+            input.value = '';
+            renderBeatKeywordTags(next);
+            input.focus();
+        }
+
+        function readBeatKeywordTags() {
+            const pills = document.getElementById('f_tags_pills');
+            return pills ? [...pills.querySelectorAll('.tag-editor-pill')].map(pill => pill.dataset.tag) : [];
         }
 
         // Helper i18n: returns the translated string for the current language.
@@ -3594,6 +4393,9 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
     renderFLP();
     if (typeof currentPage !== 'undefined' && currentPage === 'beat-detail' && typeof currentBeatId !== 'undefined' && currentBeatId) {
         showBeatDetail(currentBeatId);
+    }
+    if (typeof currentPage !== 'undefined' && currentPage === 'template-detail') {
+        routeTemplateDetailFromPath();
     }
 }
 
@@ -3938,11 +4740,11 @@ document.addEventListener('keydown', function(e) {
             notifyOrderEmail(details.id, email);
             // Tell the ADMIN about this sale (non-blocking, verified server-side).
             notifyAdmin('order', { orderId: details.id, email: email });
+            pingAbandonedCart(true, email); // mark the cart recovered before clearing it
             cart = [];
             saveCart();
             updateCartCount();
             stopCartPingLoop();
-            pingAbandonedCart(true); // mark this cart recovered — no reminder emails
             try { sessionStorage.removeItem('fridBeatsPromo'); } catch (e) {}
             navigateTo('success');
         }
@@ -3960,7 +4762,38 @@ document.addEventListener('keydown', function(e) {
         let savedVolume = IS_MOBILE_DEVICE ? 100 : parseInt(localStorage.getItem('fridBeats_volume') || '70', 10);
         if (isNaN(savedVolume)) savedVolume = IS_MOBILE_DEVICE ? 100 : 70;
 
-        function attemptPlay(audio, beatId, isRetry) {
+        let featuredHoverAudio = null;
+        let featuredHoverBeatId = null;
+        let featuredHoverTimeout = null;
+
+        function stopFeaturedHoverPreview(beatId) {
+            if (!featuredHoverAudio || (beatId && featuredHoverBeatId !== beatId)) return;
+            const audio = featuredHoverAudio;
+            const activeBeatId = featuredHoverBeatId;
+            clearTimeout(featuredHoverTimeout);
+            featuredHoverAudio = null;
+            featuredHoverBeatId = null;
+            featuredHoverTimeout = null;
+            if (currentAudio !== audio) return;
+            closeGlobalPlayer();
+            updatePlayButtons(activeBeatId, false);
+        }
+
+        function startFeaturedHoverPreview(beatId) {
+            if (window.matchMedia && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+            const beat = getBeatById(beatId);
+            if (!beat || !beat.preview) return;
+            if (currentAudio && currentBeatId === beatId && (!currentAudio.paused || currentAudio._pendingPlay)) return;
+            stopFeaturedHoverPreview();
+            playPreview(beatId, { hoverPreview: true, silentFailure: true });
+            const audio = currentAudio;
+            if (!audio || currentBeatId !== beatId) return;
+            featuredHoverAudio = audio;
+            featuredHoverBeatId = beatId;
+            featuredHoverTimeout = setTimeout(() => stopFeaturedHoverPreview(beatId), 10000);
+        }
+
+        function attemptPlay(audio, beatId, isRetry, silentFailure) {
             // STALE GUARD — if the user already switched to another beat, this
             // audio element must NEVER (re)play. Retrying a stale play() is
             // exactly what made two beats play at once with no way to stop
@@ -3983,21 +4816,23 @@ document.addEventListener('keydown', function(e) {
                 if (!isRetry) {
                     // First try often fails just because the file is still loading (not really "missing") — wait a beat and retry once before alerting.
                     const tokenAtFail = token;
-                    setTimeout(() => { if (audio._playToken === tokenAtFail) attemptPlay(audio, beatId, true); }, 300);
+                    setTimeout(() => { if (audio._playToken === tokenAtFail) attemptPlay(audio, beatId, true, silentFailure); }, 300);
                 } else {
                     console.warn('Playback failed for beat', beatId, err);
-                    alert('Audio preview not found! Add the file to the audio/ folder.');
+                    if (!silentFailure) alert('Audio preview not found! Add the file to the audio/ folder.');
                 }
             });
         }
 
-        function playPreview(beatId) {
+        function playPreview(beatId, options = {}) {
             const beat = getBeatById(beatId);
             if (!beat) { console.warn('Beat not found:', beatId); return; }
+            if (!options.hoverPreview) stopFeaturedHoverPreview();
 
             // Same beat already loaded -> toggle play/pause (also handles replaying after it finished)
             if (currentBeatId === beatId && currentAudio) {
                 const a = currentAudio;
+                a._homepageHeroPlayback = Boolean(options.homepageHeroPlayback);
                 // A play() that is still loading counts as "playing": clicking
                 // again must CANCEL it — otherwise there was no way to stop a
                 // beat that hadn't started making sound yet.
@@ -4007,7 +4842,7 @@ document.addEventListener('keydown', function(e) {
                     a.pause();
                 } else {
                     if (a.ended) a.currentTime = 0; // restart from the top instead of doing nothing
-                    attemptPlay(a, beatId, false);
+                    attemptPlay(a, beatId, false, options.silentFailure);
                 }
                 return;
             }
@@ -4026,6 +4861,7 @@ document.addEventListener('keydown', function(e) {
             const audio = new Audio(beat.preview);
             audio.preload = 'auto';
             audio.crossOrigin = 'anonymous'; // needed so the VU meter / waveform can analyze the audio via Web Audio API
+            audio._homepageHeroPlayback = Boolean(options.homepageHeroPlayback);
             currentAudio = audio;
             currentBeatId = beatId;
             setupVUForAudio(audio);
@@ -4037,11 +4873,11 @@ document.addEventListener('keydown', function(e) {
             const gpTitleEl = document.getElementById('gpTitle');
             const gpArtistEl = document.getElementById('gpArtist');
             if (player) {
-                player.style.display = 'flex';
+                player.style.display = options.hoverPreview ? 'none' : 'flex';
                 // Artwork of the playing beat, dimmed + blurred, behind the bar.
                 try { player.style.setProperty('--gp-bg-artwork', 'url("' + new URL(beat.artwork, location.href).href + '")'); } catch (e) { try { player.style.setProperty('--gp-bg-artwork', 'url("' + beat.artwork + '")'); } catch (e2) {} }
             }
-            document.body.classList.add('has-global-player');
+            document.body.classList.toggle('has-global-player', !options.hoverPreview);
             if (artwork) artwork.src = beat.artwork;
             if (gpTitleEl) gpTitleEl.textContent = beat.title;
             if (gpArtistEl) gpArtistEl.textContent = beat.artist;
@@ -4066,7 +4902,7 @@ document.addEventListener('keydown', function(e) {
                 setTimeout(() => { if (currentBeatId === beatId) loadWaveformForBeat(beatId, beat.preview); }, 900);
             }
 
-            attemptPlay(audio, beatId, false);
+            attemptPlay(audio, beatId, false, options.silentFailure);
             updatePlayButtons(beatId, true);
             trackBeatPlay(beatId); // fire-and-forget play counter (admin stats)
 
@@ -4084,6 +4920,14 @@ document.addEventListener('keydown', function(e) {
         }
 
         function updatePlayButtons(beatId, isPlaying) {
+            const homepageDisc = document.querySelector('.home-player-disc');
+            const isHomepageHeroPlayback = Boolean(
+                isPlaying &&
+                currentAudio &&
+                currentAudio._homepageHeroPlayback &&
+                beatId === currentBeatId
+            );
+            if (homepageDisc) homepageDisc.classList.toggle('is-playing', isHomepageHeroPlayback);
             document.querySelectorAll(`.beat-play-btn[data-beat-id="${beatId}"]`).forEach(btn => {
                 btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
             });
@@ -4114,12 +4958,21 @@ document.addEventListener('keydown', function(e) {
         let profilePosition = { x: 0, y: 0 };
 
         function navigateTo(page) {
+            if (page !== 'beat-detail' && page !== 'flp-remake-detail' && page !== 'template-detail' &&
+                (/^\/beat\/[^/]+\/?$/i.test(window.location.pathname) || isFlpRemakeDetailPath(window.location.pathname) || isTemplateDetailPath(window.location.pathname))) {
+        history.replaceState(null, '', '/' + window.location.search);
+    }
+    if (page !== currentPage && window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById('page-' + page);
     if (target) target.classList.add('active');
     document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
         link.classList.remove('active');
-        if (link.dataset && link.dataset.page === page) link.classList.add('active');
+        if (link.dataset && (link.dataset.page === page ||
+            (page === 'flp-remake-detail' && link.dataset.page === 'flp') ||
+            (page === 'template-detail' && link.dataset.page === 'templates'))) link.classList.add('active');
     });
     currentPage = page;
     if (page === 'cart') renderCart();
@@ -4134,6 +4987,80 @@ document.addEventListener('keydown', function(e) {
     if (page === 'flp') renderFLP();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+        function navigateToSection(page, sectionId) {
+            if (!document.getElementById(sectionId)) {
+                console.error('Navigation target not found:', sectionId);
+                return;
+            }
+            navigateTo(page);
+            history.replaceState(null, '', '#' + sectionId);
+            window.setTimeout(() => {
+                const section = document.getElementById(sectionId);
+                if (!section) {
+                    console.error('Navigation target not found after page change:', sectionId);
+                    return;
+                }
+                const header = document.getElementById('header');
+                const offset = header ? header.offsetHeight : 0;
+                window.scrollTo({
+                    top: Math.max(0, section.getBoundingClientRect().top + window.scrollY - offset - 12),
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+
+        let remakeModalReturnFocus = null;
+        let remakeModalPreviousOverflow = '';
+
+        function openRemakeOptions() {
+            const modal = document.getElementById('homeRemakeModal');
+            const closeButton = modal?.querySelector('.home-remake-close');
+            if (!modal || !closeButton) {
+                console.error('Custom remake options modal is unavailable.');
+                return;
+            }
+            remakeModalReturnFocus = document.activeElement;
+            remakeModalPreviousOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            modal.classList.add('open');
+            closeButton.focus();
+        }
+
+        function closeRemakeOptions() {
+            const modal = document.getElementById('homeRemakeModal');
+            if (!modal || !modal.classList.contains('open')) return;
+            modal.classList.remove('open');
+            document.body.style.overflow = remakeModalPreviousOverflow;
+            if (remakeModalReturnFocus instanceof HTMLElement) remakeModalReturnFocus.focus();
+            remakeModalReturnFocus = null;
+        }
+
+        document.addEventListener('keydown', event => {
+            const modal = document.getElementById('homeRemakeModal');
+            if (!modal || !modal.classList.contains('open')) return;
+            if (event.key === 'Escape') {
+                closeRemakeOptions();
+                return;
+            }
+            if (event.key !== 'Tab') return;
+            const focusable = [...modal.querySelectorAll('a[href], button:not([disabled])')];
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        });
+
+        function claimBlackBoxSlot() {
+            const message = 'Hi Frid! I want to claim one of the 20 FREE Master Black Box Test slots. I can send a 30-second clip.';
+            const url = 'https://wa.me/18296026502?text=' + encodeURIComponent(message);
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
 
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
@@ -4164,37 +5091,185 @@ document.addEventListener('keydown', function(e) {
         function renderFeatured() {
             const grid = document.getElementById('featuredGrid');
             if (!grid) return;
+            stopFeaturedHoverPreview();
+            renderHomepagePlayer();
             const featured = getFeaturedBeats().slice(0, 4);
-            grid.innerHTML = featured.map(beat => createBeatCardHTML(beat)).join('');
+            grid.innerHTML = featured.map(beat => createBeatCardHTML(beat, true)).join('');
+            grid.querySelectorAll('.featured-home-card').forEach((card, index) => {
+                const beat = featured[index];
+                card.addEventListener('mouseenter', () => startFeaturedHoverPreview(beat.id));
+                card.addEventListener('mouseleave', () => stopFeaturedHoverPreview(beat.id));
+            });
         }
 
-        function renderSeoProductLinks() {
-            // Crawlable <a> links to every product's SEO landing page. The SPA
-            // renders products client-side (invisible to crawlers on a fresh
-            // visit) — these static links let Google discover every beat,
-            // template and FLP page, boosting search visibility.
-            const box = document.getElementById('seoProductLinks');
-            if (!box) return;
-            const escapeHtmlLocal = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            // Keyword-slug URLs — MUST match productSlug() in the Worker exactly
-            // (slugs are the canonical URLs Google indexes).
-            const productSlug = (title, type) => {
-                const suffix = type === 'beat' ? 'instrumental' : type === 'flp' ? 'flp-remake' : 'template';
-                const base = String(title || '')
-                    .toLowerCase()
-                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                    .replace(/&/g, ' and ')
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
-                return (base ? base + '-' : '') + suffix;
-            };
-            const mk = (type, p) => `<a href="/${type}/${encodeURIComponent(productSlug(p.title, type))}" style="color:var(--text-tertiary);text-decoration:none;margin-right:10px;white-space:nowrap;">${escapeHtmlLocal(p.title || p.id)}${type === 'flp' ? ' FLP remake' : type === 'beat' ? ' instrumental' : ' template'}</a>`;
-            const links = [
-                ...beatsData.map(b => mk('beat', b)),
-                ...templatesData.map(t => mk('template', t)),
-                ...flpData.map(f => mk('flp', f)),
-            ].join('');
-            box.innerHTML = '<span style="color:var(--text-tertiary);">Browse: </span>' + links;
+        function getHomepageFeaturedBeat() {
+            return beatsData.find(beat => /tyga/i.test(beat.title || '') && /5\s*am/i.test(beat.title || '')) || null;
+        }
+
+        function renderHomepagePlayer() {
+            const beat = getHomepageFeaturedBeat();
+            const artwork = document.getElementById('homePlayerArtwork');
+            const playButton = document.getElementById('homePlayerPlay');
+            const cartButton = document.getElementById('homePlayerAddToCart');
+            if (!artwork || !playButton || !cartButton) return;
+            const hasPreview = Boolean(beat && beat.preview);
+            const hasArtwork = Boolean(beat && beat.artwork);
+            const hasPrice = Boolean(beat && beat.price && Number(typeof beat.price === 'object' ? beat.price.basic : beat.price) > 0);
+            artwork.hidden = !hasArtwork;
+            if (hasArtwork) artwork.src = beat.artwork;
+            playButton.disabled = !hasPreview;
+            cartButton.disabled = !hasPrice;
+        }
+
+        function playHomepageFeaturedBeat() {
+            const beat = getHomepageFeaturedBeat();
+            if (!beat || !beat.preview) return;
+            playPreview(beat.id, { homepageHeroPlayback: true });
+        }
+
+        function addHomepageFeaturedBeatToCart() {
+            const beat = getHomepageFeaturedBeat();
+            if (!beat || !beat.price) return;
+            const price = Number(typeof beat.price === 'object' ? beat.price.basic : beat.price);
+            if (!Number.isFinite(price) || price <= 0) return;
+            addToCart(beat.id, 'beat', price, beat.title, beat.artwork, 'basic');
+        }
+
+        function beatSlugFromTitle(title) {
+            return String(title || '')
+                .toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/&/g, ' and ')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function isBeatDetailPath(pathname) {
+            return /^\/beat\/[^/]+\/?$/i.test(pathname);
+        }
+
+        function routeBeatDetailFromPath() {
+            const match = window.location.pathname.match(/^\/beat\/([^/]+)\/?$/i);
+            if (!match) return false;
+
+            let slug;
+            try {
+                slug = decodeURIComponent(match[1]).toLowerCase();
+            } catch (error) {
+                console.error('Invalid beat URL:', window.location.pathname, error);
+                navigateTo('beats');
+                return true;
+            }
+
+            const beat = beatsData.find(item => {
+                const currentSlug = beatSlugFromTitle(item.title);
+                return slug === String(item.id).toLowerCase() ||
+                    slug === currentSlug ||
+                    slug === currentSlug + '-instrumental';
+            });
+            if (!beat) {
+                console.error('Beat not found for URL:', window.location.pathname);
+                navigateTo('beats');
+                return true;
+            }
+
+            showBeatDetail(beat.id);
+            return true;
+        }
+
+        function flpRemakeDisplayTitle(flp) {
+            let title = String(flp.title || '').trim();
+            if (/\bFLP\s+Remake\b/i.test(title)) return title;
+            if (flp.artist && !title.toLowerCase().startsWith(String(flp.artist).trim().toLowerCase())) {
+                title = `${flp.artist} - ${title}`;
+            }
+            return `${title} FLP Remake`;
+        }
+
+        function flpRemakeSlug(flp) {
+            const titleSlug = beatSlugFromTitle(flpRemakeDisplayTitle(flp));
+            const baseSlug = titleSlug || beatSlugFromTitle(flp.id) || 'flp-remake';
+            const matches = flpData.filter(item =>
+                beatSlugFromTitle(flpRemakeDisplayTitle(item)) === baseSlug
+            );
+            return matches.length > 1 ? `${baseSlug}-${beatSlugFromTitle(flp.id)}` : baseSlug;
+        }
+
+        function flpRemakePath(flp) {
+            return '/flp-remake/' + encodeURIComponent(flpRemakeSlug(flp));
+        }
+
+        function templateSlug(template) {
+            const titleSlug = beatSlugFromTitle(template.title);
+            const baseSlug = titleSlug || beatSlugFromTitle(template.id) || 'template';
+            const matches = templatesData.filter(item => beatSlugFromTitle(item.title) === baseSlug);
+            return matches.length > 1 ? `${baseSlug}-${beatSlugFromTitle(template.id)}` : baseSlug;
+        }
+
+        function templatePath(template) {
+            return '/templates/' + encodeURIComponent(templateSlug(template));
+        }
+
+        function isTemplateDetailPath(pathname) {
+            return /^\/templates\/[^/]+\/?$/i.test(pathname);
+        }
+
+        function routeTemplateDetailFromPath() {
+            const match = window.location.pathname.match(/^\/templates\/([^/]+)\/?$/i);
+            if (!match) return false;
+
+            let slug;
+            try {
+                slug = decodeURIComponent(match[1]).toLowerCase();
+            } catch (error) {
+                console.error('Invalid template URL:', window.location.pathname, error);
+                navigateTo('templates');
+                return true;
+            }
+
+            const template = templatesData.find(item =>
+                slug === templateSlug(item).toLowerCase() ||
+                slug === String(item.id).toLowerCase()
+            );
+            if (!template) {
+                console.error('Template not found for URL:', window.location.pathname);
+                navigateTo('templates');
+                return true;
+            }
+
+            showTemplateDetail(template.id);
+            return true;
+        }
+
+        function isFlpRemakeDetailPath(pathname) {
+            return /^\/flp-remake\/[^/]+\/?$/i.test(pathname);
+        }
+
+        function routeFlpRemakeDetailFromPath() {
+            const match = window.location.pathname.match(/^\/flp-remake\/([^/]+)\/?$/i);
+            if (!match) return false;
+
+            let slug;
+            try {
+                slug = decodeURIComponent(match[1]).toLowerCase();
+            } catch (error) {
+                console.error('Invalid FLP remake URL:', window.location.pathname, error);
+                navigateTo('flp');
+                return true;
+            }
+
+            const flp = flpData.find(item =>
+                slug === flpRemakeSlug(item).toLowerCase() ||
+                slug === String(item.id).toLowerCase()
+            );
+            if (!flp) {
+                console.error('FLP remake not found for URL:', window.location.pathname);
+                navigateTo('flp');
+                return true;
+            }
+
+            showFlpRemakeDetail(flp.id);
+            return true;
         }
 
         function renderBeats() {
@@ -4219,12 +5294,12 @@ document.addEventListener('keydown', function(e) {
     else if (currentBpm === 'very-fast') filtered = filtered.filter(b => b.bpm > 160);
     const count = document.getElementById('beatCount');
     if (count) count.textContent = filtered.length + ' beats available';
-    grid.innerHTML = filtered.map(beat => createBeatCardHTML(beat)).join('');
+    grid.innerHTML = filtered.map(beat => createBeatCardHTML(beat, false, true)).join('');
 }
 
-        function createBeatCardHTML(beat) {
+        function createBeatCardHTML(beat, isHomepageFeatured = false, isBeatStoreCard = false) {
             return `
-                <div class="beat-card" data-vstat="beat:${beat.id}">
+                <div class="beat-card${isHomepageFeatured ? ' featured-home-card' : ''}${isBeatStoreCard ? ' beat-store-card' : ''}" data-vstat="beat:${beat.id}">
                     <div class="beat-artwork">
                         <img src="${beat.artwork}" alt="${beat.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-image\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>No Image</div>'">
                         <div class="beat-play-overlay">
@@ -4232,7 +5307,8 @@ document.addEventListener('keydown', function(e) {
                                 <i class="fas fa-play"></i>
                             </button>
                         </div>
-                        ${beat.featured ? '<div class="beat-tags"><span class="beat-tag featured">Featured</span></div>' : ''}
+                        ${beat.featured && !isHomepageFeatured ? '<div class="beat-tags"><span class="beat-tag featured">Featured</span></div>' : ''}
+                        ${isHomepageFeatured || isBeatStoreCard ? `<div class="beat-meta-tags"><span class="beat-meta-tag">${beat.bpm} BPM · ${beat.genre}</span></div>` : ''}
                     </div>
                     <div class="beat-info">
                         <div class="beat-header">
@@ -4261,6 +5337,16 @@ document.addEventListener('keydown', function(e) {
         function showBeatDetail(beatId) {
             const beat = getBeatById(beatId);
             if (!beat) return;
+            const detailPath = '/beat/' + encodeURIComponent(beatSlugFromTitle(beat.title));
+            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
+                const nextUrl = new URL(window.location.href);
+                nextUrl.pathname = detailPath;
+                nextUrl.searchParams.delete('play');
+                nextUrl.searchParams.delete('autoplay');
+                nextUrl.hash = '';
+                const replaceCurrentPath = isBeatDetailPath(window.location.pathname);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+            }
             // Meta Pixel: product viewed
             try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); gaTrack('view_item', { currency: 'USD', value: _p, items: [{ item_id: beat.id, item_name: beat.title }] }); } catch (e) {}
             const container = document.getElementById('beatDetailContent');
@@ -4334,32 +5420,87 @@ document.addEventListener('keydown', function(e) {
                 return;
             }
             grid.innerHTML = templatesData.map(t => `
-                <div class="beat-card" id="template-card-${t.id}" data-vstat="template:${t.id}">
-                    <div class="beat-artwork">
-                        <img src="${t.artwork}" alt="${t.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${t.title}</div>'">
+                <article class="flp-card template-card" id="template-card-${t.id}" data-vstat="template:${t.id}" role="link" tabindex="0"
+                         aria-label="View ${t.title} details">
+                    <div class="flp-artwork">
+                        <img src="${t.artwork}" alt="${t.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${t.title}</div>'">
                     </div>
-                    <div class="beat-info">
-                        <div class="beat-header">
-                            <div>
-                                <div class="beat-title">${t.title}</div>
-                                <div class="beat-artist">${t.genre} • ${t.bpm} BPM</div>
-                            </div>
-                            <div>
-                                <div class="beat-price">$${t.price}</div>
-                            </div>
-                        </div>
-                        <p class="card-desc">${localizedText(t.description)}</p>
-                        <div class="beat-actions">
-                            <button class="btn btn-primary btn-sm" onclick="addToCart('${t.id}','template',${t.price},'${t.title}','${t.artwork}')" data-add="${t.id}">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
+                    <div class="flp-info">
+                        <h3><a class="flp-card-title" href="${templatePath(t)}">${t.title}</a></h3>
+                        <p class="flp-artist">${t.genre} • ${t.bpm} BPM • $${t.price}</p>
+                        <p class="flp-desc card-desc" style="font-weight:300;">${localizedText(t.description)}</p>
                         <div class="card-includes">
                             <p><i class="fas fa-info-circle"></i> Includes: FL Studio template, readme, artwork.</p>
                         </div>
                     </div>
-                </div>
+                </article>
             `).join('');
+
+            grid.querySelectorAll('.template-card').forEach((card, index) => {
+                const template = templatesData[index];
+                card.addEventListener('click', event => {
+                    if (event.target.closest('a')) return;
+                    showTemplateDetail(template.id);
+                });
+                card.addEventListener('keydown', event => {
+                    if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
+                        event.preventDefault();
+                        showTemplateDetail(template.id);
+                    }
+                });
+                card.querySelector('.flp-card-title').addEventListener('click', event => {
+                    event.preventDefault();
+                    showTemplateDetail(template.id);
+                });
+            });
+        }
+
+        function showTemplateDetail(templateId) {
+            const template = templatesData.find(item => item.id === templateId);
+            if (!template) {
+                console.error('Template not found:', templateId);
+                navigateTo('templates');
+                return;
+            }
+
+            const detailPath = templatePath(template);
+            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
+                const nextUrl = new URL(window.location.href);
+                nextUrl.pathname = detailPath;
+                nextUrl.hash = '';
+                const replaceCurrentPath = isBeatDetailPath(window.location.pathname) ||
+                    isFlpRemakeDetailPath(window.location.pathname) ||
+                    isTemplateDetailPath(window.location.pathname);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+            }
+
+            const container = document.getElementById('templateDetailContent');
+            if (!container) return;
+            container.innerHTML = `
+                <article class="flp-detail template-detail">
+                    <div class="flp-detail-artwork">
+                        <img src="${template.artwork}" alt="${template.title}"
+                             onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:3rem;display:block;margin-bottom:0.5rem;\\'></i>${template.title}</div>'">
+                    </div>
+                    <div class="flp-detail-info">
+                        <h1>${template.title}</h1>
+                        <p class="flp-detail-artist">${template.genre} • ${template.bpm} BPM</p>
+                        <p class="flp-detail-description">${localizedText(template.description)}</p>
+                        <div class="card-includes flp-detail-includes">
+                            <p><i class="fas fa-info-circle"></i> Includes: FL Studio template, readme, artwork.</p>
+                        </div>
+                        <div class="flp-detail-download">
+                            <button class="btn btn-primary" id="templateDetailAddBtn" style="width:100%;">
+                                <i class="fas fa-cart-plus"></i> Add to Cart — $${template.price}
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `;
+            document.getElementById('templateDetailAddBtn').addEventListener('click', () =>
+                addToCart(template.id, 'template', Number(template.price), template.title, template.artwork)
+            );
+            navigateTo('template-detail');
         }
 
         function renderFLP() {
@@ -4370,25 +5511,26 @@ document.addEventListener('keydown', function(e) {
                 return;
             }
             grid.innerHTML = flpData.map(flp => `
-                <div class="flp-card" id="flp-card-${flp.id}" data-vstat="flp:${flp.id}">
+                <div class="flp-card" id="flp-card-${flp.id}" data-vstat="flp:${flp.id}" role="link" tabindex="0"
+                     aria-label="View ${flpRemakeDisplayTitle(flp)} details"
+                     onclick="if(event.target.closest('a'))return;showFlpRemakeDetail('${flp.id}')"
+                     onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();showFlpRemakeDetail('${flp.id}');}">
                     <div class="flp-artwork">
                         <img src="${flp.thumbnail}" alt="${flp.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${flp.title}</div>'">
                         <div class="play-overlay">
-                            <a href="${flp.youtubeUrl}" target="_blank" class="flp-play-btn">
+                            <a href="${flp.youtubeUrl || '#'}" target="_blank" rel="noopener noreferrer" class="flp-play-btn"
+                               onclick="event.stopPropagation();if(this.getAttribute('href')==='#')event.preventDefault();">
                                 <i class="fas fa-play"></i>
                             </a>
                         </div>
                     </div>
                     <div class="flp-info">
-                        <h3>${flp.title}</h3>
+                        <h3><a class="flp-card-title" href="${flpRemakePath(flp)}"
+                               onclick="event.preventDefault();event.stopPropagation();showFlpRemakeDetail('${flp.id}')">
+                            ${flpRemakeDisplayTitle(flp)}
+                        </a></h3>
                         <p class="flp-artist">${flp.artist} • ${flp.genre}</p>
                         <p class="flp-desc card-desc" style="font-weight:300;">${localizedText(flp.description)}</p>
-                        <div class="flp-download-form">
-                            <input type="text" id="flpField_${flp.id}" name="flp_field_${flp.id}" inputmode="email" autocomplete="off" spellcheck="false" placeholder="Where should we send your download?">
-                            <button class="btn btn-primary btn-sm" onclick="downloadFLP('${flp.id}')">
-                                <i class="fas fa-download"></i> Download
-                            </button>
-                        </div>
                         <div class="card-includes">
                             <p><i class="fas fa-info-circle"></i> Includes: FLP file + sound kit used for the remake.</p>
                         </div>
@@ -4396,6 +5538,61 @@ document.addEventListener('keydown', function(e) {
                 </div>
             `).join('');
         }
+
+        function showFlpRemakeDetail(flpId) {
+            const flp = flpData.find(item => item.id === flpId);
+            if (!flp) {
+                console.error('FLP remake not found:', flpId);
+                navigateTo('flp');
+                return;
+            }
+
+            const detailPath = flpRemakePath(flp);
+            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
+                const nextUrl = new URL(window.location.href);
+                nextUrl.pathname = detailPath;
+                nextUrl.hash = '';
+                const replaceCurrentPath = isBeatDetailPath(window.location.pathname) ||
+                    isFlpRemakeDetailPath(window.location.pathname);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+            }
+
+            const container = document.getElementById('flpDetailContent');
+            if (!container) return;
+            container.innerHTML = `
+                <article class="flp-detail">
+                    <div class="flp-detail-artwork">
+                        <img src="${flp.thumbnail}" alt="${flpRemakeDisplayTitle(flp)}"
+                             onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:3rem;display:block;margin-bottom:0.5rem;\\'></i>${flp.title}</div>'">
+                    </div>
+                    <div class="flp-detail-info">
+                        <h1>${flpRemakeDisplayTitle(flp)}</h1>
+                        <p class="flp-detail-artist">${flp.artist} • ${flp.genre}</p>
+                        <p class="flp-detail-description">${localizedText(flp.description)}</p>
+                        <div class="card-includes flp-detail-includes">
+                            <p><i class="fas fa-info-circle"></i> Includes: FLP file + sound kit used for the remake.</p>
+                        </div>
+                        <div class="flp-detail-download">
+                            <label for="flpField_${flp.id}">Enter your email to unlock the free download</label>
+                            <div class="flp-download-form">
+                                <input type="email" id="flpField_${flp.id}" name="flp_field_${flp.id}" inputmode="email"
+                                       autocomplete="email" spellcheck="false" placeholder="Enter your email" required>
+                                <button class="btn btn-primary btn-sm" onclick="downloadFLP('${flp.id}')">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                            <label for="flpMarketingOptIn_${flp.id}" style="display:flex;align-items:flex-start;gap:0.45rem;margin-top:0.55rem;font-size:0.75rem;line-height:1.4;">
+                                <input type="checkbox" id="flpMarketingOptIn_${flp.id}" style="margin-top:0.1rem;">
+                                Email me the Black Box 30-second mastering test offer (optional).
+                            </label>
+                        </div>
+                        ${flp.youtubeUrl ? `<a class="btn btn-secondary btn-sm flp-detail-youtube" href="${flp.youtubeUrl}" target="_blank" rel="noopener noreferrer"><i class="fas fa-play"></i> Watch the remake</a>` : ''}
+                    </div>
+                </article>
+            `;
+            navigateTo('flp-remake-detail');
+        }
+
         // ===== AI BEAT FINDER (Frid Finder) =====
         // Sends the natural-language query to the Worker's /ai-search endpoint.
         // The Worker (optionally via Workers AI) extracts filters and scores the
@@ -4440,7 +5637,7 @@ document.addEventListener('keydown', function(e) {
                     resultsEl.innerHTML = '<p style="color:#f87171;font-size:0.85rem;">' + t_('ai_unavailable') + '</p>';
                 }
             } finally {
-                btn.disabled = false; btn.textContent = t_('ai_find');
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-search" aria-hidden="true"></i> ' + t_('ai_find');
             }
         }
 
@@ -4454,22 +5651,18 @@ document.addEventListener('keydown', function(e) {
             const flp = flpData.find(f => f.id === flpId);
             if (!flp) { alert('FLP not found.'); return; }
             trackEvent('download', flpId); // admin analytics: FLP download requested
-            
-            // Save subscriber
+            const marketingCheckbox = document.getElementById(`flpMarketingOptIn_${flpId}`);
+            const marketingConsent = !!(marketingCheckbox && marketingCheckbox.checked);
+
             if (!subscribers.includes(email)) {
                 subscribers.push(email);
                 saveSubscribers();
                 updateAdminStats();
-                // Tell the ADMIN about the new subscriber (non-blocking).
-                // This also enrolls the subscriber into the automated drip
-                // sequence (day 0 welcome + day 2 + day 5 promo) and emails
-                // them the instant welcome — handled entirely by the Worker.
-                notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length, flpTitle: (flp && flp.title) || 'the FLP remake' });
             }
-            // GA4: free FLP download = lead (Analytics → Engagement → Events)
+            notifyAdmin('subscriber', { email: email, totalSubscribers: subscribers.length, flpTitle: (flp && flp.title) || 'the FLP remake', marketingConsent });
+
             try { gaTrack('generate_lead', { currency: 'USD', items: [{ item_id: flpId, item_name: (flp && flp.title) || 'FLP remake' }] }); } catch (e) {}
-            
-            // Show success message with animation and download button
+
             const msg = document.getElementById('flpMessage');
             if (msg) {
                 msg.innerHTML = `
@@ -4480,7 +5673,7 @@ document.addEventListener('keydown', function(e) {
                         <p style="color:var(--text-tertiary);font-size:0.85rem;margin-top:0.5rem;">
                             The ZIP file contains: FLP file + sound kit used for the remake.
                         </p>
-                        <button onclick="startFLPDownload(${flp.download ? `'${flp.download}'` : 'null'})" 
+                        <button onclick="startFLPDownload(${flp.download ? `'${flp.download}'` : 'null'})"
                                 style="margin-top:1rem;padding:0.6rem 2rem;background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.95rem;transition:all 0.3s ease;">
                             📥 Download Now
                         </button>
@@ -4508,19 +5701,17 @@ document.addEventListener('keydown', function(e) {
                         </div>
                     </div>
                 `;
-                // Scroll to message
                 msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-            
-            // Auto-hide after 15 seconds
+
             setTimeout(() => {
                 if (msg && msg.children.length > 0) {
                     const el = msg.firstElementChild;
                     el.style.transition = 'opacity 0.5s ease';
                     el.style.opacity = '0';
-                    setTimeout(() => { 
+                    setTimeout(() => {
                         if (msg) {
-                            msg.innerHTML = ''; 
+                            msg.innerHTML = '';
                             el.style.opacity = '1';
                         }
                     }, 500);
@@ -4572,13 +5763,23 @@ document.addEventListener('keydown', function(e) {
             let formHTML = '';
             if (type === 'beat') {
                 formHTML = `
-                    <div class="form-group"><label>Title</label><input type="text" id="f_title" value="${item ? item.title : ''}" placeholder="Beat title"></div>
+                    <div class="form-group"><label>Title</label><input type="text" id="f_title" value="${item ? escapeFormHtml(item.title) : ''}" placeholder="Beat title" maxlength="60" oninput="updateBeatTitleCounter()"><span class="field-counter" id="f_title_counter"></span></div>
                     <div class="form-group"><label>Artist</label><input type="text" id="f_artist" value="${item ? item.artist : 'Frid Beats'}"></div>
+                    <div class="form-group"><label for="f_artist_tags">Artist Tags / Inspirations</label><input type="text" id="f_artist_tags" value="${item ? escapeFormHtml(item.artistTags || '') : ''}" placeholder="e.g. J Cole x Nas, Joe Dwet File x Fantom"></div>
                     <div class="form-group"><label>Genre</label><input type="text" id="f_genre" value="${item ? item.genre : 'Kompa'}"></div>
                     <div class="form-group"><label>BPM</label><input type="number" id="f_bpm" value="${item ? item.bpm : 140}"></div>
                     <div class="form-group"><label>Key</label><input type="text" id="f_key" value="${item ? item.key : 'F# Minor'}"></div>
                     <div class="form-group"><label>Mood (comma separated)</label><input type="text" id="f_mood" value="${item ? item.mood.join(', ') : 'Energético, Romántico'}"></div>
-                    ${renderDescriptionFields(item)}
+                    <div class="form-group">
+                        <label for="f_tag_input">Keywords / Tags</label>
+                        <div class="tag-editor" id="f_tags_pills"></div>
+                        <div class="tag-editor-row">
+                            <input type="text" id="f_tag_input" placeholder="Add a tag (e.g. kompa, dark, piano)" aria-label="Add keyword tag">
+                            <button type="button" class="btn btn-secondary btn-sm" id="f_tags_add" onclick="addBeatKeywordTag()">Add</button>
+                        </div>
+                        <div class="tag-help"><span id="f_tags_count">0/10 tags · minimum 5</span>. Separate multiple tags with commas.</div>
+                    </div>
+                    ${renderDescriptionFields(item, true)}
                     <div class="form-group"><label>Price - Basic License (MP3)</label><input type="number" id="f_price_basic" value="${item ? item.price.basic : 30}"></div>
                     <div class="form-group"><label>Price - WAV License</label><input type="number" id="f_price_wav" value="${item && item.price.wav ? item.price.wav : 50}"></div>
                     <div class="form-group"><label>Price - Premium License (Trackouts)</label><input type="number" id="f_price_premium" value="${item && item.price.premium ? item.price.premium : 100}"></div>
@@ -4745,6 +5946,18 @@ document.addEventListener('keydown', function(e) {
             `;
             content.innerHTML = formHTML;
             overlay.classList.add('open');
+            if (type === 'beat') {
+                updateBeatTitleCounter();
+                updateBeatDescriptionCounters();
+                renderBeatKeywordTags(item ? item.tags : []);
+                const tagInput = document.getElementById('f_tag_input');
+                if (tagInput) tagInput.addEventListener('keydown', event => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        addBeatKeywordTag();
+                    }
+                });
+            }
 
             // Add event listeners for file inputs
             document.querySelectorAll('#modalContent input[type="file"]').forEach(input => {
@@ -4959,6 +6172,13 @@ document.addEventListener('keydown', function(e) {
 
             const title = document.getElementById('f_title').value.trim();
             if (!title) { alert('Title is required'); return; }
+            if (type === 'beat' && title.length > 60) { alert('Beat title must be 60 characters or fewer.'); return; }
+            const beatTags = type === 'beat' ? readBeatKeywordTags() : [];
+            if (type === 'beat' && (beatTags.length < 5 || beatTags.length > 10)) {
+                updateBeatTagCount(beatTags.length < 5 ? 'Add at least 5 tags before saving.' : 'Maximum 10 tags.');
+                document.getElementById('f_tag_input')?.focus();
+                return;
+            }
 
             // Helper: read file as data URL
             function readFileAsDataURL(file) {
@@ -5082,11 +6302,13 @@ document.addEventListener('keydown', function(e) {
                         slug: title.toLowerCase().replace(/\s+/g, '-'),
                         title: title,
                         artist: document.getElementById('f_artist').value || 'Frid Beats',
+                        artistTags: document.getElementById('f_artist_tags').value.trim(),
                         genre: document.getElementById('f_genre').value || 'Kompa',
                         bpm: parseInt(document.getElementById('f_bpm').value) || 140,
                         key: document.getElementById('f_key').value || 'F# Minor',
                         mood: document.getElementById('f_mood').value.split(',').map(m => m.trim()),
-                        description: readDescriptionFromForm(),
+                        tags: beatTags,
+                        description: readDescriptionFromForm(true, id ? beatsData.find(d => d.id === id) : null),
                         artwork: artworkData || (id ? beatsData.find(d => d.id === id)?.artwork || 'images/beats/beat.jpg' : 'images/beats/beat.jpg'),
                         preview: audioData || (id ? beatsData.find(d => d.id === id)?.preview || 'audio/previews/beat.mp3' : 'audio/previews/beat.mp3'),
                         price: {
@@ -6435,6 +7657,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                         waitAndOpen(12);
                     }
                 }
+                window.addEventListener('popstate', () => {
+                    if (isBeatDetailPath(location.pathname)) {
+                        routeBeatDetailFromPath();
+                    } else if (isFlpRemakeDetailPath(location.pathname)) {
+                        routeFlpRemakeDetailFromPath();
+                    } else if (isTemplateDetailPath(location.pathname)) {
+                        routeTemplateDetailFromPath();
+                    } else if (currentPage === 'beat-detail') {
+                        navigateTo('home');
+                    } else if (currentPage === 'flp-remake-detail') {
+                        navigateTo('flp');
+                    } else if (currentPage === 'template-detail') {
+                        navigateTo('templates');
+                    }
+                });
+                if (routeFlpRemakeDetailFromPath()) return;
+                if (routeTemplateDetailFromPath()) return;
+                if (routeBeatDetailFromPath()) return;
                 const playId = params.get('play');
             if (!playId || !getBeatById(playId)) return;
             showBeatDetail(playId);
@@ -6475,7 +7715,9 @@ let mgpLastLang = mgpLang();
 function mgpApplyPromo(){
   const promo = Date.now() < MGP_PROMO_END.getTime();
   const p = mgpPrices();
-  $mgp('mgpSigStrike').textContent = '$' + p.sigFull.toFixed(2);
+  const strike = $mgp('mgpSigStrike');
+  strike.textContent = '$' + p.sigFull.toFixed(2);
+  strike.style.display = promo ? '' : 'none';
   $mgp('mgpSigNow').textContent = '$' + p.signature.toFixed(2);
   const b = document.querySelector('#mgpUnlock .mp-badge');
   if (b) b.style.display = promo ? 'block' : 'none';
