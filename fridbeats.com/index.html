@@ -4931,6 +4931,7 @@ document.addEventListener('keydown', function(e) {
             audio.preload = 'auto';
             audio.crossOrigin = 'anonymous'; // needed so the VU meter / waveform can analyze the audio via Web Audio API
             audio._homepageHeroPlayback = Boolean(options.homepageHeroPlayback);
+            audio._countBeatPlay = !options.hoverPreview;
             currentAudio = audio;
             currentBeatId = beatId;
             setupVUForAudio(audio);
@@ -4973,11 +4974,13 @@ document.addEventListener('keydown', function(e) {
 
             attemptPlay(audio, beatId, false, options.silentFailure);
             updatePlayButtons(beatId, true);
-            trackBeatPlay(beatId); // fire-and-forget play counter (admin stats)
 
             audio.onended = () => { updatePlayButtons(beatId, false); renderWaveform(0); };
             audio.onpause = () => { if (!audio.ended) updatePlayButtons(beatId, false); };
-            audio.onplay = () => { updatePlayButtons(beatId, true); };
+            audio.onplay = () => {
+                updatePlayButtons(beatId, true);
+                if (audio._countBeatPlay) trackBeatPlay(beatId);
+            };
 
             audio.addEventListener('timeupdate', () => {
                 if (!currentAudio || currentBeatId !== beatId) return;
@@ -5420,6 +5423,7 @@ document.addEventListener('keydown', function(e) {
             try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); gaTrack('view_item', { currency: 'USD', value: _p, items: [{ item_id: beat.id, item_name: beat.title }] }); } catch (e) {}
             const container = document.getElementById('beatDetailContent');
             if (!container) return;
+            trackBeatStat('view', beat.id);
             container.innerHTML = `
                 <div class="beat-detail">
                     <div class="beat-detail-artwork">
@@ -6503,7 +6507,7 @@ document.addEventListener('keydown', function(e) {
         async function loadPlayStats() {
             try {
                 if (!window.R2_UPLOAD_ENDPOINT || !(await supabaseAdminReady())) return;
-                const r = await fetch(R2_UPLOAD_ENDPOINT + '/admin-stats', { headers: await adminAuthHeader() });
+                const r = await fetch(R2_UPLOAD_ENDPOINT + '/admin-stats', { headers: await adminAuthHeader(), cache: 'no-store' });
                 if (!r.ok) return;
                 const d = await r.json();
                 if (d && d.ok && d.stats) {
@@ -6516,7 +6520,7 @@ document.addEventListener('keydown', function(e) {
                     }
                 }
                 const el = document.getElementById('adminPlayStatsNote');
-                if (el) el.textContent = '▶ Plays, 👁 Views and ⬇ Downloads are counted server-side (plays/views deduped — one count per product per page).';
+                if (el) el.textContent = '▶ Plays, 👁 Views and ⬇ Downloads are counted server-side. Beat plays are deduped for 30 seconds.';
             } catch (e) { /* stats are optional — never block the admin panel */ }
             renderAdminBeats();
             renderAdminTemplates();
@@ -6772,8 +6776,8 @@ function loadPeaksFromStorage(beatId) {
 //   kind 'play'     → visitor pressed play on a beat
 //   kind 'download' → visitor requested a free FLP download
 //   kind 'view'     → a product card became visible in the viewport
-// The Worker accumulates counts server-side (product_stats table), so
-// numbers survive browser clears. Throttled per kind+id (30s).
+// Beat counts use the beats table; other product events use product_stats.
+// Counts survive browser clears and are throttled per kind+id (30s).
 // ============================================================
 const _statTracked = {}; // "kind:id" -> timestamp of last ping
 function trackEvent(kind, id) {
@@ -6792,7 +6796,26 @@ function trackEvent(kind, id) {
         }).catch(() => {}); // never blocks or notifies — pure analytics
     } catch (e) { /* ignore */ }
 }
-function trackBeatPlay(beatId) { trackEvent('play', beatId); }
+function trackBeatPlay(beatId) { trackBeatStat('play', beatId); }
+function trackBeatStat(kind, beatId) {
+    try {
+        if (kind !== 'play' && kind !== 'view') return;
+        const key = kind + ':' + beatId;
+        const now = Date.now();
+        if (_statTracked[key] && now - _statTracked[key] < 30000) return;
+        _statTracked[key] = now;
+        if (!window.R2_UPLOAD_ENDPOINT) return;
+        fetch(R2_UPLOAD_ENDPOINT + '/beats/' + encodeURIComponent(beatId) + '/' + kind, {
+            method: 'POST',
+            keepalive: true,
+            cache: 'no-store',
+        }).then(response => {
+            if (!response.ok) console.warn('Beat analytics request failed:', response.status, kind, beatId);
+        }).catch(error => console.warn('Beat analytics request failed:', kind, beatId, error));
+    } catch (e) {
+        console.warn('Beat analytics request failed:', kind, beatId, e);
+    }
+}
 
 // VIEW TRACKING — counts each product card the visitor actually sees.
 // One view per card per page load (IntersectionObserver + batched pings).
@@ -6804,7 +6827,11 @@ function _flushViewPings() {
     _viewFlushTimer = null;
     const batch = Array.from(_viewPending);
     _viewPending.clear();
-    batch.forEach(id => { _viewSent.add(id); trackEvent('view', id); });
+    batch.forEach(id => {
+        _viewSent.add(id);
+        if (id.startsWith('beat:')) trackBeatStat('view', id.slice(5));
+        else trackEvent('view', id);
+    });
 }
 function watchViewCards() {
     try {
