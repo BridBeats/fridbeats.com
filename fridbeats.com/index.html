@@ -4354,6 +4354,75 @@ let subscribers = JSON.parse(localStorage.getItem('fridBeats_subscribers')) || [
             return pills ? [...pills.querySelectorAll('.tag-editor-pill')].map(pill => pill.dataset.tag) : [];
         }
 
+        function renderBeatArtistTags(tags) {
+            const container = document.getElementById('f_artist_tags_pills');
+            if (!container) return;
+            container.replaceChildren();
+            const values = Array.isArray(tags) ? tags : typeof tags === 'string' ? tags.split(',') : [];
+            const normalizedTags = [];
+            const seenTags = new Set();
+            values.map(tag => String(tag).trim()).filter(Boolean).forEach(tag => {
+                const normalizedTag = tag.toLowerCase();
+                if (seenTags.has(normalizedTag)) return;
+                seenTags.add(normalizedTag);
+                normalizedTags.push(tag);
+            });
+            normalizedTags.slice(0, 10).forEach(tag => {
+                const pill = document.createElement('span');
+                pill.className = 'tag-editor-pill';
+                pill.dataset.tag = tag;
+                const label = document.createElement('span');
+                label.textContent = tag;
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.setAttribute('aria-label', `Remove ${tag}`);
+                remove.textContent = '×';
+                remove.addEventListener('click', () => {
+                    pill.remove();
+                    updateBeatArtistTagCount();
+                });
+                pill.append(label, remove);
+                container.appendChild(pill);
+            });
+            updateBeatArtistTagCount();
+        }
+
+        function updateBeatArtistTagCount(message = '') {
+            const pills = document.getElementById('f_artist_tags_pills');
+            const count = document.getElementById('f_artist_tags_count');
+            const addButton = document.getElementById('f_artist_tags_add');
+            if (!pills || !count) return;
+            const total = pills.querySelectorAll('.tag-editor-pill').length;
+            count.textContent = message || `${total}/10 tags`;
+            if (addButton) addButton.disabled = total >= 10;
+        }
+
+        function addBeatArtistTag() {
+            const input = document.getElementById('f_artist_tags_input');
+            const pills = document.getElementById('f_artist_tags_pills');
+            if (!input || !pills) return;
+            const entries = input.value.split(',').map(tag => tag.trim()).filter(Boolean);
+            if (!entries.length) return;
+            const current = [...pills.querySelectorAll('.tag-editor-pill')].map(pill => pill.dataset.tag);
+            const next = [...current];
+            for (const tag of entries) {
+                if (next.some(existingTag => existingTag.toLowerCase() === tag.toLowerCase())) continue;
+                if (next.length >= 10) {
+                    updateBeatArtistTagCount('Maximum 10 tags.');
+                    break;
+                }
+                next.push(tag);
+            }
+            input.value = '';
+            renderBeatArtistTags(next);
+            input.focus();
+        }
+
+        function readBeatArtistTags() {
+            const pills = document.getElementById('f_artist_tags_pills');
+            return pills ? [...pills.querySelectorAll('.tag-editor-pill')].map(pill => pill.dataset.tag) : [];
+        }
+
         // Helper i18n: returns the translated string for the current language.
         function t_(key) {
             const lang = localStorage.getItem('fridBeats_lang') || 'en';
@@ -5765,7 +5834,15 @@ document.addEventListener('keydown', function(e) {
                 formHTML = `
                     <div class="form-group"><label>Title</label><input type="text" id="f_title" value="${item ? escapeFormHtml(item.title) : ''}" placeholder="Beat title" maxlength="60" oninput="updateBeatTitleCounter()"><span class="field-counter" id="f_title_counter"></span></div>
                     <div class="form-group"><label>Artist</label><input type="text" id="f_artist" value="${item ? item.artist : 'Frid Beats'}"></div>
-                    <div class="form-group"><label for="f_artist_tags">Artist Tags / Inspirations</label><input type="text" id="f_artist_tags" value="${item ? escapeFormHtml(item.artistTags || '') : ''}" placeholder="e.g. J Cole x Nas, Joe Dwet File x Fantom"></div>
+                    <div class="form-group">
+                        <label for="f_artist_tags_input">Artist Tags / Inspirations (optional)</label>
+                        <div class="tag-editor" id="f_artist_tags_pills"></div>
+                        <div class="tag-editor-row">
+                            <input type="text" id="f_artist_tags_input" placeholder="e.g. J Cole x Nas, Joe Dwet File x Fantom" aria-label="Add artist inspiration tag">
+                            <button type="button" class="btn btn-secondary btn-sm" id="f_artist_tags_add" onclick="addBeatArtistTag()">Add</button>
+                        </div>
+                        <div class="tag-help"><span id="f_artist_tags_count">0/10 tags</span>. Separate multiple tags with commas.</div>
+                    </div>
                     <div class="form-group"><label>Genre</label><input type="text" id="f_genre" value="${item ? item.genre : 'Kompa'}"></div>
                     <div class="form-group"><label>BPM</label><input type="number" id="f_bpm" value="${item ? item.bpm : 140}"></div>
                     <div class="form-group"><label>Key</label><input type="text" id="f_key" value="${item ? item.key : 'F# Minor'}"></div>
@@ -5949,6 +6026,14 @@ document.addEventListener('keydown', function(e) {
             if (type === 'beat') {
                 updateBeatTitleCounter();
                 updateBeatDescriptionCounters();
+                renderBeatArtistTags(item ? item.artistTags || '' : []);
+                const artistTagInput = document.getElementById('f_artist_tags_input');
+                if (artistTagInput) artistTagInput.addEventListener('keydown', event => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        addBeatArtistTag();
+                    }
+                });
                 renderBeatKeywordTags(item ? item.tags : []);
                 const tagInput = document.getElementById('f_tag_input');
                 if (tagInput) tagInput.addEventListener('keydown', event => {
@@ -6302,7 +6387,7 @@ document.addEventListener('keydown', function(e) {
                         slug: title.toLowerCase().replace(/\s+/g, '-'),
                         title: title,
                         artist: document.getElementById('f_artist').value || 'Frid Beats',
-                        artistTags: document.getElementById('f_artist_tags').value.trim(),
+                        artistTags: readBeatArtistTags().join(', '),
                         genre: document.getElementById('f_genre').value || 'Kompa',
                         bpm: parseInt(document.getElementById('f_bpm').value) || 140,
                         key: document.getElementById('f_key').value || 'F# Minor',
