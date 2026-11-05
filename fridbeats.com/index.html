@@ -5268,7 +5268,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         function flpRemakePath(flp) {
-            return '/?open=flp/' + encodeURIComponent(String(flp.id));
+            return '/flp-remake/' + encodeURIComponent(flpRemakeSlug(flp));
         }
 
         function templateSlug(template) {
