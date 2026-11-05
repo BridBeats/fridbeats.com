@@ -380,145 +380,6 @@
     display:none; font-size:1.5rem; color:var(--text-tertiary);
     padding:0.5rem; background:none; border:none; cursor:pointer;
 }
-.header-search {
-    display: flex;
-    align-items: center;
-    background: var(--bg-input, rgba(255,255,255,0.04));
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    padding: 0.35rem 0.35rem 0.35rem 1rem;
-    flex: 1;
-    max-width: 240px;
-    margin: 0 1rem;
-}
-.header-search input {
-    flex: 1;
-    min-width: 0;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text-primary);
-    font-size: 0.85rem;
-    font-family: inherit;
-}
-.header-search input::placeholder { color: var(--text-tertiary); }
-.header-search button {
-    background: var(--accent-primary);
-    border: none;
-    color: #fff;
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    font-size: 0.8rem;
-}
-@media (max-width: 1150px) {
-    .header-search { display: none; } /* keep the header uncluttered — search is still available via the search icon */
-}
-.mobile-search-btn {
-    display: none;
-    font-size: 1.15rem;
-    color: var(--text-tertiary);
-    padding: 0.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-@media (max-width: 1150px) {
-    .mobile-search-btn { display: flex; align-items: center; }
-}
-.mobile-search-bar {
-    display: none;
-    position: fixed;
-    top: 70px;
-    left: 0; right: 0;
-    z-index: 998;
-    background: rgba(10,14,26,0.97);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border-bottom: 1px solid var(--border);
-    padding: 0.85rem 1rem;
-    align-items: center;
-    gap: 0.6rem;
-}
-.mobile-search-bar.open { display: flex; }
-.mobile-search-bar input {
-    flex: 1;
-    min-width: 0;
-    background: var(--bg-input, rgba(255,255,255,0.06));
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    padding: 0.55rem 1rem;
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    font-family: inherit;
-    outline: none;
-}
-.mobile-search-bar input::placeholder { color: var(--text-tertiary); }
-.mobile-search-bar button {
-    background: var(--accent-primary);
-    border: none;
-    color: #fff;
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-/* ===== SEARCH RESULTS DROPDOWN (shared by desktop + mobile search bars) ===== */
-.header-search, .mobile-search-bar { position: relative; }
-.search-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    right: 0;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-    max-height: 420px;
-    overflow-y: auto;
-    z-index: 1500;
-}
-.search-dropdown.open { display: block; }
-.search-dropdown-section { padding: 0.5rem 0; }
-.search-dropdown-section + .search-dropdown-section { border-top: 1px solid var(--border); }
-.search-dropdown-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    padding: 0.4rem 1rem;
-}
-.search-dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-}
-.search-dropdown-item:hover { background: var(--bg-card-hover); }
-.search-dropdown-item img {
-    width: 38px; height: 38px;
-    border-radius: 8px;
-    object-fit: cover;
-    background: var(--bg-tertiary);
-    flex-shrink: 0;
-}
-.search-dropdown-title { font-size: 0.85rem; color: var(--text-primary); }
-.search-dropdown-sub { font-size: 0.7rem; color: var(--text-tertiary); }
-.search-dropdown-empty { padding: 1rem; font-size: 0.8rem; color: var(--text-tertiary); text-align: center; }
-.search-highlight {
-    animation: searchHighlightPulse 2.2s ease-out;
-    border-color: var(--accent-primary) !important;
-}
-@keyframes searchHighlightPulse {
-    0% { box-shadow: 0 0 0 4px rgba(26,90,74,0.55); }
-    100% { box-shadow: 0 0 0 0 rgba(26,90,74,0); }
-}
 /* Email deep link (?play=<id>&autoplay=1): pulse the play button until the
    visitor taps anywhere, then the beat starts. Browsers block autoplay sound,
    so this is the smoothest hands-off experience we can offer. */
@@ -1662,8 +1523,7 @@ input[type="range"]::-moz-range-thumb {
             .nav-right { flex-shrink:0; gap:0.35rem; }
             .lang-btn { min-height:34px; padding:0.32rem 0.58rem; font-size:0.68rem; }
             .lang-btn span { display:inline; }
-            .mobile-search-btn, .cart-btn, .mobile-menu-btn { width:34px; height:34px; padding:0; display:flex; align-items:center; justify-content:center; }
-            .mobile-search-btn { font-size:1.05rem; }
+            .cart-btn, .mobile-menu-btn { width:34px; height:34px; padding:0; display:flex; align-items:center; justify-content:center; }
             .cart-btn { font-size:1.08rem; }
             .mobile-menu-btn { font-size:1.35rem; }
             .hero-title { font-size:2.2rem; }
@@ -1804,25 +1664,6 @@ input[type="range"]::-moz-range-thumb {
 
         /* ===== HOMEPAGE PHASE 1 ===== */
         #page-home { padding-top:70px; }
-        body:has(#page-home.active) .header-search {
-            display:flex;
-            flex:0 0 38px;
-            width:38px;
-            max-width:38px;
-            margin:0;
-            padding:0;
-            border:0;
-            background:transparent;
-        }
-        body:has(#page-home.active) .header-search input,
-        body:has(#page-home.active) .header-search .search-dropdown { display:none; }
-        body:has(#page-home.active) .header-search button {
-            width:38px;
-            height:38px;
-            color:var(--text-primary);
-            background:transparent;
-            font-size:1rem;
-        }
         body:has(#page-home.active) .nav-links { gap:1rem; }
         body:has(#page-home.active) .nav-links a { flex-shrink:0; white-space:nowrap; }
         .home-main { max-width:960px; margin:0 auto; padding:0 1.25rem; }
@@ -2256,7 +2097,6 @@ input[type="range"]::-moz-range-thumb {
             #page-beats .section-title { font-size:1rem; line-height:1.2; }
             #page-beats [data-i18n="beats_subtitle"] { font-size:0.75rem; line-height:1.3; }
             #page-beats .beat-artwork { aspect-ratio:1 / 1; }
-            body:has(#page-home.active) .header-search { display:none; }
             .home-main { padding:0 0.8rem; }
             #page-home .home-hero { padding:0.75rem 0 0.45rem; }
             .home-player { grid-template-columns:110px minmax(0,1fr); gap:0.85rem; min-height:0; padding:0.7rem; }
@@ -2307,9 +2147,6 @@ input[type="range"]::-moz-range-thumb {
                 line-height:1.15;
                 white-space:nowrap;
             }
-        }
-        @media (max-width:900px) {
-            body:has(#page-home.active) .header-search { display:none; }
         }
         @media (min-width:1320px) and (hover:hover) and (pointer:fine) {
             body:has(#page-home.active) .home-promo-stack { display:flex; }
@@ -2414,11 +2251,6 @@ input[type="range"]::-moz-range-thumb {
             <img loading="lazy" decoding="async" src="https://myyfdrttulefdmjnybuk.supabase.co/storage/v1/object/public/frid-files/public/logo/logo.png" alt="FRID BEATS" onerror="this.style.display='none'">
             <span>FRID</span> BEATS
         </div>
-        <div class="header-search" id="headerSearch">
-            <input type="text" id="headerSearchInput" placeholder="Search beats, templates, FLP..." oninput="renderSearchDropdown(this.value,'headerSearchResults')" onkeydown="if(event.key==='Enter') runHeaderSearch()">
-            <button onclick="runHeaderSearch()" aria-label="Search"><i class="fas fa-search"></i></button>
-            <div class="search-dropdown" id="headerSearchResults"></div>
-        </div>
         <nav class="nav-links" id="navLinks">
             <a onclick="navigateTo('home')" class="active" data-page="home" data-i18n="nav_home">Home</a>
             <a onclick="navigateTo('beats')" data-page="beats" data-i18n="nav_beats">Beats</a>
@@ -2442,9 +2274,6 @@ input[type="range"]::-moz-range-thumb {
             <button onclick="setLang('ht')" data-lang="ht">🇭🇹 Kreyòl</button>
         </div>
     </div>
-    <button class="mobile-search-btn" onclick="toggleMobileSearch()" aria-label="Search">
-        <i class="fas fa-search"></i>
-    </button>
     <button class="cart-btn" onclick="navigateTo('cart')">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count" id="cartCount">0</span>
@@ -2454,13 +2283,6 @@ input[type="range"]::-moz-range-thumb {
     </button>
 </div>
     </header>
-
-    <!-- ===== MOBILE SEARCH BAR (appears below the header) ===== -->
-    <div class="mobile-search-bar" id="mobileSearchBar">
-        <input type="text" id="mobileSearchInput" placeholder="Search beats, templates, FLP..." oninput="renderSearchDropdown(this.value,'mobileSearchResults')" onkeydown="if(event.key==='Enter') runMobileSearch()">
-        <button onclick="runMobileSearch()" aria-label="Search"><i class="fas fa-search"></i></button>
-        <div class="search-dropdown" id="mobileSearchResults"></div>
-    </div>
 
     <!-- ===== MOBILE MENU ===== -->
     <div class="mobile-menu" id="mobileMenu">
@@ -2495,7 +2317,7 @@ input[type="range"]::-moz-range-thumb {
                         <span>Genre: Hip-Hop</span><span>Key: F Major</span><span>BPM: 110</span><span>File: MP3/WAV</span><span>Instant Download</span>
                     </div>
                     <div class="home-player-actions">
-                        <button class="btn btn-gradient" id="homePlayerPlay" onclick="playHomepageFeaturedBeat()" disabled>
+                        <button class="btn btn-gradient" id="homePlayerPlay" onclick="playHomepageFeaturedBeat()" aria-label="Play featured beat" aria-pressed="false" disabled>
                             <i class="fas fa-play"></i> Play
                         </button>
                         <button class="btn btn-secondary" id="homePlayerAddToCart" onclick="addHomepageFeaturedBeatToCart()" disabled>
@@ -2598,7 +2420,6 @@ input[type="range"]::-moz-range-thumb {
                             <button class="filters-close-btn" onclick="toggleFilters()" aria-label="Close filters"><i class="fas fa-times"></i></button>
                         </div>
                     </div>
-                    <div class="filter-group"><label data-i18n="filters_search">Search</label><input type="text" id="searchInput" placeholder="Search beats..." oninput="applyFilters()" data-i18n-placeholder="filters_search_placeholder"></div>
                     <div class="filter-group">
                         <label data-i18n="filters_genre">Genre</label>
                         <div class="filter-chips" id="genreFilters">
@@ -5000,6 +4821,14 @@ document.addEventListener('keydown', function(e) {
                 beatId === currentBeatId
             );
             if (homepageDisc) homepageDisc.classList.toggle('is-playing', isHomepageHeroPlayback);
+            const homepagePlayButton = document.getElementById('homePlayerPlay');
+            if (homepagePlayButton) {
+                homepagePlayButton.innerHTML = isHomepageHeroPlayback
+                    ? '<i class="fas fa-stop"></i> Stop'
+                    : '<i class="fas fa-play"></i> Play';
+                homepagePlayButton.setAttribute('aria-label', isHomepageHeroPlayback ? 'Stop featured beat' : 'Play featured beat');
+                homepagePlayButton.setAttribute('aria-pressed', String(isHomepageHeroPlayback));
+            }
             document.querySelectorAll(`.beat-play-btn[data-beat-id="${beatId}"]`).forEach(btn => {
                 btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
             });
@@ -5190,13 +5019,45 @@ document.addEventListener('keydown', function(e) {
             artwork.hidden = !hasArtwork;
             if (hasArtwork) artwork.src = beat.artwork;
             playButton.disabled = !hasPreview;
+            const isPlaying = Boolean(
+                beat && currentBeatId === beat.id && currentAudio &&
+                currentAudio._homepageHeroPlayback &&
+                (!currentAudio.paused || currentAudio._pendingPlay)
+            );
+            playButton.innerHTML = isPlaying
+                ? '<i class="fas fa-stop"></i> Stop'
+                : '<i class="fas fa-play"></i> Play';
+            playButton.setAttribute('aria-label', isPlaying ? 'Stop featured beat' : 'Play featured beat');
+            playButton.setAttribute('aria-pressed', String(isPlaying));
             cartButton.disabled = !hasPrice;
         }
 
         function playHomepageFeaturedBeat() {
             const beat = getHomepageFeaturedBeat();
             if (!beat || !beat.preview) return;
+            if (
+                currentBeatId === beat.id &&
+                currentAudio &&
+                (!currentAudio.paused || currentAudio._pendingPlay)
+            ) {
+                currentAudio._playToken = (currentAudio._playToken || 0) + 1;
+                currentAudio._pendingPlay = false;
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                updatePlayButtons(beat.id, false);
+                renderWaveform(0);
+                const timeDisplay = document.getElementById('gpTime');
+                if (timeDisplay) timeDisplay.textContent = '0:00 / ' + formatTime(currentAudio.duration || 0);
+                return;
+            }
             playPreview(beat.id, { homepageHeroPlayback: true });
+            if (
+                currentBeatId === beat.id &&
+                currentAudio &&
+                (!currentAudio.paused || currentAudio._pendingPlay)
+            ) {
+                updatePlayButtons(beat.id, true);
+            }
         }
 
         function addHomepageFeaturedBeatToCart() {
@@ -5406,11 +5267,6 @@ document.addEventListener('keydown', function(e) {
     }
 
     let filtered = [...beatsData];
-    const search = document.getElementById('searchInput');
-    if (search && search.value) {
-        const term = search.value.toLowerCase();
-        filtered = filtered.filter(b => b.title.toLowerCase().includes(term) || b.genre.toLowerCase().includes(term));
-    }
     if (currentGenre !== 'all') filtered = filtered.filter(b => b.genre === currentGenre);
     if (currentBpm === 'slow') filtered = filtered.filter(b => b.bpm < 90);
     else if (currentBpm === 'medium') filtered = filtered.filter(b => b.bpm >= 90 && b.bpm <= 120);
@@ -6735,8 +6591,6 @@ document.addEventListener('keydown', function(e) {
             renderBeats();
         }
         function clearFilters() {
-            const search = document.getElementById('searchInput');
-            if (search) search.value = '';
             setGenre('all');
             setBpm('all');
             const sort = document.getElementById('sortSelect');
@@ -7516,128 +7370,6 @@ function setGlobalVolume(val) {
     }
 }
 let pageHistory = []; // List of pages
-function getGlobalSearchResults(query) {
-    query = (query || '').trim().toLowerCase();
-    if (!query) return { beats: [], templates: [], flp: [] };
-    const matches = x => (
-        ((x.title || '').toLowerCase().includes(query)) ||
-        ((x.artist || '').toLowerCase().includes(query)) ||
-        ((x.genre || '').toLowerCase().includes(query))
-    );
-    return {
-        beats: beatsData.filter(matches).slice(0, 5),
-        templates: templatesData.filter(matches).slice(0, 5),
-        flp: flpData.filter(matches).slice(0, 5),
-    };
-}
-
-function renderSearchDropdown(query, dropdownId) {
-    const dropdown = document.getElementById(dropdownId);
-    if (!dropdown) return;
-    const q = (query || '').trim();
-    if (!q) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; return; }
-    const results = getGlobalSearchResults(q);
-    const total = results.beats.length + results.templates.length + results.flp.length;
-    if (total === 0) {
-        dropdown.innerHTML = '<div class="search-dropdown-empty">No results for "' + q.replace(/</g, '&lt;') + '"</div>';
-        dropdown.classList.add('open');
-        return;
-    }
-    function section(label, items, type) {
-        if (!items.length) return '';
-        return `<div class="search-dropdown-section"><div class="search-dropdown-label">${label}</div>` +
-            items.map(item => `
-                <div class="search-dropdown-item" onclick="selectSearchResult('${type}','${item.id}')">
-                    <img loading="lazy" decoding="async" src="${item.artwork || item.thumbnail || ''}" alt="" onerror="this.style.display='none'">
-                    <div>
-                        <div class="search-dropdown-title">${item.title}</div>
-                        <div class="search-dropdown-sub">${item.artist || ''}${item.genre ? ' • ' + item.genre : ''}</div>
-                    </div>
-                </div>
-            `).join('') + `</div>`;
-    }
-    dropdown.innerHTML =
-        section('Beats', results.beats, 'beat') +
-        section('Templates', results.templates, 'template') +
-        section('FLP Remakes', results.flp, 'flp');
-    dropdown.classList.add('open');
-}
-
-function closeAllSearchDropdowns() {
-    ['headerSearchResults', 'mobileSearchResults'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.classList.remove('open'); el.innerHTML = ''; }
-    });
-}
-
-function selectSearchResult(type, id) {
-    closeAllSearchDropdowns();
-    const hi = document.getElementById('headerSearchInput'); if (hi) hi.value = '';
-    const mi = document.getElementById('mobileSearchInput'); if (mi) mi.value = '';
-    const bar = document.getElementById('mobileSearchBar'); if (bar) bar.classList.remove('open');
-    if (type === 'beat') {
-        showBeatDetail(id);
-    } else if (type === 'template') {
-        navigateTo('templates');
-        scrollToAndHighlight('template-card-' + id);
-    } else if (type === 'flp') {
-        navigateTo('flp');
-        scrollToAndHighlight('flp-card-' + id);
-    }
-}
-
-function scrollToAndHighlight(elementId) {
-    setTimeout(() => {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.classList.add('search-highlight');
-        setTimeout(() => el.classList.remove('search-highlight'), 2200);
-    }, 120);
-}
-
-function runGlobalSearch(val) {
-    val = (val || '').trim();
-    if (!val) return;
-    const results = getGlobalSearchResults(val);
-    if (results.beats.length) {
-        selectSearchResult('beat', results.beats[0].id);
-    } else if (results.templates.length) {
-        selectSearchResult('template', results.templates[0].id);
-    } else if (results.flp.length) {
-        selectSearchResult('flp', results.flp[0].id);
-    } else {
-        // Nothing anywhere — fall back to the Beats page filter so the person still sees "no results" in context
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = val;
-        closeAllSearchDropdowns();
-        navigateTo('beats');
-        if (typeof applyFilters === 'function') applyFilters();
-    }
-}
-
-function runHeaderSearch() {
-    const headerInput = document.getElementById('headerSearchInput');
-    runGlobalSearch(headerInput ? headerInput.value : '');
-}
-
-function runMobileSearch() {
-    const mobileInput = document.getElementById('mobileSearchInput');
-    runGlobalSearch(mobileInput ? mobileInput.value : '');
-}
-
-function toggleMobileSearch() {
-    const bar = document.getElementById('mobileSearchBar');
-    if (!bar) return;
-    bar.classList.toggle('open');
-    if (bar.classList.contains('open')) {
-        const input = document.getElementById('mobileSearchInput');
-        if (input) input.focus();
-    } else {
-        closeAllSearchDropdowns();
-    }
-}
-
 function toggleFilters() {
     const panel = document.getElementById('filtersPanel');
     if (panel) {
@@ -7672,18 +7404,6 @@ document.addEventListener('click', function(e) {
         filtersPanel.classList.remove('open');
     }
 
-    // Search dropdowns (desktop + mobile) — close if the click lands outside the search bar itself
-    const headerSearch = document.getElementById('headerSearch');
-    if (headerSearch && !headerSearch.contains(e.target)) {
-        const d = document.getElementById('headerSearchResults');
-        if (d) d.classList.remove('open');
-    }
-    const mobileSearchBar = document.getElementById('mobileSearchBar');
-    const mobileSearchBtn = document.querySelector('.mobile-search-btn');
-    if (mobileSearchBar && mobileSearchBar.classList.contains('open') &&
-        !mobileSearchBar.contains(e.target) && (!mobileSearchBtn || !mobileSearchBtn.contains(e.target))) {
-        mobileSearchBar.classList.remove('open');
-    }
 });
 
 const originalSetLang = setLang;
