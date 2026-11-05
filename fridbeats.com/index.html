@@ -5220,6 +5220,13 @@ document.addEventListener('keydown', function(e) {
             return /^\/beat\/[^/]+\/?$/i.test(pathname);
         }
 
+        function beatDetailPath(beat) {
+            const baseSlug = beatSlugFromTitle(beat.title) || beatSlugFromTitle(beat.id) || 'beat';
+            const matches = beatsData.filter(item => beatSlugFromTitle(item.title) === baseSlug);
+            const slug = matches.length > 1 ? `${baseSlug}-${beatSlugFromTitle(beat.id)}` : baseSlug;
+            return '/?open=beat/' + encodeURIComponent(slug);
+        }
+
         function routeBeatDetailFromPath() {
             const match = window.location.pathname.match(/^\/beat\/([^/]+)\/?$/i);
             if (!match) return false;
@@ -5268,7 +5275,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         function flpRemakePath(flp) {
-            return '/flp-remake/' + encodeURIComponent(flpRemakeSlug(flp));
+            return '/?open=flp/' + encodeURIComponent(flpRemakeSlug(flp));
         }
 
         function templateSlug(template) {
@@ -5279,7 +5286,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         function templatePath(template) {
-            return '/templates/' + encodeURIComponent(templateSlug(template));
+            return '/?open=template/' + encodeURIComponent(templateSlug(template));
         }
 
         function isTemplateDetailPath(pathname) {
@@ -5344,18 +5351,47 @@ document.addEventListener('keydown', function(e) {
             return true;
         }
 
-        function routeFlpRemakeDetailFromQuery() {
+        function routeContentDetailFromQuery() {
             const openParam = new URLSearchParams(window.location.search).get('open') || '';
-            const match = openParam.match(/^flp\/([A-Za-z0-9_-]{1,64})$/i);
+            const match = openParam.match(/^(beat|template|flp)\/([A-Za-z0-9_-]{1,128})$/i);
             if (!match) return false;
 
-            const flp = flpData.find(item => String(item.id).toLowerCase() === match[1].toLowerCase());
+            const [, type, rawValue] = match;
+            const value = rawValue.toLowerCase();
+            if (type.toLowerCase() === 'beat') {
+                const beat = beatsData.find(item => {
+                    const baseSlug = beatSlugFromTitle(item.title);
+                    const matches = beatsData.filter(candidate => beatSlugFromTitle(candidate.title) === baseSlug);
+                    const slug = matches.length > 1 ? `${baseSlug}-${beatSlugFromTitle(item.id)}` : baseSlug;
+                    return value === slug || value === String(item.id).toLowerCase();
+                });
+                if (!beat) {
+                    console.error('Beat not found for URL:', window.location.href);
+                    navigateTo('beats');
+                    return true;
+                }
+                showBeatDetail(beat.id);
+                return true;
+            }
+
+            if (type.toLowerCase() === 'template') {
+                const template = templatesData.find(item =>
+                    value === templateSlug(item).toLowerCase()
+                );
+                if (!template) return false;
+                showTemplateDetail(template.id);
+                return true;
+            }
+
+            const flp = flpData.find(item =>
+                value === flpRemakeSlug(item).toLowerCase() ||
+                value === String(item.id).toLowerCase()
+            );
             if (!flp) {
                 console.error('FLP remake not found for URL:', window.location.href);
                 navigateTo('flp');
                 return true;
             }
-
             showFlpRemakeDetail(flp.id);
             return true;
         }
@@ -5425,15 +5461,12 @@ document.addEventListener('keydown', function(e) {
         function showBeatDetail(beatId) {
             const beat = getBeatById(beatId);
             if (!beat) return;
-            const detailPath = '/beat/' + encodeURIComponent(beatSlugFromTitle(beat.title));
-            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
-                const nextUrl = new URL(window.location.href);
-                nextUrl.pathname = detailPath;
-                nextUrl.searchParams.delete('play');
-                nextUrl.searchParams.delete('autoplay');
-                nextUrl.hash = '';
-                const replaceCurrentPath = isBeatDetailPath(window.location.pathname);
-                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+            const detailUrl = new URL(beatDetailPath(beat), window.location.origin);
+            if (window.location.pathname + window.location.search !== detailUrl.pathname + detailUrl.search) {
+                const replaceCurrentPath = isBeatDetailPath(window.location.pathname) ||
+                    isTemplateDetailPath(window.location.pathname) ||
+                    isFlpRemakeDetailPath(window.location.pathname);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', detailUrl.pathname + detailUrl.search);
             }
             // Meta Pixel: product viewed
             try { const _p = beat.price && typeof beat.price === 'object' ? (parseFloat(beat.price.basic) || parseFloat(beat.price.premium) || parseFloat(beat.price.exclusive) || 0) : (parseFloat(beat.price) || 0); metaTrack('ViewContent', { content_name: beat.title, content_ids: [beat.id], content_type: 'product', value: _p, currency: 'USD' }); gaTrack('view_item', { currency: 'USD', value: _p, items: [{ item_id: beat.id, item_name: beat.title }] }); } catch (e) {}
@@ -5553,14 +5586,12 @@ document.addEventListener('keydown', function(e) {
             }
 
             const detailPath = templatePath(template);
-            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
-                const nextUrl = new URL(window.location.href);
-                nextUrl.pathname = detailPath;
-                nextUrl.hash = '';
+            const detailUrl = new URL(detailPath, window.location.origin);
+            if (window.location.pathname + window.location.search !== detailUrl.pathname + detailUrl.search) {
                 const replaceCurrentPath = isBeatDetailPath(window.location.pathname) ||
                     isFlpRemakeDetailPath(window.location.pathname) ||
                     isTemplateDetailPath(window.location.pathname);
-                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', detailUrl.pathname + detailUrl.search);
             }
 
             const container = document.getElementById('templateDetailContent');
@@ -7767,6 +7798,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     setTimeout(backToCheckout, 1200);
                     setTimeout(() => window.addEventListener('hashchange', backToCheckout, { once: true }), 1500);
                 }
+                if (routeContentDetailFromQuery()) return;
                 // SEO landing pages (/template/<id>, /flp/<id>) link here with
                 // ?open=template/<id> — wait briefly for Supabase data (admin-added
                 // items are not in the local defaults), then jump to the product.
@@ -7775,19 +7807,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                     const slashIdx = openParam.indexOf('/');
                     const oType = openParam.slice(0, slashIdx);
                     const oId = openParam.slice(slashIdx + 1);
-                    if (oType === 'template' || oType === 'flp') {
+                    if (oType === 'template') {
                         const waitAndOpen = (tries) => {
-                            const pool = oType === 'template' ? templatesData : flpData;
+                            const pool = templatesData;
                             if ((pool || []).some(x => x.id === oId)) {
-                                if (oType === 'flp') showFlpRemakeDetail(oId);
-                                else selectSearchResult(oType, oId);
+                                selectSearchResult(oType, oId);
                                 return;
                             }
                             if (tries > 0) setTimeout(() => waitAndOpen(tries - 1), 300);
-                            else {
-                                if (oType === 'flp') showFlpRemakeDetail(oId);
-                                else selectSearchResult(oType, oId);
-                            }
+                            else selectSearchResult(oType, oId);
                         };
                         waitAndOpen(12);
                     }
@@ -7799,7 +7827,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         routeFlpRemakeDetailFromPath();
                     } else if (isTemplateDetailPath(location.pathname)) {
                         routeTemplateDetailFromPath();
-                    } else if (routeFlpRemakeDetailFromQuery()) {
+                    } else if (routeContentDetailFromQuery()) {
                         return;
                     } else if (currentPage === 'beat-detail') {
                         navigateTo('home');
@@ -7809,6 +7837,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         navigateTo('templates');
                     }
                 });
+                if (routeContentDetailFromQuery()) return;
                 if (routeFlpRemakeDetailFromPath()) return;
                 if (routeTemplateDetailFromPath()) return;
                 if (routeBeatDetailFromPath()) return;
