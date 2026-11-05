@@ -5268,7 +5268,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         function flpRemakePath(flp) {
-            return '/flp-remake/' + encodeURIComponent(flpRemakeSlug(flp));
+            return '/?open=flp/' + encodeURIComponent(String(flp.id));
         }
 
         function templateSlug(template) {
@@ -5336,6 +5336,22 @@ document.addEventListener('keydown', function(e) {
             );
             if (!flp) {
                 console.error('FLP remake not found for URL:', window.location.pathname);
+                navigateTo('flp');
+                return true;
+            }
+
+            showFlpRemakeDetail(flp.id);
+            return true;
+        }
+
+        function routeFlpRemakeDetailFromQuery() {
+            const openParam = new URLSearchParams(window.location.search).get('open') || '';
+            const match = openParam.match(/^flp\/([A-Za-z0-9_-]{1,64})$/i);
+            if (!match) return false;
+
+            const flp = flpData.find(item => String(item.id).toLowerCase() === match[1].toLowerCase());
+            if (!flp) {
+                console.error('FLP remake not found for URL:', window.location.href);
                 navigateTo('flp');
                 return true;
             }
@@ -5590,6 +5606,13 @@ document.addEventListener('keydown', function(e) {
                      onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();showFlpRemakeDetail('${flp.id}');}">
                     <div class="flp-artwork">
                         <img src="${flp.thumbnail}" alt="${flp.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\'color:var(--text-muted);padding:2rem;text-align:center;\\'><i class=\\'fas fa-file-alt\\' style=\\'font-size:2rem;display:block;margin-bottom:0.5rem;\\'></i>${flp.title}</div>'">
+                        <div class="play-overlay">
+                            <a href="${flp.youtubeUrl || '#'}" target="_blank" rel="noopener noreferrer" class="flp-play-btn"
+                               aria-label="Watch ${flpRemakeDisplayTitle(flp)} on YouTube"
+                               onclick="event.stopPropagation();if(this.getAttribute('href')==='#')event.preventDefault();">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="flp-info">
                         <h3><a class="flp-card-title" href="${flpRemakePath(flp)}"
@@ -5598,9 +5621,11 @@ document.addEventListener('keydown', function(e) {
                         </a></h3>
                         <p class="flp-artist">${flp.artist} • ${flp.genre}</p>
                         <p class="flp-desc card-desc" style="font-weight:300;">${localizedText(flp.description)}</p>
-                        <div class="card-includes">
-                            <p><i class="fas fa-info-circle"></i> Includes: FLP file + sound kit used for the remake.</p>
-                        </div>
+                        <button type="button" class="btn btn-gradient" style="width:100%;justify-content:center;white-space:nowrap;padding:0.45rem 0.35rem;gap:0.35rem;font-size:clamp(0.58rem,2.5vw,0.78rem);margin-top:0.6rem;font-weight:700;"
+                                aria-label="Open ${flpRemakeDisplayTitle(flp)} details to download the FLP"
+                                onclick="event.stopPropagation();showFlpRemakeDetail('${flp.id}')">
+                            <i class="fas fa-download" aria-hidden="true"></i> Click here to download the FLP
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -5614,14 +5639,11 @@ document.addEventListener('keydown', function(e) {
                 return;
             }
 
-            const detailPath = flpRemakePath(flp);
-            if (window.location.pathname.toLowerCase() !== detailPath.toLowerCase()) {
-                const nextUrl = new URL(window.location.href);
-                nextUrl.pathname = detailPath;
-                nextUrl.hash = '';
+            const detailUrl = new URL(flpRemakePath(flp), window.location.origin);
+            if (window.location.pathname + window.location.search !== detailUrl.pathname + detailUrl.search) {
                 const replaceCurrentPath = isBeatDetailPath(window.location.pathname) ||
                     isFlpRemakeDetailPath(window.location.pathname);
-                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', nextUrl.pathname + nextUrl.search);
+                history[replaceCurrentPath ? 'replaceState' : 'pushState'](null, '', detailUrl.pathname + detailUrl.search);
             }
 
             const container = document.getElementById('flpDetailContent');
@@ -7756,9 +7778,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                     if (oType === 'template' || oType === 'flp') {
                         const waitAndOpen = (tries) => {
                             const pool = oType === 'template' ? templatesData : flpData;
-                            if ((pool || []).some(x => x.id === oId)) { selectSearchResult(oType, oId); return; }
+                            if ((pool || []).some(x => x.id === oId)) {
+                                if (oType === 'flp') showFlpRemakeDetail(oId);
+                                else selectSearchResult(oType, oId);
+                                return;
+                            }
                             if (tries > 0) setTimeout(() => waitAndOpen(tries - 1), 300);
-                            else selectSearchResult(oType, oId); // fall back — highlight anyway
+                            else {
+                                if (oType === 'flp') showFlpRemakeDetail(oId);
+                                else selectSearchResult(oType, oId);
+                            }
                         };
                         waitAndOpen(12);
                     }
@@ -7770,6 +7799,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                         routeFlpRemakeDetailFromPath();
                     } else if (isTemplateDetailPath(location.pathname)) {
                         routeTemplateDetailFromPath();
+                    } else if (routeFlpRemakeDetailFromQuery()) {
+                        return;
                     } else if (currentPage === 'beat-detail') {
                         navigateTo('home');
                     } else if (currentPage === 'flp-remake-detail') {
