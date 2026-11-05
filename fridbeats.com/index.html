@@ -2725,7 +2725,7 @@ input[type="range"]::-moz-range-thumb {
                     <div class="mgp-wave"><canvas id="mgpWv"></canvas></div>
                     <div class="mgp-verdict" id="mgpVerdict"></div>
                     <div class="mgp-actions">
-                        <button class="btn btn-gradient" onclick="mgpGoMagic()">⚡ <span data-i18n="mgp_unlock_btn">GET IT MASTERED — $9.99</span></button>
+                        <button class="btn btn-gradient" onclick="mgpGoMagic()">⚡ <span data-i18n="mgp_unlock_btn">GET IT MASTERED — $24.99</span></button>
                         <a class="btn btn-secondary" id="mgpWaTop" href="#" target="_blank" rel="noopener">💬 <span data-i18n="mgp_order_wa">Order via WhatsApp</span></a>
                     </div>
                     <div class="mgp-note" data-i18n="mgp_an_note_pay">⚡ Magic Master renders your full master (WAV 24-bit + MP3 320k) instantly in your browser — or go Frid Signature for his personal pass.</div>
@@ -2750,9 +2750,9 @@ input[type="range"]::-moz-range-thumb {
                     <h3 class="mgp-sec" data-i18n="mgp_unlock">ORDER — PROFESSIONAL MASTERING</h3>
                     <div class="mgp-plans">
                         <div class="mgp-plan active">
-                            <div class="mp-badge" data-i18n="mgp_promo_badge">LAUNCH −60%</div>
+                            <div class="mp-badge" data-i18n="mgp_promo_badge" style="display:none;">LAUNCH −60%</div>
                             <div class="mp-n" data-i18n="mgp_plan1">MASTERING SERVICE — 1 TRACK</div>
-                            <div class="mp-p"><s id="mgpSigStrike">$24.99</s><b id="mgpSigNow">$9.99</b></div>
+                            <div class="mp-p"><s id="mgpSigStrike" style="display:none;">$24.99</s><b id="mgpSigNow">$24.99</b></div>
                             <div class="mp-d" data-i18n="mgp_plan1_d">Professional mastering with Frid's studio tool. WAV 24-bit + MP3 320k delivered to your email within 24 hours. Revisions included.</div>
                         </div>
                     </div>
@@ -7878,15 +7878,14 @@ function mgpLang(){
   try{ const l = localStorage.getItem('fridBeats_lang') || 'en'; return MGP_I18N[l] ? l : 'en'; }catch(e){ return 'en'; }
 }
 let mgpLastLang = mgpLang();
-function mgpApplyPromo(){
-  const promo = Date.now() < MGP_PROMO_END.getTime();
+function mgpApplyPrice(){
   const p = mgpPrices();
   const strike = $mgp('mgpSigStrike');
   strike.textContent = '$' + p.sigFull.toFixed(2);
-  strike.style.display = promo ? '' : 'none';
+  strike.style.display = 'none';
   $mgp('mgpSigNow').textContent = '$' + p.signature.toFixed(2);
   const b = document.querySelector('#mgpUnlock .mp-badge');
-  if (b) b.style.display = promo ? 'block' : 'none';
+  if (b) b.style.display = 'none';
 }
 const MGP_I18N = {
   "en": {
@@ -7896,10 +7895,10 @@ const MGP_I18N = {
     "mgp_hero_kicker": "PRO MASTERING · ALL GENRES · INSTANT IN YOUR BROWSER",
     "mgp_hero_title_1": "Radio-Ready Mastering,",
     "mgp_hero_title_2": "Mixed by Frid Beats",
-    "mgp_promo_badge_x": "LAUNCH −60% — Frid Signature $24.99 → $9.99 until Oct 15",
+    "mgp_promo_badge_x": "FRID SIGNATURE ? $24.99 per track",
     "mgp_hero_sub": "Your beat, your song, your loop — mastered to the exact level commercial tracks hit: crisp, loud where it counts, dynamics fully preserved. Upload, hear the difference for free, unlock your master.",
-    "mgp_promo_badge": "LAUNCH −60%",
-    "mgp_promo_ends": "until Oct 15 · launch price",
+    "mgp_promo_badge": "REGULAR PRICE",
+    "mgp_promo_ends": "$24.99 per track",
     "mgp_title": "MASTERING SERVICE — FRID'S STUDIO RIG, 24H DELIVERY",
     "mgp_magic_badge": "24H DELIVERY",
     "mgp_sub": "Order a professional master: I run your track through my studio tool (the same rig behind FRID MASTER), check it by ear and deliver WAV 24-bit + MP3 320k by email within 24 hours. Revisions included.",
@@ -7933,7 +7932,7 @@ const MGP_I18N = {
     "mgp_pp_busy": "⚠️ Master is still rendering — one second…",
     "mgp_render_done": "✅ Master ready — listen above!",
     "mgp_render_fail": "⚠️ Rendering failed on this file — try a WAV or MP3, or order via WhatsApp.",
-    "mgp_sig_wa": "Hi Frid! I paid $9.99 for FRID SIGNATURE mastering on fridbeats.com — Order {OID}. My track:",
+    "mgp_sig_wa": "Hi Frid! I paid $24.99 for FRID SIGNATURE mastering on fridbeats.com — Order {OID}. My track:",
     "mgp_spec_dynamics": "DYNAMICS PRESERVED",
     "mgp_spec_universal": "EVERY GENRE · EVERY BPM",
     "mgp_page_title": "Mastering <span>Service</span>",
@@ -7952,7 +7951,7 @@ const MGP_I18N = {
     "mgp_g_needs_headroom": "NEEDS HEADROOM",
     "mgp_g_alive": "ALIVE",
     "mgp_g_squashed": "SQUASHED",
-    "mgp_unlock_btn": "GET IT MASTERED — $9.99",
+    "mgp_unlock_btn": "GET IT MASTERED — $24.99",
     "mgp_order_wa": "Order via WhatsApp",
     "mgp_an_note_pay": "⚡ Ready for the real thing? Order a professional master — WAV 24-bit + MP3 320k delivered in 24h.",
     "mgp_priv_note": "🔒 Your audio is analyzed locally in your browser — nothing is uploaded until you order.",
@@ -7960,7 +7959,7 @@ const MGP_I18N = {
     "mgp_step1_t": "Free analysis",
     "mgp_step1_p": "Drop your track. In seconds you see its loudness, peaks and dynamics — the same numbers mastering studios check first.",
     "mgp_step2_t": "Hear it free — then unlock",
-    "mgp_step2_p": "Magic Master renders your master right in your browser: hear 20 free seconds of the loudest part. Love it? Unlock the full WAV + MP3 download for $9.99.",
+    "mgp_step2_p": "Magic Master renders your master right in your browser: hear 20 free seconds of the loudest part. Love it? Unlock the full WAV + MP3 download for $24.99.",
     "mgp_step3_t": "Radio-ready, instantly",
     "mgp_step3_p": "The full clean master downloads immediately after payment — WAV 24-bit + MP3 320k, peak −0.02 dBFS. Want Frid's ear on it? Add Frid Signature.",
     "mgp_price_title": "CHOOSE YOUR MASTER",
@@ -7970,9 +7969,9 @@ const MGP_I18N = {
     "mgp_pl3": "Reference matching — I match the tone of any track you send",
     "mgp_pl4": "WAV 24-bit + MP3 320k + measurement report",
     "mgp_pl5": "Delivered in 24h · revisions included until you're happy",
-    "mgp_price_btn": "GET MASTERED — $9.99",
+    "mgp_price_btn": "GET MASTERED — $24.99",
     "mgp_price_note": "Secure payment via PayPal — card & PayPal balance accepted",
-    "mgp_cmp_t": "Why is this $9.99 and not $50?",
+    "mgp_cmp_t": "Why is this $24.99 and not $50?",
     "mgp_cmp_p": "— Real studios charge $30–$100 per song. My mastering rig is fully automated by me: precision measurements, reference matching, zero guesswork. You pay for the result, not the overhead.",
     "mgp_co_title": "CHECKOUT — PROFESSIONAL MASTERING",
     "mgp_co_email_label": "YOUR EMAIL — WHERE YOUR MASTER WILL BE DELIVERED",
@@ -8012,10 +8011,10 @@ const MGP_I18N = {
     "mgp_v_loudness_p2": "LUFS. A proper master brings you into the modern window while keeping every punch intact.",
     "mgp_v_dyn": "⚠️ Dynamics are squashed",
     "mgp_v_dyn_p": "Your track may be over-limited. A careful re-master with reference matching restores the punch — send it over.",
-    "mgp_v_unlock": "Unlock your master for $9.99",
+    "mgp_v_unlock": "Unlock your master for $24.99",
     "mgp_v_unlock_p": "— instant WAV 24-bit + MP3 320k + report.",
     "mgp_wa_msg": "Hi Frid! I just ran the free analysis on fridbeats.com and I want my track mastered.",
-    "mgp_wa_paid": "Hi Frid! I just paid $9.99 for mastering on fridbeats.com",
+    "mgp_wa_paid": "Hi Frid! I just paid $24.99 for mastering on fridbeats.com",
     "mgp_wa_paid_track": ". Here is my track",
     "mgp_mail_sub": "Mastering Order",
     "mgp_mail_body": "Hi Frid,\n\nMy PayPal order ID: {OID}\nMy track is attached (WAV/MP3).\nOptional reference: ",
@@ -8049,7 +8048,7 @@ const MGP_I18N = {
     "mgp_g_needs_headroom": "NECESITA ESPACIO",
     "mgp_g_alive": "VIVO",
     "mgp_g_squashed": "APLASTADO",
-    "mgp_unlock_btn": "MASTERIZA TU TRACK — $9.99",
+    "mgp_unlock_btn": "MASTERIZA TU TRACK — $24.99",
     "mgp_order_wa": "Pedir por WhatsApp",
     "mgp_an_note_pay": "⚡ ¿Listo para el resultado real? Pide una masterización profesional — WAV 24-bit + MP3 320k en 24h.",
     "mgp_priv_note": "🔒 Tu audio se analiza localmente en tu navegador — nada se sube hasta que pidas.",
@@ -8057,7 +8056,7 @@ const MGP_I18N = {
     "mgp_step1_t": "Análisis gratis",
     "mgp_step1_p": "Suelta tu track. En segundos ves su sonoridad, picos y dinámica — los mismos números que revisan primero los estudios de mastering.",
     "mgp_step2_t": "Escúchalo gratis — luego desbloquea",
-    "mgp_step2_p": "Magic Master renderiza tu master en tu navegador: escucha 20 segundos gratis de la parte más fuerte. ¿Te encanta? Desbloquea la descarga completa WAV + MP3 por $9.99.",
+    "mgp_step2_p": "Magic Master renderiza tu master en tu navegador: escucha 20 segundos gratis de la parte más fuerte. ¿Te encanta? Desbloquea la descarga completa WAV + MP3 por $24.99.",
     "mgp_step3_t": "Listo para radio, al instante",
     "mgp_step3_p": "El master completo y limpio se descarga inmediatamente tras el pago — WAV 24-bit + MP3 320k, pico −0.02 dBFS. ¿Quieres el oído de Frid? Añade Frid Signature.",
     "mgp_price_title": "ELIGE TU MASTER",
@@ -8067,9 +8066,9 @@ const MGP_I18N = {
     "mgp_pl3": "Reference matching — igualo el tono de cualquier track que envíes",
     "mgp_pl4": "WAV 24-bit + MP3 320k + reporte de mediciones",
     "mgp_pl5": "Entrega en 24h · revisiones incluidas hasta que estés feliz",
-    "mgp_price_btn": "MASTERIZAR — $9.99",
+    "mgp_price_btn": "MASTERIZAR — $24.99",
     "mgp_price_note": "Pago seguro vía PayPal — tarjeta y saldo PayPal aceptados",
-    "mgp_cmp_t": "¿Por qué $9.99 y no $50?",
+    "mgp_cmp_t": "¿Por qué $24.99 y no $50?",
     "mgp_cmp_p": "— Los estudios reales cobran $30–$100 por canción. Mi equipo de mastering está totalmente automatizado por mí: mediciones de precisión, reference matching, cero adivinanzas. Pagas por el resultado, no por la estructura.",
     "mgp_co_title": "PAGO — MASTERING PROFESIONAL",
     "mgp_co_email_label": "TU EMAIL — DONDE SE ENTREGARÁ TU MASTER",
@@ -8109,16 +8108,16 @@ const MGP_I18N = {
     "mgp_v_loudness_p2": "LUFS. Un master adecuado te trae a la ventana moderna manteniendo cada golpe intacto.",
     "mgp_v_dyn": "⚠️ Dinámica aplastada",
     "mgp_v_dyn_p": "Tu track puede estar sobre-limitado. Un re-master cuidadoso con reference matching restaura el golpe — envíalo.",
-    "mgp_v_unlock": "Desbloquea tu master por $9.99",
+    "mgp_v_unlock": "Desbloquea tu master por $24.99",
     "mgp_v_unlock_p": "— WAV 24-bit + MP3 320k + reporte al instante.",
     "mgp_wa_msg": "¡Hola Frid! Acabo de hacer el análisis gratis en fridbeats.com y quiero masterizar mi track.",
-    "mgp_wa_paid": "¡Hola Frid! Acabo de pagar $9.99 por mastering en fridbeats.com",
+    "mgp_wa_paid": "¡Hola Frid! Acabo de pagar $24.99 por mastering en fridbeats.com",
     "mgp_wa_paid_track": ". Aquí está mi track",
     "mgp_mail_sub": "Pedido de Mastering",
     "mgp_mail_body": "Hola Frid,\n\nMi ID de orden PayPal: {OID}\nMi track va adjunto (WAV/MP3).\nReferencia opcional: ",
-    "mgp_promo_badge": "LANZAMIENTO −60%",
-    "mgp_promo_ends": "hasta el 15 de oct · precio de lanzamiento",
-    "mgp_promo_badge_x": "LANZAMIENTO −60% — Frid Signature $24.99 → $9.99 hasta el 15 de oct",
+    "mgp_promo_badge": "PRECIO NORMAL",
+    "mgp_promo_ends": "$24.99 por track",
+    "mgp_promo_badge_x": "FRID SIGNATURE ? $24.99 por track",
     "mgp_title": "SERVICIO DE MASTERIZACIÓN — ESTUDIO DE FRID, ENTREGA EN 24H",
     "mgp_magic_badge": "ENTREGA EN 24H",
     "mgp_sub": "Pide una masterización profesional: paso tu track por mi herramienta de estudio (el mismo motor detrás de FRID MASTER), lo reviso de oído y entrego WAV 24-bit + MP3 320k por email en 24 horas. Revisiones incluidas.",
@@ -8152,7 +8151,7 @@ const MGP_I18N = {
     "mgp_pp_busy": "⚠️ El master aún se está renderizando — un segundo…",
     "mgp_render_done": "✅ ¡Master listo — escúchalo arriba!",
     "mgp_render_fail": "⚠️ Falló el renderizado con este archivo — prueba WAV o MP3, o pide por WhatsApp.",
-    "mgp_sig_wa": "¡Hola Frid! Pagué $9.99 por FRID SIGNATURE en fridbeats.com — Orden {OID}. Mi track:",
+    "mgp_sig_wa": "¡Hola Frid! Pagué $24.99 por FRID SIGNATURE en fridbeats.com — Orden {OID}. Mi track:",
     "mgp_dl_oid": "Tu número de pedido:",
     "mgp_dl_mail": "ENVIAR MI TRACK POR EMAIL",
     "mgp_dl_note": "Haz clic en el botón para abrir tu correo — adjunta tu track (WAV o MP3) o pega un enlace de WeTransfer / Google Drive, junto con tu número de pedido."
@@ -8183,7 +8182,7 @@ const MGP_I18N = {
     "mgp_g_needs_headroom": "PRECISA DE ESPAÇO",
     "mgp_g_alive": "VIVO",
     "mgp_g_squashed": "ESMAGADO",
-    "mgp_unlock_btn": "MASTERIZE SUA FAIXA — $9.99",
+    "mgp_unlock_btn": "MASTERIZE SUA FAIXA — $24.99",
     "mgp_order_wa": "Pedir via WhatsApp",
     "mgp_an_note_pay": "⚡ Pronto para o resultado real? Peça uma masterização profissional — WAV 24-bit + MP3 320k em 24h.",
     "mgp_priv_note": "🔒 Seu áudio é analisado localmente no seu navegador — nada é enviado até você pedir.",
@@ -8191,7 +8190,7 @@ const MGP_I18N = {
     "mgp_step1_t": "Análise grátis",
     "mgp_step1_p": "Solte sua faixa. Em segundos você vê sua sonoridade, picos e dinâmica — os mesmos números que os estúdios de mastering verificam primeiro.",
     "mgp_step2_t": "Ouça grátis — depois desbloqueie",
-    "mgp_step2_p": "O Magic Master renderiza seu master no seu navegador: ouça 20 segundos grátis da parte mais forte. Amou? Desbloqueie o download completo WAV + MP3 por $9.99.",
+    "mgp_step2_p": "O Magic Master renderiza seu master no seu navegador: ouça 20 segundos grátis da parte mais forte. Amou? Desbloqueie o download completo WAV + MP3 por $24.99.",
     "mgp_step3_t": "Pronto para rádio, na hora",
     "mgp_step3_p": "O master completo e limpo é baixado imediatamente após o pagamento — WAV 24-bit + MP3 320k, pico −0.02 dBFS. Quer o ouvido do Frid? Adicione o Frid Signature.",
     "mgp_price_title": "ESCOLHA SEU MASTER",
@@ -8201,9 +8200,9 @@ const MGP_I18N = {
     "mgp_pl3": "Reference matching — igualo o tom de qualquer faixa que enviar",
     "mgp_pl4": "WAV 24-bit + MP3 320k + relatório de medições",
     "mgp_pl5": "Entrega em 24h · revisões incluídas até você ficar satisfeito",
-    "mgp_price_btn": "MASTERIZAR — $9.99",
+    "mgp_price_btn": "MASTERIZAR — $24.99",
     "mgp_price_note": "Pagamento seguro via PayPal — cartão e saldo PayPal aceitos",
-    "mgp_cmp_t": "Por que $9.99 e não $50?",
+    "mgp_cmp_t": "Por que $24.99 e não $50?",
     "mgp_cmp_p": "— Estúdios reais cobram $30–$100 por música. Meu rig de mastering é totalmente automatizado por mim: medições de precisão, reference matching, zero achismo. Você paga pelo resultado, não pela estrutura.",
     "mgp_co_title": "PAGAMENTO — MASTERING PROFISSIONAL",
     "mgp_co_email_label": "SEU EMAIL — ONDE SEU MASTER SERÁ ENTREGUE",
@@ -8243,16 +8242,16 @@ const MGP_I18N = {
     "mgp_v_loudness_p2": "LUFS. Um master adequado te traz à janela moderna mantendo cada batida intacta.",
     "mgp_v_dyn": "⚠️ Dinâmica esmagada",
     "mgp_v_dyn_p": "Sua faixa pode estar super-limitada. Um re-master cuidadoso com reference matching restaura o impacto — envie.",
-    "mgp_v_unlock": "Desbloqueie seu master por $9.99",
+    "mgp_v_unlock": "Desbloqueie seu master por $24.99",
     "mgp_v_unlock_p": "— WAV 24-bit + MP3 320k + relatório instantâneos.",
     "mgp_wa_msg": "Oi Frid! Acabei de fazer a análise grátis no fridbeats.com e quero masterizar minha faixa.",
-    "mgp_wa_paid": "Oi Frid! Acabei de pagar $9.99 por mastering no fridbeats.com",
+    "mgp_wa_paid": "Oi Frid! Acabei de pagar $24.99 por mastering no fridbeats.com",
     "mgp_wa_paid_track": ". Aqui está minha faixa",
     "mgp_mail_sub": "Pedido de Mastering",
     "mgp_mail_body": "Oi Frid,\n\nMeu ID de pedido PayPal: {OID}\nMinha faixa está anexada (WAV/MP3).\nReferência opcional: ",
-    "mgp_promo_badge": "LANÇAMENTO −60%",
-    "mgp_promo_ends": "até 15 de out · preço de lançamento",
-    "mgp_promo_badge_x": "LANÇAMENTO −60% — Frid Signature $24.99 → $9.99 até 15 de out",
+    "mgp_promo_badge": "PRE?O NORMAL",
+    "mgp_promo_ends": "$24.99 por faixa",
+    "mgp_promo_badge_x": "FRID SIGNATURE ? $24.99 por faixa",
     "mgp_title": "SERVIÇO DE MASTERIZAÇÃO — ESTÚDIO DO FRID, ENTREGA EM 24H",
     "mgp_magic_badge": "ENTREGA EM 24H",
     "mgp_sub": "Peça uma masterização profissional: passo sua faixa pela minha ferramenta de estúdio (o mesmo motor por trás do FRID MASTER), reviso de ouvido e entrego WAV 24-bit + MP3 320k por e-mail em 24 horas. Revisões incluídas.",
@@ -8286,7 +8285,7 @@ const MGP_I18N = {
     "mgp_pp_busy": "⚠️ O master ainda está sendo renderizado — um segundo…",
     "mgp_render_done": "✅ Master pronto — ouça acima!",
     "mgp_render_fail": "⚠️ Falha ao renderizar este arquivo — tente WAV ou MP3, ou peça via WhatsApp.",
-    "mgp_sig_wa": "Oi Frid! Paguei $9.99 pelo FRID SIGNATURE no fridbeats.com — Pedido {OID}. Minha faixa:",
+    "mgp_sig_wa": "Oi Frid! Paguei $24.99 pelo FRID SIGNATURE no fridbeats.com — Pedido {OID}. Minha faixa:",
     "mgp_dl_oid": "Número do seu pedido:",
     "mgp_dl_mail": "ENVIAR MINHA FAIXA POR E-MAIL",
     "mgp_dl_note": "Clique no botão para abrir seu e-mail — anexe sua faixa (WAV ou MP3) ou cole um link do WeTransfer / Google Drive, junto com o número do pedido."
@@ -8317,7 +8316,7 @@ const MGP_I18N = {
     "mgp_g_needs_headroom": "MANQUE DE MARGE",
     "mgp_g_alive": "VIVANT",
     "mgp_g_squashed": "ÉCRASÉ",
-    "mgp_unlock_btn": "FAIS MASTER TON MORCEAU — $9.99",
+    "mgp_unlock_btn": "FAIS MASTER TON MORCEAU — $24.99",
     "mgp_order_wa": "Commander via WhatsApp",
     "mgp_an_note_pay": "⚡ Prêt pour le vrai résultat ? Commande un mastering professionnel — WAV 24-bit + MP3 320k en 24h.",
     "mgp_priv_note": "🔒 Ton audio est analysé localement dans ton navigateur — rien n'est envoyé avant ta commande.",
@@ -8325,7 +8324,7 @@ const MGP_I18N = {
     "mgp_step1_t": "Analyse gratuite",
     "mgp_step1_p": "Dépose ton morceau. En quelques secondes tu vois sa sonorité, ses pics et sa dynamique — les mêmes chiffres que les studios de mastering vérifient en premier.",
     "mgp_step2_t": "Écoute gratis — puis débloque",
-    "mgp_step2_p": "Magic Master rend ton master dans ton navigateur : écoute 20 secondes gratuites du passage le plus fort. Tu adores ? Débloque le téléchargement complet WAV + MP3 pour $9.99.",
+    "mgp_step2_p": "Magic Master rend ton master dans ton navigateur : écoute 20 secondes gratuites du passage le plus fort. Tu adores ? Débloque le téléchargement complet WAV + MP3 pour $24.99.",
     "mgp_step3_t": "Prêt pour la radio, instantanément",
     "mgp_step3_p": "Le master complet et propre se télécharge immédiatement après le paiement — WAV 24-bit + MP3 320k, pic à −0.02 dBFS. Tu veux l'oreille de Frid ? Ajoute Frid Signature.",
     "mgp_price_title": "CHOISIS TON MASTER",
@@ -8335,9 +8334,9 @@ const MGP_I18N = {
     "mgp_pl3": "Reference matching — j'égale le son de n'importe quel morceau envoyé",
     "mgp_pl4": "WAV 24-bit + MP3 320k + rapport de mesures",
     "mgp_pl5": "Livré en 24h · révisions incluses jusqu'à ta satisfaction",
-    "mgp_price_btn": "MASTERISER — $9.99",
+    "mgp_price_btn": "MASTERISER — $24.99",
     "mgp_price_note": "Paiement sécurisé via PayPal — carte et solde PayPal acceptés",
-    "mgp_cmp_t": "Pourquoi $9.99 et pas $50 ?",
+    "mgp_cmp_t": "Pourquoi $24.99 et pas $50 ?",
     "mgp_cmp_p": "— Les vrais studios facturent $30–$100 par chanson. Mon rig de mastering est entièrement automatisé par moi : mesures de précision, reference matching, zéro approximation. Tu paies le résultat, pas la structure.",
     "mgp_co_title": "PAIEMENT — MASTERING PROFESSIONNEL",
     "mgp_co_email_label": "TON EMAIL — LÀ OÙ TON MASTER SERA LIVRÉ",
@@ -8377,16 +8376,16 @@ const MGP_I18N = {
     "mgp_v_loudness_p2": "LUFS. Un bon master te ramène dans la fenêtre moderne en gardant chaque punch intact.",
     "mgp_v_dyn": "⚠️ Dynamique écrasée",
     "mgp_v_dyn_p": "Ton morceau est peut-être sur-limité. Un re-master soigné avec reference matching restaure le punch — envoie-le.",
-    "mgp_v_unlock": "Débloque ton master pour $9.99",
+    "mgp_v_unlock": "Débloque ton master pour $24.99",
     "mgp_v_unlock_p": "— WAV 24-bit + MP3 320k + rapport instantanés.",
     "mgp_wa_msg": "Salut Frid ! Je viens de faire l'analyse gratuite sur fridbeats.com et je veux masteriser mon morceau.",
-    "mgp_wa_paid": "Salut Frid ! Je viens de payer $9.99 pour le mastering sur fridbeats.com",
+    "mgp_wa_paid": "Salut Frid ! Je viens de payer $24.99 pour le mastering sur fridbeats.com",
     "mgp_wa_paid_track": ". Voici mon morceau",
     "mgp_mail_sub": "Commande de Mastering",
     "mgp_mail_body": "Salut Frid,\n\nMon ID de commande PayPal : {OID}\nMon morceau est en pièce jointe (WAV/MP3).\nRéférence optionnelle : ",
-    "mgp_promo_badge": "LANCEMENT −60%",
-    "mgp_promo_ends": "jusqu'au 15 oct · prix de lancement",
-    "mgp_promo_badge_x": "LANCEMENT −60% — Frid Signature $24.99 → $9.99 jusqu'au 15 oct",
+    "mgp_promo_badge": "PRIX NORMAL",
+    "mgp_promo_ends": "$24.99 par morceau",
+    "mgp_promo_badge_x": "FRID SIGNATURE ? $24.99 par morceau",
     "mgp_title": "SERVICE DE MASTERING — STUDIO DE FRID, LIVRAISON 24H",
     "mgp_magic_badge": "LIVRAISON 24H",
     "mgp_sub": "Commande un mastering professionnel : je passe ton morceau dans mon outil studio (le même moteur derrière FRID MASTER), je le vérifie à l'oreille et je livre le WAV 24-bit + MP3 320k par e-mail en 24 heures. Révisions incluses.",
@@ -8420,7 +8419,7 @@ const MGP_I18N = {
     "mgp_pp_busy": "⚠️ Le master est encore en cours de rendu — une seconde…",
     "mgp_render_done": "✅ Master prêt — écoute ci-dessus !",
     "mgp_render_fail": "⚠️ Échec du rendu sur ce fichier — essaie WAV ou MP3, ou commande via WhatsApp.",
-    "mgp_sig_wa": "Salut Frid ! J'ai payé $9.99 pour FRID SIGNATURE sur fridbeats.com — Commande {OID}. Mon morceau:",
+    "mgp_sig_wa": "Salut Frid ! J'ai payé $24.99 pour FRID SIGNATURE sur fridbeats.com — Commande {OID}. Mon morceau:",
     "mgp_dl_oid": "Ton numéro de commande :",
     "mgp_dl_mail": "ENVOYER MON MORCEAU PAR E-MAIL",
     "mgp_dl_note": "Clique sur le bouton pour ouvrir ton application e-mail — joins ton morceau (WAV ou MP3) ou colle un lien WeTransfer / Google Drive, avec ton numéro de commande."
@@ -8451,7 +8450,7 @@ const MGP_I18N = {
     "mgp_g_needs_headroom": "MANKE ESPAS",
     "mgp_g_alive": "VIVAN",
     "mgp_g_squashed": "KRAZE",
-    "mgp_unlock_btn": "FÈ MASTERE TRACK OU — $9.99",
+    "mgp_unlock_btn": "FÈ MASTERE TRACK OU — $24.99",
     "mgp_order_wa": "Kòmande via WhatsApp",
     "mgp_an_note_pay": "⚡ Pare pou vrè rezilta a? Kòmande yon mastering pwofesyonèl — WAV 24-bit + MP3 320k nan 24h.",
     "mgp_priv_note": "🔒 Odyo ou analize lokalman nan navigatè ou — anyen pa upload jiskaske ou kòmande.",
@@ -8459,7 +8458,7 @@ const MGP_I18N = {
     "mgp_step1_t": "Analiz gratis",
     "mgp_step1_p": "Trase track ou. Nan kèk segond ou wè sonorite, pik ak dinamik li — menm chif studio mastering tcheke an premye.",
     "mgp_step2_t": "Koute gratis — apre debloke",
-    "mgp_step2_p": "Magic Master rann master ou nan navigatè ou: koute 20 segond gratis pati ki pi fò a. Renmen l? Debloke telechajman konplè WAV + MP3 pou $9.99.",
+    "mgp_step2_p": "Magic Master rann master ou nan navigatè ou: koute 20 segond gratis pati ki pi fò a. Renmen l? Debloke telechajman konplè WAV + MP3 pou $24.99.",
     "mgp_step3_t": "Pare pou radyo, imedyatman",
     "mgp_step3_p": "Master konplè a telechaje touswit apre peman an — WAV 24-bit + MP3 320k, pik −0.02 dBFS. Ou vle zòrèy Frid a? Ajoute Frid Signature.",
     "mgp_price_title": "CHWAZI MASTER OU",
@@ -8469,9 +8468,9 @@ const MGP_I18N = {
     "mgp_pl3": "Reference matching — m egzale ton nenpòt track ou voye",
     "mgp_pl4": "WAV 24-bit + MP3 320k + rapò mezire",
     "mgp_pl5": "Delivre nan 24è · revizyon konsa jiskaske ou kontan",
-    "mgp_price_btn": "MASTERIZE — $9.99",
+    "mgp_price_btn": "MASTERIZE — $24.99",
     "mgp_price_note": "Peman sekirize via PayPal — kat ak balans PayPal aksepte",
-    "mgp_cmp_t": "Poukisa $9.99 e pa $50?",
+    "mgp_cmp_t": "Poukisa $24.99 e pa $50?",
     "mgp_cmp_p": "— Vrè studio yo chaje $30–$100 pa chante. Ekipman mastering mwen an otomatize 100% pa mwen: meziman presizyon, reference matching, san devin. Ou peye rezilta a, pa estrikti a.",
     "mgp_co_title": "PEMAN — MASTERING PWOFESYONÈL",
     "mgp_co_email_label": "IMEL OU — KOTE MASTER OU AP DELIVRE",
@@ -8511,16 +8510,16 @@ const MGP_I18N = {
     "mgp_v_loudness_p2": "LUFS. Yon bon master mennen ou nan fenèt modèn nan kenbe chak kouto enteg.",
     "mgp_v_dyn": "⚠️ Dinamik kraze",
     "mgp_v_dyn_p": "Track ou ka twò limite. Yon re-master ki fèt ak serye ak reference matching retabli kouto a — voye l.",
-    "mgp_v_unlock": "Debloke master ou pou $9.99",
+    "mgp_v_unlock": "Debloke master ou pou $24.99",
     "mgp_v_unlock_p": "— WAV 24-bit + MP3 320k + rapò lelman.",
     "mgp_wa_msg": "Bonjou Frid! M fe analiz gratis la sou fridbeats.com e m vle masterize track mwen.",
-    "mgp_wa_paid": "Bonjou Frid! M peye $9.99 pou mastering sou fridbeats.com",
+    "mgp_wa_paid": "Bonjou Frid! M peye $24.99 pou mastering sou fridbeats.com",
     "mgp_wa_paid_track": ". Men track mwen",
     "mgp_mail_sub": "Kòmand Mastering",
     "mgp_mail_body": "Bonjou Frid,\n\nID kòmand PayPal mwen: {OID}\nTrack mwen an nan atachman (WAV/MP3).\nReferans opsyonèl: ",
-    "mgp_promo_badge": "LANSMAN −60%",
-    "mgp_promo_ends": "jiska 15 okt · pri lansman",
-    "mgp_promo_badge_x": "LANSMAN −60% — Frid Signature $24.99 → $9.99 jiska 15 okt",
+    "mgp_promo_badge": "PRI N?MAL",
+    "mgp_promo_ends": "$24.99 pa track",
+    "mgp_promo_badge_x": "FRID SIGNATURE ? $24.99 pa track",
     "mgp_title": "SERVIS MASTERING — ZOUTI STUDIO FRID, DELIVRE NAN 24È",
     "mgp_magic_badge": "DELIVRE NAN 24È",
     "mgp_sub": "Kòmande yon mastering pwofesyonèl: mwen pase track ou nan zouti studio mwen an (menm motè ki dèyè FRID MASTER), mwen tcheke l ak zòrèy mwen epi mwen delivre WAV 24-bit + MP3 320k pa imel nan 24 èdtan. Revizyon enkli.",
@@ -8554,7 +8553,7 @@ const MGP_I18N = {
     "mgp_pp_busy": "⚠️ Master la ap rann ankò — yon segond…",
     "mgp_render_done": "✅ Master pare — koute anwo!",
     "mgp_render_fail": "⚠️ Rann echwe sou fichye sa a — eseye WAV oswa MP3, oswa kòmande via WhatsApp.",
-    "mgp_sig_wa": "Bonjou Frid! M peye $9.99 pou FRID SIGNATURE sou fridbeats.com — Kòmand {OID}. Track mwen:",
+    "mgp_sig_wa": "Bonjou Frid! M peye $24.99 pou FRID SIGNATURE sou fridbeats.com — Kòmand {OID}. Track mwen:",
     "mgp_dl_oid": "Nimewo kòmand ou:",
     "mgp_dl_mail": "VOYE TRACK MWEN PA IMEL",
     "mgp_dl_note": "Klike bouton an pou louvri imel ou — mete track ou an atachman (WAV oswa MP3) oswa kole yon lyen WeTransfer / Google Drive, ak nimewo kòmand ou."
@@ -8569,10 +8568,8 @@ const MGP_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJz
 const MGP_PAYPAL_CLIENT_ID = 'BAA-8f-Z5HuGQLRSkcGmRFcwvnHlSbsYHBIpp_ig87h3op-TTeKtTiMlPqOsjPZUEaHs7uvKKmEGtD319c';
 const MGP_MAGIC_LIMIT_SEC = 20;   // seconds of free preview
 const MGP_TARGET_LUFS = -11.2;    // mirror commercial AI masters (OpenMusic ref: −11.2 LUFS / LRA 4.6)
-const MGP_PROMO_END = new Date('2026-10-15T23:59:59Z');
 function mgpPrices(){
-  const promo = Date.now() < MGP_PROMO_END.getTime();
-  return { signature: promo ? 9.99 : 24.99, sigFull: 24.99 };
+  return { signature: 24.99, sigFull: 24.99 };
 }
 function mgpCheckoutTotal(){ return mgpPrices().signature; }
 let mgpSupabase = null;
@@ -8800,7 +8797,7 @@ function mgpStartPp(){
           mgpPaid=true;
           $mgp('mgpOrderId').textContent = oid;
           $mgp('mgpMailLink').href = 'mailto:contact@fridbeats.com?subject=' + encodeURIComponent((dict.mgp_mail_sub||'Mastering Order') + ' — ' + oid) + '&body=' + encodeURIComponent((dict.mgp_mail_body||'Hi Frid,\n\nMy PayPal order ID: {OID}\nMy track is attached (WAV/MP3).').replace('{OID}', oid));
-          const waMsg = (dict.mgp_wa_paid||'Hi Frid! I just paid $9.99 for mastering on fridbeats.com') + ' — ' + oid;
+          const waMsg = (dict.mgp_wa_paid||'Hi Frid! I just paid $24.99 for mastering on fridbeats.com') + ' — ' + oid;
           $mgp('mgpSigWa').href='https://wa.me/18296026502?text='+encodeURIComponent(waMsg);
           $mgp('mgpPay').style.display='none'; $mgp('mgpDl').style.display='block';
           $mgp('mgpDl').scrollIntoView({behavior:'smooth',block:'center'});
@@ -8816,11 +8813,11 @@ function mgpStartPp(){
 
 /* init: translate the mastering UI once the page language is known, re-render on switch */
 mgpApplyI18n();
-mgpApplyPromo();
+mgpApplyPrice();
 document.addEventListener('click', e => {
   if (mgpPageHidden()) return;
   const lang = mgpLang();
-  if (lang !== mgpLastLang) { mgpLastLang = lang; mgpApplyI18n(); mgpApplyPromo(); }
+  if (lang !== mgpLastLang) { mgpLastLang = lang; mgpApplyI18n(); mgpApplyPrice(); }
 });
     </script>
 </body>
